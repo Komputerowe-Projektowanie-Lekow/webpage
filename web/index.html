@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Protein ASCII Showcase</title>
+<link rel="stylesheet" href="./styles.css" />
+<body>
+  <div class="ascii-layer">
+    <pre id="screen">loading...</pre>
+  </div>
+  <main class="pages">
+    <section class="page hero">
+      <div class="page-content">
+        <h1>Protein Folding, Rendered In ASCII</h1>
+        <p>
+          An experimental rendering pipeline transforms volumetric protein motion into a living ASCII mosaic.
+          Every glyph is a pixel pulled straight from the source frames - no shaders, just characters and time.
+        </p>
+        <a class="cta" href="#learn-more">Explore the Pipeline</a>
+      </div>
+    </section>
+    <section class="page" id="learn-more">
+      <div class="page-content">
+        <h1 id="learn-more">Learn How It Works</h1>
+        <p>
+          From raw video to glyph-perfect animation: the pipeline samples each frame in Python,
+          maps luminance to a bespoke character palette, and streams it on the page via a lightweight
+          decoder that adapts resolution to your screen in real time.
+        </p>
+        <p>
+          The result is a motion backdrop slim enough for GitHub Pages, yet rich enough to highlight
+          volumetric motion and subtle folding cues without distracting overlays.
+        </p>
+      </div>
+    </section>
+    <section class="page">
+      <div class="page-content">
+        <h1>Bring Your Own Data</h1>
+        <p>
+          Drop in a new clip, regenerate frames with <code>build_ascii.py</code>, and ship to GitHub Pages instantly. Everything here is static and portable.
+        </p>
+        <p>
+          Remix the palette, adjust the cadence, or swap the source clip entirely - the renderer adapts
+          automatically. Everything stays static, portable, and open for experimentation.
+        </p>
+      </div>
+    </section>
+  </main>
+  <script type="module" src="./main.js"></script>
+</body>
+</html>
