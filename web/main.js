@@ -1,7 +1,7 @@
 const CONFIG = {
   fps: 60,
   speed: 0.15,
-  palette: " .:-=+*#%@",
+  palette: " .'`^\",:;Il!i><~+_-?][}{1)(|\\/tfjrxnuvczXYUJCLQ0OZmwqpdbkhao*#MW&8%B@$",
   yScale: 5.0,
   lineAspect: 1.0,
   charPixelTarget: 6,

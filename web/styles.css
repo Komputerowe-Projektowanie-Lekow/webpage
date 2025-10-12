@@ -1,5 +1,32 @@
 :root {
-  color-scheme: light;
+  color-scheme: dark;
+  --void-black: #0a0a0a;
+  --terminal-green: #1a0fb8a8;
+  --electric-cyan: #00d4ff;
+  
+  /* Color Combination 1 - Default/Hero */
+  --combo1-primary: #01779B;
+  --combo1-secondary: #00709E;
+  --combo1-tertiary: #013E5A;
+  --combo1-light: #A5C5DE;
+  
+  /* Color Combination 2 */
+  --combo2-primary: #B6E6FD;
+  --combo2-secondary: #004E6D;
+  --combo2-tertiary: #8DB5CF;
+  --combo2-light: #00668E;
+  
+  /* Color Combination 3 */
+  --combo3-primary: #001027;
+  --combo3-secondary: #7BA9CA;
+  --combo3-tertiary: #2083AD;
+  --combo3-light: #C3DAEC;
+  
+  /* Default to combo 1 */
+  --deep-blue: var(--combo1-tertiary);
+  --ocean-blue: var(--combo1-secondary);
+  --bright-blue: var(--combo1-primary);
+  --ice-blue: var(--combo1-light);
 }
 
 * {
@@ -11,16 +38,36 @@ body {
   margin: 0;
   height: 100%;
   min-height: 100%;
-  font-family: "Inter", "Segoe UI", -apple-system, BlinkMacSystemFont, sans-serif;
-  background: #f6fbff;
-  color: #112237;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", "Helvetica Neue", Arial, sans-serif;
+  background: var(--void-black);
+  color: var(--ice-blue);
 }
 
 body {
-  line-height: 1.6;
+  line-height: 1.7;
   scroll-behavior: smooth;
   position: relative;
+  letter-spacing: 0;
 }
+
+body::before {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 9999;
+  background: radial-gradient(
+    ellipse at center,
+    transparent 0%,
+    transparent 60%,
+    rgba(10, 10, 10, 0.3) 100%
+  );
+}
+
+/* Removed pixel grid for minimal aesthetic */
 
 .pages {
   display: flex;
@@ -31,10 +78,11 @@ body {
 
 .page {
   position: relative;
-  padding: clamp(3rem, 7vw, 6.5rem) clamp(1.5rem, 6vw, 5rem);
+  padding: clamp(3rem, 7vw, 6.5rem) clamp(1.5rem, 3vw, 3rem);
   display: flex;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.85);
+  justify-content: flex-start;
+  background: var(--void-black);
+  border-top: 1px solid var(--deep-blue);
 }
 
 .page-content {
@@ -45,24 +93,31 @@ body {
 }
 
 .page h1 {
-  font-size: clamp(2.6rem, 4vw, 3.9rem);
-  margin: 0 0 1rem;
-  letter-spacing: 0.045em;
-  color: #0f1f36;
+  font-family: inherit;
+  font-size: clamp(2.5rem, 4vw, 3.8rem);
+  font-weight: 700;
+  margin: 0 0 1.5rem;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+  text-transform: uppercase;
+  line-height: 1.1;
 }
 
 .page p {
-  margin: 0 0 1.1rem;
-  color: rgba(17, 35, 55, 0.72);
+  margin: 0 0 1.5rem;
+  color: var(--ice-blue);
   max-width: 36rem;
+  font-size: 1rem;
 }
 
 .hero {
   min-height: 100vh;
   align-items: center;
   justify-content: flex-start;
-  background: rgba(246, 251, 255, 0.75);
+  background: transparent;
   padding: 0;
+  border: none;
+  z-index: 1;
 }
 
 .hero .page-content {
@@ -71,32 +126,64 @@ body {
   margin-left: 0;
   text-align: left;
   padding: clamp(3.5rem, 8vw, 7rem) clamp(1.5rem, 3vw, 3rem) clamp(3.5rem, 8vw, 7rem) clamp(1.5rem, 3vw, 3rem);
+  border-left: 3px solid var(--bright-blue);
+  background: rgba(1, 62, 90, 0.05);
+  backdrop-filter: blur(2px);
 }
 
 .hero .page-content p {
   margin-left: 0;
+  color: var(--ice-blue);
 }
 
 .hero a.cta {
   display: inline-flex;
   align-self: flex-start;
   font-weight: 600;
-  color: #264c8c;
-  text-decoration: underline;
-  text-decoration-thickness: 0.12em;
-  text-underline-offset: 0.2em;
-  gap: 0.35rem;
-  transition: color 160ms ease, transform 160ms ease;
+  font-family: inherit;
+  color: var(--bright-blue);
+  text-decoration: none;
+  gap: 0.5rem;
+  transition: all 200ms ease;
+  padding: 0.875rem 1.75rem;
+  border: 2px solid var(--bright-blue);
+  background: transparent;
+  letter-spacing: 0.02em;
+  font-size: 1rem;
+  position: relative;
+  overflow: hidden;
+  border-radius: 2px;
+}
+
+.hero a.cta::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: var(--bright-blue);
+  transition: left 250ms ease;
+  z-index: -1;
+}
+
+.hero a.cta:hover::before {
+  left: 0;
 }
 
 .hero a.cta::after {
-  content: "->";
-  font-size: 0.95em;
-  letter-spacing: 0.1em;
+  content: "→";
+  font-size: 1.1em;
+  letter-spacing: 0;
+  transition: transform 200ms ease;
 }
 
 .hero a.cta:hover {
-  color: #1a66c2;
+  color: #ffffff;
+  transform: translateX(2px);
+}
+
+.hero a.cta:hover::after {
   transform: translateX(4px);
 }
 
@@ -105,12 +192,19 @@ body {
   inset: 0;
   z-index: 0;
   width: 100vw;
-  height: 100dvh;
+  height: 100vh;
   pointer-events: none;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: flex-end;
+  clip-path: inset(0 0 0 0);
+}
+
+/* Hide ASCII behind non-hero sections */
+.page:not(.hero) {
+  position: relative;
+  z-index: 10;
 }
 
 #screen {
@@ -120,8 +214,8 @@ body {
   font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
   letter-spacing: 0;
   line-height: 1;
-  opacity: 0.90;
-  color: #0b1b34;
+  opacity: 0.4;
+  color: var(--combo1-primary);
   user-select: none;
   overflow: visible;
   display: block;
@@ -129,13 +223,92 @@ body {
   height: 100%;
 }
 
-.page:nth-of-type(2) {
-  background: rgba(255, 255, 255, 0.92);
+/* Page Color Cycling - Combination 1 (pages 1, 4, 7...) */
+.page:nth-child(3n+1):not(.hero) {
+  --deep-blue: var(--combo1-tertiary);
+  --ocean-blue: var(--combo1-secondary);
+  --bright-blue: var(--combo1-primary);
+  --ice-blue: var(--combo1-light);
+  background: var(--void-black);
+  border-top: 1px solid var(--combo1-primary);
 }
 
-.page:nth-of-type(3) {
-  background: rgba(255, 255, 255, 0.88);
+/* Page Color Cycling - Combination 2 (pages 2, 5, 8...) */
+.page:nth-child(3n+2) {
+  --deep-blue: var(--combo2-tertiary);
+  --ocean-blue: var(--combo2-secondary);
+  --bright-blue: var(--combo2-primary);
+  --ice-blue: var(--combo2-light);
+  background: var(--void-black);
+  border-top: 1px solid var(--combo2-secondary);
 }
+
+/* Page Color Cycling - Combination 3 (pages 3, 6, 9...) */
+.page:nth-child(3n+3) {
+  --deep-blue: var(--combo3-tertiary);
+  --ocean-blue: var(--combo3-secondary);
+  --bright-blue: var(--combo3-primary);
+  --ice-blue: var(--combo3-light);
+  background: var(--void-black);
+  border-top: 1px solid var(--combo3-tertiary);
+}
+
+code {
+  font-family: "SF Mono", "Monaco", "Consolas", monospace;
+  background: rgba(255, 255, 255, 0.05);
+  color: var(--ice-blue);
+  padding: 0.2em 0.5em;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+  font-size: 0.9em;
+}
+
+/* Removed scanline effect for cleaner aesthetic */
+
+/* Selection styling - subtle and minimal */
+::selection {
+  background: var(--bright-blue);
+  color: #ffffff;
+}
+
+::-moz-selection {
+  background: var(--bright-blue);
+  color: #ffffff;
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 12px;
+  background: var(--void-black);
+}
+
+::-webkit-scrollbar-track {
+  background: var(--void-black);
+  border-left: 1px solid var(--deep-blue);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--deep-blue);
+  border: 1px solid var(--bright-blue);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--ocean-blue);
+}
+
+/* Links styling */
+a:not(.cta) {
+  color: var(--electric-cyan);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color 200ms ease;
+}
+
+a:not(.cta):hover {
+  border-bottom-color: var(--electric-cyan);
+}
+
+/* Removed blinking cursor for cleaner look */
 
 @media (max-width: 900px) {
   .page {
@@ -143,12 +316,12 @@ body {
   }
 
   .page-content {
-    text-align: center;
+    text-align: left;
     margin-left: 0;
   }
 
   .page p {
-    margin-left: auto;
+    margin-left: 0;
     margin-right: auto;
     max-width: 100%;
   }
@@ -159,17 +332,18 @@ body {
 
   .hero .page-content {
     margin-left: 0;
-    text-align: center;
-    padding: clamp(3rem, 12vw, 5rem) clamp(1.5rem, 12vw, 4rem);
+    text-align: left;
+    padding: clamp(3rem, 12vw, 5rem) clamp(1.5rem, 8vw, 3rem);
+    border-left: 2px solid var(--bright-blue);
   }
 
   .hero .page-content p {
-    margin-left: auto;
+    margin-left: 0;
     margin-right: auto;
   }
 
   .hero a.cta {
-    align-self: center;
+    align-self: flex-start;
   }
   
   .ascii-layer {
@@ -178,6 +352,7 @@ body {
   
   #screen {
     width: 100vw;
+    opacity: 0.3;
   }
   
   .hero .page-content {
