@@ -1,13 +1,13 @@
 const CONFIG = {
-  fps: 45,
-  speed: 0.7,
+  fps: 60,
+  speed: 0.15,
   palette: " .:-=+*#%@",
-  yScale: 1.0,
-  lineAspect: 0.95,
-  charPixelTarget: 8,
-  minCols: 80,
-  maxCols: 4000,
-  preloadAhead: 12
+  yScale: 5.0,
+  lineAspect: 1.0,
+  charPixelTarget: 6,
+  minCols: 100,
+  maxCols: 500,
+  preloadAhead: 15
 };
 
 const screen = document.getElementById("screen");
@@ -254,9 +254,16 @@ function cacheKey(index, state) {
 
 function updateResolutionInternal(state, wrap, cache, inflight, force = false) {
   const width = wrap.clientWidth || 1;
+  const height = wrap.clientHeight || 1;
+  
+  // Calculate columns and rows based on viewport dimensions to fill entire screen
   let cols = Math.floor(width / CONFIG.charPixelTarget);
   cols = Math.max(CONFIG.minCols, Math.min(CONFIG.maxCols, cols));
-  const rows = Math.max(24, Math.round(cols * state.aspect / CONFIG.yScale));
+  
+  // Calculate rows based on viewport height to ensure full vertical coverage
+  let rows = Math.floor(height / (CONFIG.charPixelTarget * CONFIG.lineAspect));
+  rows = Math.max(rows, 24);
+  
   const key = `${cols}x${rows}`;
   if (force || key !== state.resKey) {
     state.cols = cols;
@@ -269,23 +276,21 @@ function updateResolutionInternal(state, wrap, cache, inflight, force = false) {
 
 function convertBitmapToAscii(bitmap, canvas, ctx, state) {
   const cols = state.cols;
-  const scaledHeight = Math.max(1, Math.round(cols * state.aspect));
-  const sampleRows = state.rows;
+  const rows = state.rows;
 
+  // Scale image to exactly match our viewport-based resolution
   canvas.width = cols;
-  canvas.height = scaledHeight;
-  ctx.clearRect(0, 0, cols, scaledHeight);
-  ctx.drawImage(bitmap, 0, 0, cols, scaledHeight);
+  canvas.height = rows;
+  ctx.clearRect(0, 0, cols, rows);
+  ctx.drawImage(bitmap, 0, 0, cols, rows);
 
-  const image = ctx.getImageData(0, 0, cols, scaledHeight).data;
-  const stepY = scaledHeight / sampleRows;
-  const lines = new Array(sampleRows);
+  const image = ctx.getImageData(0, 0, cols, rows).data;
+  const lines = new Array(rows);
   const paletteSize = CONFIG.palette.length - 1;
 
-  for (let row = 0; row < sampleRows; row++) {
-    const sampleY = Math.min(scaledHeight - 1, Math.floor((row + 0.5) * stepY));
+  for (let row = 0; row < rows; row++) {
     let line = "";
-    let offset = sampleY * cols * 4;
+    let offset = row * cols * 4;
     for (let x = 0; x < cols; x++) {
       const r = image[offset];
       const g = image[offset + 1];
@@ -349,9 +354,12 @@ function fitFont(engine) {
     return;
   }
 
+  // Calculate font size to exactly fill viewport dimensions
   const pxByWidth = width / cols;
   const pxByHeight = height / (rows * CONFIG.lineAspect);
-  const px = Math.floor(Math.min(pxByWidth, pxByHeight));
+  
+  // Use the larger value to ensure full coverage, then add a small buffer
+  const px = Math.ceil(Math.max(pxByWidth, pxByHeight) * 1.01);
 
   if (px > 0) {
     screen.style.fontSize = px + "px";
