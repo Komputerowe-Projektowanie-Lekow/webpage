@@ -169,6 +169,16 @@ body {
   display: block;
 }
 
+.logo-container {
+  margin-bottom: 2rem;
+}
+
+.site-logo {
+  width: clamp(150px, 30vw, 250px);
+  height: auto;
+  display: block;
+}
+
 .hero .page-content p {
   margin-left: 0;
   color: var(--text-mid);
@@ -467,6 +477,10 @@ a:not(.cta):hover {
   .hero a.cta {
     align-self: flex-start;
     font-size: 0.9rem;
+  }
+  
+  .site-logo {
+    width: clamp(120px, 40vw, 180px);
   }
   
   .ascii-layer {
