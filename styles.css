@@ -48,6 +48,7 @@ body {
   scroll-behavior: smooth;
   position: relative;
   letter-spacing: 0.01em;
+  padding-top: 0;
 }
 
 .pages {
@@ -399,6 +400,69 @@ a:not(.cta):hover {
   margin: 0;
 }
 
+/* Sticky Navigation */
+.sticky-nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  background: var(--bg-white);
+  border-bottom: 2px solid var(--primary-blue);
+  transform: translateY(-100%);
+  transition: transform 300ms ease;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.sticky-nav.visible {
+  transform: translateY(0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.nav-content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 3rem;
+  padding: 1.2rem clamp(2rem, 5vw, 6rem);
+  max-width: 100%;
+}
+
+.nav-link {
+  font-family: inherit;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  text-decoration: none;
+  border: none;
+  transition: all 200ms ease;
+  position: relative;
+  padding: 0.5rem 0;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: var(--primary-blue);
+  transition: width 200ms ease;
+}
+
+.nav-link:hover {
+  color: var(--secondary-blue);
+}
+
+.nav-link:hover::after {
+  width: 100%;
+  background: var(--secondary-blue);
+}
+
 /* Projects Section Full Width */
 .projects-section .page-content {
   max-width: 100%;
@@ -480,30 +544,162 @@ a:not(.cta):hover {
 }
 
 .accordion-header[aria-expanded="true"] + .accordion-content {
-  max-height: 1000px !important;
+  max-height: none !important;
   opacity: 1 !important;
   visibility: visible !important;
   transition: max-height 300ms ease, opacity 300ms ease, visibility 0s 0s !important;
 }
 
-.accordion-problems {
-  list-style: none;
-  padding: 0 1.5rem 1.5rem 1.5rem;
+/* Project Details Structure */
+.project-details {
+  padding: 2rem 2rem 1.5rem 2rem;
+}
+
+.project-intro {
+  margin-bottom: 2rem;
+}
+
+.project-intro p {
+  color: var(--text-dark);
+  font-size: 1rem;
+  line-height: 1.7;
   margin: 0;
 }
 
-.accordion-problems li {
-  padding: 0.75rem 0;
-  color: var(--text-mid);
-  font-size: 0.9rem;
-  letter-spacing: 0.02em;
-  border-top: 1px dashed rgba(0, 0, 0, 0.1);
-  line-height: 1.6;
+.project-section {
+  margin-bottom: 3rem;
 }
 
-.accordion-problems li:first-child {
-  border-top: none;
-  padding-top: 1rem;
+.project-section:last-child {
+  margin-bottom: 0;
+}
+
+.project-section h3 {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  margin: 0 0 1.5rem 0;
+  border-bottom: 2px solid var(--primary-blue);
+  padding-bottom: 0.5rem;
+}
+
+.project-section p {
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  line-height: 1.8;
+  margin: 0 0 1rem 0;
+}
+
+.project-list {
+  margin: 1rem 0 1.5rem 0;
+  padding-left: 2rem;
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  line-height: 1.8;
+}
+
+.project-list li {
+  margin-bottom: 1rem;
+  padding-left: 0.5rem;
+}
+
+.project-list li strong {
+  color: var(--text-dark);
+  font-weight: 600;
+}
+
+.project-list li em {
+  color: var(--secondary-blue);
+  font-style: italic;
+}
+
+.current-status {
+  background: var(--bg-light);
+  padding: 1rem 1.5rem;
+  border-left: 4px solid var(--primary-blue);
+  margin: 2rem 0 1rem 0 !important;
+  color: var(--primary-blue) !important;
+  font-size: 0.95rem !important;
+}
+
+.status-divider {
+  text-align: center;
+  color: var(--primary-blue);
+  font-size: 1.5rem;
+  margin: 2rem 0 !important;
+  letter-spacing: 0.5rem;
+}
+
+/* Problem Items */
+.problem-item {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  background: var(--bg-light);
+}
+
+.problem-item:last-child {
+  margin-bottom: 0;
+}
+
+.problem-item h4 {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--secondary-blue);
+  margin: 0 0 1rem 0;
+}
+
+.problem-premise,
+.problem-content {
+  margin: 0.75rem 0;
+  font-size: 0.9rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.problem-premise strong,
+.problem-content strong {
+  color: var(--text-dark);
+}
+
+.problem-item ul {
+  margin: 0.5rem 0 0 0;
+  padding-left: 1.5rem;
+  list-style: disc;
+}
+
+.problem-item ul li {
+  margin-bottom: 0.75rem;
+  line-height: 1.7;
+  color: var(--text-mid);
+}
+
+.problem-item ul li strong {
+  color: var(--primary-blue);
+  font-weight: 600;
+}
+
+.project-conclusion {
+  background: var(--bg-light);
+  padding: 1.5rem;
+  border-left: 4px solid var(--secondary-blue);
+}
+
+.project-conclusion h3 {
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.project-conclusion p {
+  font-size: 0.95rem;
+  font-style: italic;
+  color: var(--text-dark);
 }
 
 @media (max-width: 900px) {
@@ -619,5 +815,33 @@ a:not(.cta):hover {
   
   .accordion-problems li {
     font-size: 0.85rem;
+  }
+  
+  .nav-content {
+    gap: 1.5rem;
+    padding: 1rem clamp(1.5rem, 6vw, 2.5rem);
+  }
+  
+  .nav-link {
+    font-size: 0.75rem;
+  }
+  
+  .project-details {
+    padding: 1.5rem 1rem;
+  }
+  
+  .project-list {
+    padding-left: 1.5rem;
+    font-size: 0.9rem;
+  }
+  
+  .problem-item {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .current-status {
+    padding: 0.75rem 1rem;
+    font-size: 0.85rem !important;
   }
 }

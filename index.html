@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Sekcja Koła Naukowego Wspierania Projektów Leków</title>
 <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-<link rel="stylesheet" href="./styles.css?v=4" />
+<link rel="stylesheet" href="./styles.css?v=6" />
 </head>
 <body>
   <div class="ascii-layer">
@@ -14,6 +14,13 @@
       <span>Dokowanie ligandu do białka</span>
     </div>
   </div>
+  <nav class="sticky-nav" id="stickyNav">
+    <div class="nav-content">
+      <a href="#dzialanie-sekcji" class="nav-link">Działanie sekcji</a>
+      <a href="#nasze-dzialanie" class="nav-link">Nasze działanie</a>
+      <a href="#projekty" class="nav-link">Projekty</a>
+    </div>
+  </nav>
   <main class="pages">
     <section class="page hero">
       <div class="page-content">
@@ -24,10 +31,10 @@
         <p>
           Cześć, w naszej sekcji zajmujemy się computer-aided drug design:
         </p>
-        <a class="cta" href="#learn-more">Dowiedz się więcej</a>
+        <a class="cta" href="#dzialanie-sekcji">Dowiedz się więcej</a>
       </div>
     </section>
-    <section class="page" id="learn-more">
+    <section class="page" id="dzialanie-sekcji">
       <div class="page-content">
         <div class="page-text">
         <h1>Działanie sekcji</h1>
@@ -45,7 +52,7 @@
         </div>
       </div>
     </section>
-    <section class="page">
+    <section class="page" id="nasze-dzialanie">
       <div class="page-content">
         <div class="page-text">
         <h1>Nasze działanie</h1>
@@ -81,7 +88,7 @@
         </div>
       </div>
     </section>
-    <section class="page projects-section">
+    <section class="page projects-section" id="projekty">
       <div class="page-content">
         <div class="page-text">
         <h1>Obecne działania projektów</h1>
@@ -97,25 +104,135 @@
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
-              <ul class="accordion-problems">
-                <li>PROBLEM 1: Optymalizacja procesu wirtualnego screeningu dla Akwaporyny 4</li>
-                <li>PROBLEM 2: Integracja narzędzi molekularnej dynamiki z pipeline'm</li>
-                <li>PROBLEM 3: Walidacja wyników dokowania z danymi eksperymentalnymi</li>
-              </ul>
+              <div class="project-details">
+                <div class="project-intro">
+                  <p><strong>Stworzenie sposobu testowania tysięcy związków o potencjalnym działaniu terapeutycznym aż do etapu przedklinicznego:</strong></p>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Opis</h3>
+                  <p>Case study – opracowanie metody na paradoksalnie dobrze i źle opisanym problemie: badanie białka akwaporyny 4 w patogenezie Alzheimera.</p>
+                  
+                  <p><strong>Nasz obecny plan:</strong></p>
+                  <ol class="project-list">
+                    <li><strong>Zebranie związków:</strong> zintegrować pobieranie kandydatów z PDB, PubChem, ChEMBL i własnych baz/API do jednej, deduplikowanej listy wejściowej.</li>
+                    <li><strong>Wstępna analiza/klasteryzacja:</strong> oczyścić zbiór Chemmine-tool/VS, zastosować reguły (np. Lipiński, XlogP) i wybrać podzbiór do dokowania.</li>
+                    <li><strong>Przygotowanie białek:</strong> przygotować AQP4 (i warianty) do symulacji: protonacja, brakujące atomy, mostki S-S, usunięcie artefaktów, wybór jednostki biologicznej i kontrola jakości geometrii.<br>
+                      3a. <em>Apo-MD (charakterystyka ruchów):</em> wykonać serie niezależnych MD apo (±CG) i przeanalizować RMSD/RMSF, PCA oraz DCCM, aby ujawnić naturalne tryby i regiony sprzężeń.<br>
+                      3b. <em>Apo-ensemble + FES:</em> zbudować ensemble stanów (REST2/Metadynamics + PMARLO), wyznaczyć CV, FES i MSM, a następnie wyekstrahować 10–30 reprezentantów do dalszych kroków.<br>
+                      3c. <em>Kieszenie allosteryczne:</em> wykryć i zweryfikować przejściowe kieszenie (MDPocket/FTMap/TRAPP) i ścieżki allosteryczne (AlloSigMa/PRS/RTA) jako cele dokowania.
+                    </li>
+                  </ol>
+                  
+                  <p class="current-status"><strong>Tutaj jesteśmy obecnie (13/10/2025)</strong></p>
+                  
+                  <p class="status-divider">─────</p>
+                  
+                  <ol class="project-list" start="4">
+                    <li><strong>Biblioteka ligandów:</strong> połączyć związki z baz z generacją de novo (REINVENT4, LinkInvent/Mol2Mol) oraz scaffold-hopping dla wariantów chemicznych.</li>
+                    <li><strong>Właściwości/ADMET:</strong> przeprowadzić QSAR/SAR i profilowanie ADMET (w tym Tanimoto/porównania chemoinform.), odrzucając chemie toksyczne lub nienadające się do BBB.</li>
+                    <li><strong>Ulepszanie cząsteczek:</strong> iteracyjnie stosować bioizosterie, R-group replacement i scaffold-hopping, by podnieść selektywność i okno terapeutyczne.</li>
+                  </ol>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Problemy</h3>
+                  
+                  <div class="problem-item">
+                    <h4>Problem 1</h4>
+                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
+                    żeby znaleźć jakiś konkretny cel terapeutyczny, trzeba znać działanie biologiczne tego elementu w otoczeniu.</p>
+                    <p class="problem-content"><strong>Treść:</strong></p>
+                    <ul>
+                      <li>biologiczne opisanie akwaporyny 4 i jej działania w szlaku syntrofiny alfa 1 w mózgu. Jak będzie to oddziaływać na tworzenie się późniejszych kanałów. Czy powinniśmy szukać elementów, które będą robić inhibicję, czy może jakoś katalizować proces transportu/tworzenia się tych białek. <strong>nie jesteśmy pewni, jak dokładnie zachowuje się ten kompleks i czy powinniśmy go zatrzymywać, czy katalizować</strong></li>
+                      <li>każde białko, które jest w bazie danych, musi przejść konkretne przygotowanie; jednak na naszym przykładzie nie jesteśmy pewni, czy obecna konfiguracja białka jest dobrze zrobiona, i <strong>nie jesteśmy w stanie zidentyfikować i naprawić wszystkich mostków dwusiarczkowych, żeby nie było jakiś bezsensownych grup -SH.</strong></li>
+                    </ul>
+                  </div>
+                  
+                  <div class="problem-item">
+                    <h4>Problem 2</h4>
+                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
+                    homologiczne białka powinny działać na podobnej zasadzie jak inne o znanej już funkcji, w innym znaczeniu czy organizmie.</p>
+                    <p class="problem-content"><strong>Treść:</strong></p>
+                    <ul>
+                      <li>chcemy zrobić duże MSA (multi-sequence alignment), żeby stworzyć sobie nasze białko akwaporynę 4, a nie polegać na banku białek, w którym jest tylko konkretny jeden snapshot tego białka w krysztale z PDB, i konkretną sekwencję kodującą to białko, żeby następnie użyć jakichś modeli do predykcji białek; jednak <strong>nie jesteśmy w stanie powiedzieć, jak dobrze zrobić ten element, żeby wszystko, co będzie po tym, było stabilnie opisane i na przesłankach, że nasze białko nie jest widmem.</strong></li>
+                      <li><strong>nie potrafimy zebrać homologów i przygotować MSA w celu porównania konserwacji reszt orto- vs allosterycznych</strong></li>
+                    </ul>
+                  </div>
+                  
+                  <div class="problem-item">
+                    <h4>Problem 3</h4>
+                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
+                    do naszego badania musimy (albo nie) sprawdzić metodę SILCS (Site Identification by Ligand Competitive Saturation), ale nie ma jej obecnie nielicencjonowanej, z tego co wiemy. Musimy zrobić samemu implementację tej metody lub znaleźć narzędzie, które to zrobi.</p>
+                    <p class="problem-content"><strong>Treść:</strong></p>
+                    <ul>
+                      <li><strong>implementacja wydaje się być nieosiągalnym celem, a poszukanie działającej wersji na otwartej licencji jest bardzo trudne, choć może się tutaj mylimy</strong></li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="project-section project-conclusion">
+                  <h3>Końcowy opis</h3>
+                  <p>To są obecne problemy, jakie wiążą się z tym projektem. To jest bardzo mały horyzont, a sam plan jest znacznie większy oraz prowadzi do ciekawych rezultatów.</p>
+                </div>
+              </div>
             </div>
           </div>
           
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title">Paczka Python dla konformacji białek</span>
+              <span class="accordion-title">Paczka Python dla konformacji białek (PMARLO)</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
-              <ul class="accordion-problems">
-                <li>PROBLEM 1: Unifikacja API różnych narzędzi do analizy konformacyjnej</li>
-                <li>PROBLEM 2: Implementacja algorytmów Markov State Models</li>
-                <li>PROBLEM 3: Optymalizacja wydajności obliczeń dla dużych systemów</li>
-              </ul>
+              <div class="project-details">
+                <div class="project-intro">
+                  <p><strong>Zrobienie paczki w Pythonie jako program umożliwiający szukanie konformacji białek w sposób łączący wiele technik optymalizacyjnych do szukania najszybszej drogi przeszukania search-space'u obiektu</strong></p>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Opis</h3>
+                  <p>Obecnie mamy jedynie szkielet PoC. Pełne wdrożenie stanie się realne, gdy dopracujemy spójną teorię matematyczną obejmującą dystrybucję obliczeń, metadynamikę z różnymi rodzajami biasu oraz parametry modeli Markova.</p>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Metoda</h3>
+                  <ol class="project-list">
+                    <li><strong>Init/Config:</strong> wczytaj config, ustaw seedy, utwórz <code>run_root</code>, zdefiniuj plan transformacji (features, &tau;-curriculum, <code>T_ref</code>).</li>
+                    <li><strong>Protein prep &rarr; Transform plan:</strong> przygotuj układ i listę cech (np. odległości/kontakty/RMSD), które będą liczone dla każdej ramki.</li>
+                    <li><strong>REMD (krótkie przebiegi):</strong> uruchom multi-T REMD z wymianami; na starcie bias = 0 (tylko fizyka), loguj metadane każdej repliki/segmentu.</li>
+                    <li><strong>DEMUX:</strong> rozdziel trajektorie po temperaturze i segmentach; zweryfikuj inwarianty (intra-T, intra-segment, ciągłość czasu) &mdash; w razie naruszeń fail-fast.</li>
+                    <li><strong>Emit shards:</strong> dla każdego shardu policz cechy <code>X</code>, <code>t_index</code>, <code>dt_ps</code> (+ opcjonalnie <code>energy</code>, <code>bias</code>), zapisz <code>*.npz</code> + <code>*.json</code>.</li>
+                    <li><strong>(Opcjonalnie) TRAM/MBAR-wagi:</strong> z energii/biasu policz <code>w_frame</code> do re-weightingu i ewentualnego ważenia próbek w trenowaniu CV.</li>
+                    <li><strong>Bootstrap CV @T_ref:</strong> uruchom losową liniową/TICA projekcję jako CV-v0; zamroź ją jako punkt odniesienia.</li>
+                    <li><strong>Budowa par (&tau;-curriculum):</strong> generuj pary (t, t+&tau;) wyłącznie intra-T/intra-segment; sampler równoważy temperatury i doboostowuje rzadkie regiony.</li>
+                    <li><strong>Trening DeepTICA:</strong> ucz CV na parach (z <code>sample_weight = w_frame</code>, jeśli dostępne) i monitoruj VAMP-2/ITS na time-holdout; zapisuj checkpointy.</li>
+                    <li><strong>Guided-REMD (pętla joint):</strong> jeśli metryki rosną, ale pokrycie przestrzeni słabe &mdash; uruchom kolejne krótkie REMD z lekkim biasem w CV, zdemuxuj i dopisz nowe shardy; wróć do kroku 8.</li>
+                    <li><strong>Kryteria stopu:</strong> gdy VAMP-2 plateau oraz ITS stabilne (i/lub limit iteracji) &mdash; zamknij pętlę joint i zamroź finalny model CV.</li>
+                    <li><strong>Reweight do T_ref:</strong> przelicz końcowe <code>w_frame</code> TRAM/MBAR i rzutuj wszystkie ramki do przestrzeni CV (Y), przygotowując dane ważone do analizy stanów.</li>
+                    <li><strong>MSM @T_ref:</strong> klastruj w CV-space (ważone), zlicz przejścia &rarr; macierz przejść &rarr; ITS/CK &rarr; PCCA+; jeśli CK/ITS nie przechodzi, popraw liczbę klastrów/&tau; i powtórz ten krok.</li>
+                    <li><strong>FES + eksport:</strong> zbuduj FES (hist/KDE w CV-space z wagami), wyznacz stany i populacje, a następnie wyeksportuj artefakty (<code>cv_model</code>, <code>scaler</code>, <code>cv_projection</code>, <code>msm/*.npz</code>, <code>fes/*</code>, <code>report.html</code>).</li>
+                  </ol>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Problemy</h3>
+                  <div class="problem-item">
+                    <h4>Problem 1</h4>
+                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
+                    trudno zrobić to dobrze, jeśli nie ma ewaluacji i ciągłego sprawdzania regresji czy jakości algorytmów, które robią główną pracę. Potrzebujemy solidnych podstaw, żeby udowodnić, że symulując w krótkich porcjach, zyskujemy więcej informacji.</p>
+                    <p class="problem-content"><strong>Treść:</strong></p>
+                    <ul>
+                      <li><strong>Zbudować matematyczny opis całego eksperymentu,</strong> który pokaże, jak system krótkich, wąskich symulacji kompensuje ograniczone zasoby. Tutaj jest <a href="./files/pdfs/theory.pdf" target="_blank" rel="noopener">przykład</a> koncepcji z czatu GPT – obecnie to szkic bez aparatu matematycznego.</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="project-section project-conclusion">
+                  <h3>Końcowy opis</h3>
+                  <p>Reszta problemów jest zebrana w <a href="https://github.com/Komputerowe-Projektowanie-Lekow/pmarlo/issues" target="_blank" rel="noopener">issue trackerze PMARLO</a>, gdzie znajdziecie pełną listę zadań przybliżających paczkę do działania.</p>
+                </div>
+              </div>
             </div>
           </div>
           
@@ -125,11 +242,34 @@
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
-              <ul class="accordion-problems">
-                <li>PROBLEM 1: Wybór odpowiedniego targetu terapeutycznego</li>
-                <li>PROBLEM 2: Przygotowanie zestawu danych treningowych</li>
-                <li>PROBLEM 3: Opracowanie strategii walidacji modeli ML</li>
-              </ul>
+              <div class="project-details">
+                <div class="project-intro">
+                  <p><strong>Wystartowanie w konkursie Polaris Hub na bazie Kaggle, w ktorym mozna porownac swoje metody do SOTA z branz CADD</strong></p>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Opis</h3>
+                  <p>Obecnie analizowalismy tylko modele, ktore wygraly ostatni konkurs Antiviral Competition na platformie Open Molecular Software Foundation, ASAP i Polaris.</p>
+                </div>
+                
+                <div class="project-section">
+                  <h3>Problemy</h3>
+                  <div class="problem-item">
+                    <h4>Problem 1</h4>
+                    <p class="problem-premise"><strong>Przeslanki:</strong><br>
+                    jesli chcemy zbudowac model ADMET przewidujacy wlasciwosci chemikofizyczne zwiazku tylko na podstawie reprezentacji stringowej, potrzebujemy dobrze dobranych technik ML.</p>
+                    <p class="problem-content"><strong>Tresc:</strong></p>
+                    <ul>
+                      <li><strong>Opracowac innowacyjna metode modelowania ADMET,</strong> ktora korzysta z dostepnych danych (rowniez zrodel open-source) i radzi sobie bez ogromnych, zamknietych zbiorow.</li>
+                    </ul>
+                  </div>
+                </div>
+                
+                <div class="project-section project-conclusion">
+                  <h3>Koncowy opis</h3>
+                  <p>Samodzielnie sprawdz co mozemy wyniesc z Polaris Hub &mdash; to srodowisko, do ktorego regularnie bedziemy wracac, zeby benchmarkowac nasze metody. <a href="https://polarishub.io/" target="_blank" rel="noopener">Polaris &mdash; benchmarking dla drug discovery</a></p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -184,6 +324,26 @@
           header.setAttribute("aria-expanded", !isExpanded ? "true" : "false");
         });
       });
+      
+      // Sticky navigation functionality
+      const stickyNav = document.getElementById("stickyNav");
+      const heroSection = document.querySelector(".hero");
+      
+      function checkNavVisibility() {
+        if (!heroSection || !stickyNav) return;
+        
+        const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
+        const scrollPosition = window.scrollY;
+        
+        if (scrollPosition > heroBottom - 100) {
+          stickyNav.classList.add("visible");
+        } else {
+          stickyNav.classList.remove("visible");
+        }
+      }
+      
+      window.addEventListener("scroll", checkNavVisibility, { passive: true });
+      checkNavVisibility(); // Check on load
     });
   </script>
 </body>
