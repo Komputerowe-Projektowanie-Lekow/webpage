@@ -5,21 +5,28 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <meta name="description" content="Sekcja CADD Politechniki Poznańskiej: budujemy otwarty workflow projektowania leków (REMD, MSM, TRAM, ML) i paczkę PMARLO. Aktualnie: AQP4/Alzheimer, przygotowania do Polaris Hub. Dołącz — projekty, PR-y, wyniki." />
 <title>Sekcja Koła Naukowego Wspierania Projektów Leków</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
 <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-<link rel="stylesheet" href="./styles.css?v=6" />
+<link rel="stylesheet" href="./styles.css?v=7" />
 </head>
 <body>
+  <div class="language-switcher">
+    <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
+    <button class="lang-btn" data-lang="en" aria-label="English" title="English">GB</button>
+  </div>
   <div class="ascii-layer">
     <pre id="screen">loading...</pre>
     <div class="ascii-caption">
-      <span>Dokowanie ligandu do białka</span>
+      <span data-i18n="ascii.caption">Dokowanie ligandu do białka</span>
     </div>
   </div>
   <nav class="sticky-nav" id="stickyNav">
     <div class="nav-content">
-      <a href="#kontekst-sekcji" class="nav-link">Kontekst sekcji</a>
-      <a href="#projekty" class="nav-link">Projekty</a>
-      <a href="#dolacz" class="nav-link">Dołącz</a>
+      <a href="#kontekst-sekcji" class="nav-link" data-i18n="nav.context">Kontekst sekcji</a>
+      <a href="#projekty" class="nav-link" data-i18n="nav.projects">Projekty</a>
+      <a href="#dolacz" class="nav-link" data-i18n="nav.join">Dołącz</a>
     </div>
   </nav>
   <main class="pages">
@@ -28,19 +35,19 @@
         <div class="logo-container">
           <img src="./images/logo/sknwpl.png" alt="SKNWPL Logo" class="site-logo" />
         </div>
-        <h1>Sekcja Koła Naukowego Wspierania Projektów Leków</h1>
-        <p>
-          Cześć, w naszej sekcji zajmujemy się projektowaniem leków wspomaganym komputerowo.
+        <h1 data-i18n="hero.title">Sekcja Koła Naukowego Wspierania Projektów Leków</h1>
+        <p data-i18n="hero.subtitle">
+          Cześć, w naszej sekcji zajmujemy się projektowaniem leków wspomaganych komputerowo.
         </p>
-        <a class="cta" href="#kontekst-sekcji">Dowiedz się więcej</a>
+        <a class="cta" href="#kontekst-sekcji" data-i18n="hero.cta">Dowiedz się więcej</a>
       </div>
     </section>
     <section class="page" id="kontekst-sekcji">
       <div class="page-content">
         <div class="page-text">
-        <h1>Kontekst sekcji</h1>
-        <p>
-          Dążymy do medycyny indywidualnej: budujemy workflow, które komputerowo przesiewa tysiące cząsteczek aż do progu przedklinicznego (gdzie i tak przechodzi < 0,1 %). W pierwszym zastosowaniu sprawdzamy modulatory akwaporyny-4 w kontekście Alzheimera. Równolegle tworzymy open-source’ową bibliotekę w Pythonie (stylistyką zbliżoną do PyEMMA2), scalającą najlepsze metody predykcji konformacji białek w jeden ekosystem. Gdy tylko na Polaris Hub ogłoszą kolejną edycję konkursu – startujemy.
+        <h1 data-i18n="context.title">Kontekst sekcji</h1>
+        <p data-i18n="context.content">
+          Dążymy do medycyny indywidualnej: budujemy workflow, które komputerowo przesiewa tysiące cząsteczek aż do progu przedklinicznego (gdzie i tak przechodzi < 0,1 %). W pierwszym zastosowaniu sprawdzamy modulatory akwaporyny-4 w kontekście Alzheimera. Równolegle tworzymy open-source'ową bibliotekę w Pythonie (stylistyką zbliżoną do PyEMMA2), scalającą najlepsze metody predykcji konformacji białek w jeden ekosystem. Gdy tylko na Polaris Hub ogłoszą kolejną edycję konkursu – startujemy.
         </p>
         </div>
         <div class="page-image">
@@ -51,8 +58,8 @@
     <section class="page projects-section" id="projekty">
       <div class="page-content">
         <div class="page-text">
-        <h1>Obecne działania projektów</h1>
-        <p>
+        <h1 data-i18n="projects.title">Obecne działania projektów</h1>
+        <p data-i18n="projects.intro">
           Poniżej znajdziesz listę naszych bieżących projektów wraz z problemami, nad którymi obecnie pracujemy. Kliknij na projekt, aby zobaczyć szczegóły.
         </p>
         </div>
@@ -60,20 +67,20 @@
         <div class="projects-accordion">
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title">Workflow Computer-Aided Drug Design</span>
+              <span class="accordion-title" data-i18n="project1.title">Workflow Computer-Aided Drug Design</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
               <div class="project-details">
                 <div class="project-intro">
-                  <p><strong>Stworzenie sposobu testowania tysięcy związków o potencjalnym działaniu terapeutycznym aż do etapu przedklinicznego:</strong></p>
+                  <p><strong data-i18n="project1.subtitle">Stworzenie sposobu testowania tysięcy związków o potencjalnym działaniu terapeutycznym aż do etapu przedklinicznego:</strong></p>
                 </div>
                 
                 <div class="project-section">
-                  <h3>Opis</h3>
-                  <p>Case study – opracowanie metody na paradoksalnie dobrze i źle opisanym problemie: badanie białka akwaporyny 4 w patogenezie Alzheimera.</p>
+                  <h3 data-i18n="project1.desc.title">Opis</h3>
+                  <p data-i18n="project1.desc.intro">Case study – opracowanie metody na paradoksalnie dobrze i źle opisanym problemie: badanie białka akwaporyny 4 w patogenezie Alzheimera.</p>
                   
-                  <p><strong>Nasz obecny plan:</strong></p>
+                  <p><strong data-i18n="project1.desc.plan">Nasz obecny plan:</strong></p>
                   <ol class="project-list">
                     <li><strong>Zebranie związków:</strong> zintegrować pobieranie kandydatów z PDB, PubChem, ChEMBL i własnych baz/API do jednej, deduplikowanej listy wejściowej.</li>
                     <li><strong>Wstępna analiza/klasteryzacja:</strong> oczyścić zbiór Chemmine-tool/VS, zastosować reguły (np. Lipiński, XlogP) i wybrać podzbiór do dokowania.</li>
@@ -84,7 +91,7 @@
                     </li>
                   </ol>
                   
-                  <p class="current-status"><strong>Tutaj jesteśmy obecnie (13/10/2025)</strong></p>
+                  <p class="current-status"><strong data-i18n="project1.current">Tutaj jesteśmy obecnie (13/10/2025)</strong></p>
                   
                   <p class="status-divider">─────</p>
                   
@@ -96,10 +103,10 @@
                 </div>
                 
                 <div class="project-section">
-                  <h3>Problemy</h3>
+                  <h3 data-i18n="project1.problems.title">Problemy</h3>
                   
                   <div class="problem-item">
-                    <h4>Problem 1</h4>
+                    <h4 data-i18n="project1.problem1.title">Problem 1</h4>
                     <p class="problem-premise"><strong>Przesłanki:</strong><br>
                     żeby znaleźć jakiś konkretny cel terapeutyczny, trzeba znać działanie biologiczne tego elementu w otoczeniu.</p>
                     <p class="problem-content"><strong>Treść:</strong></p>
@@ -110,7 +117,7 @@
                   </div>
                   
                   <div class="problem-item">
-                    <h4>Problem 2</h4>
+                    <h4 data-i18n="project1.problem2.title">Problem 2</h4>
                     <p class="problem-premise"><strong>Przesłanki:</strong><br>
                     homologiczne białka powinny działać na podobnej zasadzie jak inne o znanej już funkcji, w innym znaczeniu czy organizmie.</p>
                     <p class="problem-content"><strong>Treść:</strong></p>
@@ -121,7 +128,7 @@
                   </div>
                   
                   <div class="problem-item">
-                    <h4>Problem 3</h4>
+                    <h4 data-i18n="project1.problem3.title">Problem 3</h4>
                     <p class="problem-premise"><strong>Przesłanki:</strong><br>
                     do naszego badania musimy (albo nie) sprawdzić metodę SILCS (Site Identification by Ligand Competitive Saturation), ale nie ma jej obecnie nielicencjonowanej, z tego co wiemy. Musimy zrobić samemu implementację tej metody lub znaleźć narzędzie, które to zrobi.</p>
                     <p class="problem-content"><strong>Treść:</strong></p>
@@ -132,8 +139,8 @@
                 </div>
                 
                 <div class="project-section project-conclusion">
-                  <h3>Końcowy opis</h3>
-                  <p>To są obecne problemy, jakie wiążą się z tym projektem. To jest bardzo mały horyzont, a sam plan jest znacznie większy oraz prowadzi do ciekawych rezultatów.</p>
+                  <h3 data-i18n="project1.conclusion.title">Końcowy opis</h3>
+                  <p data-i18n="project1.conclusion.text">To są obecne problemy, jakie wiążą się z tym projektem. To jest bardzo mały horyzont, a sam plan jest znacznie większy oraz prowadzi do ciekawych rezultatów.</p>
                 </div>
               </div>
             </div>
@@ -141,22 +148,22 @@
           
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title">Paczka Python dla konformacji białek (PMARLO)</span>
+              <span class="accordion-title" data-i18n="project2.title">Paczka Python dla konformacji białek (PMARLO)</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
               <div class="project-details">
                 <div class="project-intro">
-                  <p><strong>Zrobienie paczki w Pythonie jako program umożliwiający szukanie konformacji białek w sposób łączący wiele technik optymalizacyjnych do szukania najszybszej drogi przeszukania search-space'u obiektu</strong></p>
+                  <p><strong data-i18n="project2.subtitle">Zrobienie paczki w Pythonie jako program umożliwiający szukanie konformacji białek w sposób łączący wiele technik optymalizacyjnych do szukania najszybszej drogi przeszukania search-space'u obiektu</strong></p>
                 </div>
                 
                 <div class="project-section">
-                  <h3>Opis</h3>
-                  <p>Obecnie mamy jedynie szkielet PoC. Pełne wdrożenie stanie się realne, gdy dopracujemy spójną teorię matematyczną obejmującą dystrybucję obliczeń, metadynamikę z różnymi rodzajami biasu oraz parametry modeli Markova.</p>
+                  <h3 data-i18n="project2.desc.title">Opis</h3>
+                  <p data-i18n="project2.desc.text">Obecnie mamy jedynie szkielet PoC. Pełne wdrożenie stanie się realne, gdy dopracujemy spójną teorię matematyczną obejmującą dystrybucję obliczeń, metadynamikę z różnymi rodzajami biasu oraz parametry modeli Markova.</p>
                 </div>
                 
                 <div class="project-section">
-                  <h3>Metoda</h3>
+                  <h3 data-i18n="project2.method.title">Metoda</h3>
                   <ol class="project-list">
                     <li><strong>Init/Config:</strong> wczytaj config, ustaw seedy, utwórz <code>run_root</code>, zdefiniuj plan transformacji (features, &tau;-curriculum, <code>T_ref</code>).</li>
                     <li><strong>Protein prep &rarr; Transform plan:</strong> przygotuj układ i listę cech (np. odległości/kontakty/RMSD), które będą liczone dla każdej ramki.</li>
@@ -176,9 +183,9 @@
                 </div>
                 
                 <div class="project-section">
-                  <h3>Problemy</h3>
+                  <h3 data-i18n="project2.problems.title">Problemy</h3>
                   <div class="problem-item">
-                    <h4>Problem 1</h4>
+                    <h4 data-i18n="project2.problem1.title">Problem 1</h4>
                     <p class="problem-premise"><strong>Przesłanki:</strong><br>
                     trudno zrobić to dobrze, jeśli nie ma ewaluacji i ciągłego sprawdzania regresji czy jakości algorytmów, które robią główną pracę. Potrzebujemy solidnych podstaw, żeby udowodnić, że symulując w krótkich porcjach, zyskujemy więcej informacji.</p>
                     <p class="problem-content"><strong>Treść:</strong></p>
@@ -189,8 +196,8 @@
                 </div>
                 
                 <div class="project-section project-conclusion">
-                  <h3>Końcowy opis</h3>
-                  <p>Reszta problemów jest zebrana w <a href="https://github.com/Komputerowe-Projektowanie-Lekow/pmarlo/issues" target="_blank" rel="noopener">issue trackerze PMARLO</a>, gdzie znajdziecie pełną listę zadań przybliżających paczkę do działania.</p>
+                  <h3 data-i18n="project2.conclusion.title">Końcowy opis</h3>
+                  <p><span data-i18n="project2.conclusion.text1">Reszta problemów jest zebrana w </span><a href="https://github.com/Komputerowe-Projektowanie-Lekow/pmarlo/issues" target="_blank" rel="noopener" data-i18n="project2.conclusion.link">issue trackerze PMARLO</a><span data-i18n="project2.conclusion.text2">, gdzie znajdziecie pełną listę zadań przybliżających paczkę do działania.</span></p>
                 </div>
               </div>
             </div>
@@ -198,24 +205,24 @@
           
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title">Przygotowania do Polaris Hub</span>
+              <span class="accordion-title" data-i18n="project3.title">Przygotowania do Polaris Hub</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
               <div class="project-details">
                 <div class="project-intro">
-                  <p><strong>Wystartowanie w konkursie Polaris Hub na bazie Kaggle, w ktorym mozna porownac swoje metody do SOTA z branz CADD</strong></p>
+                  <p><strong data-i18n="project3.subtitle">Wystartowanie w konkursie Polaris Hub na bazie Kaggle, w ktorym mozna porownac swoje metody do SOTA z branz CADD</strong></p>
                 </div>
                 
                 <div class="project-section">
-                  <h3>Opis</h3>
-                  <p>Obecnie analizowalismy tylko modele, ktore wygraly ostatni konkurs Antiviral Competition na platformie Open Molecular Software Foundation, ASAP i Polaris.</p>
+                  <h3 data-i18n="project3.desc.title">Opis</h3>
+                  <p data-i18n="project3.desc.text">Obecnie analizowalismy tylko modele, ktore wygraly ostatni konkurs Antiviral Competition na platformie Open Molecular Software Foundation, ASAP i Polaris.</p>
                 </div>
                 
                 <div class="project-section">
-                  <h3>Problemy</h3>
+                  <h3 data-i18n="project3.problems.title">Problemy</h3>
                   <div class="problem-item">
-                    <h4>Problem 1</h4>
+                    <h4 data-i18n="project3.problem1.title">Problem 1</h4>
                     <p class="problem-premise"><strong>Przeslanki:</strong><br>
                     jesli chcemy zbudowac model ADMET przewidujacy wlasciwosci chemikofizyczne zwiazku tylko na podstawie reprezentacji stringowej, potrzebujemy dobrze dobranych technik ML.</p>
                     <p class="problem-content"><strong>Tresc:</strong></p>
@@ -226,8 +233,8 @@
                 </div>
                 
                 <div class="project-section project-conclusion">
-                  <h3>Koncowy opis</h3>
-                  <p>Samodzielnie sprawdz co mozemy wyniesc z Polaris Hub &mdash; to srodowisko, do ktorego regularnie bedziemy wracac, zeby benchmarkowac nasze metody. <a href="https://polarishub.io/" target="_blank" rel="noopener">Polaris &mdash; benchmarking dla drug discovery</a></p>
+                  <h3 data-i18n="project3.conclusion.title">Koncowy opis</h3>
+                  <p><span data-i18n="project3.conclusion.text1">Samodzielnie sprawdz co mozemy wyniesc z Polaris Hub &mdash; to srodowisko, do ktorego regularnie bedziemy wracac, zeby benchmarkowac nasze metody. </span><a href="https://polarishub.io/" target="_blank" rel="noopener" data-i18n="project3.conclusion.link">Polaris &mdash; benchmarking dla drug discovery</a></p>
                 </div>
               </div>
             </div>
@@ -238,15 +245,15 @@
     <section class="page" id="dolacz">
       <div class="page-content">
         <div class="page-text">
-        <h1>Dołącz do nas</h1>
-        <p>
+        <h1 data-i18n="join.title">Dołącz do nas</h1>
+        <p data-i18n="join.intro1">
           Dołącz do nas, tworząc jednostkę badawczą tutaj na politechnice.
         </p>
-        <p>
+        <p data-i18n="join.intro2">
           Nie prowadzimy żadnych regularnych wykładów ani wprowadzeń. Preferujemy pracę nad konkretnymi problemami badawczymi. Większość komunikacji odbywa się na Discordzie, GitHubie, Notion i Zotero.
         </p>
         
-        <h2>Chodź budować</h2>
+        <h2 data-i18n="join.build.title">Chodź budować</h2>
         <p>
           Obecnie sknwpl składa się z 5 osób, która jest rozłożona na 3 grupy:
         </p>
@@ -264,7 +271,7 @@
           Jeżeli jesteś zainteresowany jakimiś koncernami farmaceutycznymi jak: Polpharma, Selvita, Celon Pharma, Ryvu Therapeutics, Mabion, Bioton, Captor Therapeutics, Bioceltix, Biotts, Polfa Tarchomin, Adamed Pharma, Molecure, Molecule One czy Pure Biologics, Helix Immuno-Oncology – to jest to świetne miejsce, żeby pokazać swój wkład w R&D.
         </p>
         
-        <h2>Czego szukamy</h2>
+        <h2 data-i18n="join.looking.title">Czego szukamy</h2>
         <p>
           Nie obchodzi nas do jakiej szkoły chodziłeś, czy w ogóle chodziłeś. Nie obchodzi nas czy masz tradycyjne wyszkolenie z jakiejś dziedziny. Jesteśmy sekcją projektową, a nie typowo edukacyjną. Szukamy ludzi którzy indywidualnie i w zespole potrafią wpłynąć na kierunek naszych badań:
         </p>
@@ -283,7 +290,7 @@
           Nie musisz udowadniać swoich umiejętności, wystarczy porozmawiać. Jednak gdy chcesz wstępnie móc wiedzieć co robimy zobacz zakładkę 'projekty' w których masz obecne przykładowe problemy jakie trzeba rozwiązać.
         </p>
         
-        <h2>Aktywnie szukamy ludzi</h2>
+        <h2 data-i18n="join.positions.title">Aktywnie szukamy ludzi</h2>
         <p>
           Pamiętajcie, że wszystko zajawkowo:
         </p>
@@ -320,7 +327,7 @@
           <p class="position-workflow">PMARLO, Polaris Hub</p>
         </div>
         
-        <h2>Aplikowanie</h2>
+        <h2 data-i18n="join.apply.title">Aplikowanie</h2>
         <ol>
           <li>Jeżeli chcesz uczestniczyć w sekcji to należy dołączyć do koła bioinformatyki i powiedzieć mi jak chcesz pomóc w robieniu tego co wydaje się dla ciebie interesujące w naszej sekcji.</li>
           <li>Później porozmawiasz z jednym z liderów naszej sekcji na temat jak możesz się wdrożyć, pomóc lub robić.</li>
@@ -330,18 +337,18 @@
           Jeżeli wszystko pójdzie dobrze to będziemy robić ciekawe rzeczy.
         </p>
         
-        <h2>FAQ</h2>
+        <h2 data-i18n="join.faq.title">FAQ</h2>
         <div class="faq-item">
-          <p class="faq-question">Jakieś komputery do obliczeń?</p>
-          <p class="faq-answer">Nie</p>
+          <p class="faq-question" data-i18n="join.faq.q1">Jakieś komputery do obliczeń?</p>
+          <p class="faq-answer" data-i18n="join.faq.a1">Nie</p>
         </div>
         <div class="faq-item">
-          <p class="faq-question">Gdzieś miejsce na infrastrukturę do stworzenia tego pipeline'u?</p>
-          <p class="faq-answer">Nie</p>
+          <p class="faq-question" data-i18n="join.faq.q2">Gdzieś miejsce na infrastrukturę do stworzenia tego pipeline'u?</p>
+          <p class="faq-answer" data-i18n="join.faq.a2">Nie</p>
         </div>
         <div class="faq-item">
-          <p class="faq-question">Jakiekolwiek licencje czy pozwolenia?</p>
-          <p class="faq-answer">Nie</p>
+          <p class="faq-question" data-i18n="join.faq.q3">Jakiekolwiek licencje czy pozwolenia?</p>
+          <p class="faq-answer" data-i18n="join.faq.a3">Nie</p>
         </div>
         </div>
       </div>
@@ -350,30 +357,31 @@
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
-        <h3>Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.</h3>
-        <p>
+        <h3 data-i18n="footer.dream.title">Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.</h3>
+        <p data-i18n="footer.dream.text">
           Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania przetrwają etap kliniczny.        </p>
       </div>
       <div class="footer-section">
-        <h3>Kontakt i adresy</h3>
+        <h3 data-i18n="footer.contact.title">Kontakt i adresy</h3>
         <p>
-          <a href="https://github.com/Komputerowe-Projektowanie-Lekow">Repozytorium na GitHubie</a><br>
-          <a href="mailto:sknwpl@proton.me">Kontakt</a><br>
-          Email: sknwpl(at)proton(dot)me
+          <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium na GitHubie</a><br>
+          <a href="mailto:sknwpl@proton.me" data-i18n="footer.contact.email">Kontakt</a><br>
+          <span data-i18n="footer.contact.email.text">Email: sknwpl(at)proton(dot)me</span>
         </p>
       </div>
       <div class="footer-section">
-        <h3>Partnerzy / wsparcie</h3>
-        <p>
+        <h3 data-i18n="footer.partners.title">Partnerzy / wsparcie</h3>
+        <p data-i18n-html="footer.partners.text">
           Otwarte zaproszenie do współpracy (sprzęt, granty, konsultacje).<br>
           Jeżeli chcesz się odezwać z pytaniem, jakąś współpracą naukową itp. - skontaktuj się z nami.
         </p>
       </div>
     </div>
     <div class="footer-bottom">
-      <p>Dołącz do nas i podziel się swoimi umiejętnościami.</p>
+      <p data-i18n="footer.bottom">Dołącz do nas i podziel się swoimi umiejętnościami.</p>
     </div>
   </footer>
+  <script type="module" src="./i18n.js"></script>
   <script type="module" src="./main.js"></script>
   <script>
     // Accordion functionality - inline to ensure it loads
