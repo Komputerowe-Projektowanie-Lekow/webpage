@@ -1,146 +1,103 @@
 <!doctype html>
-<html lang="en">
+<html lang="pl">
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Protein ASCII Showcase</title>
+<title>Sekcja Koła Naukowego Wspierania Projektów Leków</title>
 <link rel="stylesheet" href="./styles.css" />
 <body>
   <div class="ascii-layer">
     <pre id="screen">loading...</pre>
+    <div class="ascii-caption">
+      <span>Dokowanie ligandu do białka</span>
+    </div>
   </div>
   <main class="pages">
     <section class="page hero">
       <div class="page-content">
-        <h1>Protein Folding, Rendered In ASCII</h1>
+        <h1>Sekcja Koła Naukowego Wspierania Projektów Leków</h1>
         <p>
-          An experimental rendering pipeline transforms volumetric protein motion into a living ASCII mosaic.
-          Every glyph is a pixel pulled straight from the source frames - no shaders, just characters and time.
+          Cześć, w naszej sekcji zajmujemy się computer-aided drug design:
         </p>
-        <a class="cta" href="#learn-more">Explore the Pipeline</a>
+        <a class="cta" href="#learn-more">Dowiedz się więcej</a>
       </div>
     </section>
     <section class="page" id="learn-more">
       <div class="page-content">
-        <h1>The Rendering Pipeline</h1>
+        <div class="page-text">
+        <h1>Działanie sekcji</h1>
         <p>
-          Our experimental ASCII rendering pipeline transforms volumetric protein motion data into
-          a living character mosaic. The process bridges computational biology and web visualization,
-          creating an accessible way to observe molecular dynamics without requiring specialized software.
+          naszym dzialaniem jest przyblizenie ludzkosci do medycyny indywidualnej za pomoca technik SOTA:
         </p>
-        
-        <h2>Core Components</h2>
-        <p>
-          The rendering system consists of three main stages that work together to produce
-          real-time ASCII animations from molecular simulation data:
-        </p>
-        
         <ul>
-          <li><strong>Frame Extraction:</strong> Raw simulation data is processed frame by frame,
-          with each molecular configuration captured at precise time intervals</li>
-          <li><strong>Luminance Mapping:</strong> 3D structures are projected onto a 2D plane,
-          with depth and density information converted to grayscale intensity values</li>
-          <li><strong>Character Assignment:</strong> A custom palette of ASCII characters replaces
-          pixel intensity values, creating the distinctive text-based visualization</li>
-          <li><strong>Resolution Adaptation:</strong> The decoder dynamically adjusts character
-          density based on viewport size, ensuring optimal rendering on any screen</li>
-          <li><strong>Performance Optimization:</strong> Frame preloading and caching strategies
-          maintain smooth playback even on lower-powered devices</li>
+          <li><strong>chcemy stworzyć workflow</strong>, który pozwoli nam komputerowo testować tysiące związków aż do etapu przedklinicznego (na którym i tak jest tylko ok. od 0,n% do 0,0n% akceptacji). W jego ramach skupiamy się na badaniu działania akwaporyny 4 (Alzheimer). </li>
+          <li><strong>równolegle tworzymy paczkę w Pythonie</strong>, podobną do PyEMMA2, która pozwoli łączyć SOTA wyszukiwania konformacji białek w jeden spójny ekosystem. </li>
+          <li><strong>gdy pojawi się kolejny konkurs na Polaris Hub, planujemy wystartować.</strong> </li>
         </ul>
-        
-        <h2>Technical Implementation</h2>
-        <p>
-          The pipeline is implemented using Python for data processing and vanilla JavaScript
-          for client-side rendering. This approach ensures maximum compatibility while maintaining
-          performance:
-        </p>
-        
-        <ul>
-          <li>Python scripts handle molecular data extraction and frame generation</li>
-          <li>Canvas API enables efficient pixel-to-character conversion in the browser</li>
-          <li>Web Workers manage frame preloading without blocking the main thread</li>
-          <li>CSS transforms and GPU acceleration smooth out animation playback</li>
-          <li>Progressive enhancement ensures graceful degradation on older browsers</li>
-        </ul>
-        
-        <p>
-          The entire system is designed to be portable and self-contained. Once processed,
-          the ASCII frames can be hosted on any static file server, making the visualization
-          accessible without requiring backend infrastructure or specialized hosting.
-        </p>
+        </div>
+        <div class="page-image">
+          <img src="./images/computer.png" alt="Rendering pipeline visualization" />
+        </div>
       </div>
     </section>
     <section class="page">
       <div class="page-content">
-        <h1>Applications & Use Cases</h1>
+        <div class="page-text">
+        <h1>Nasze działanie</h1>
         <p>
-          This ASCII rendering approach opens up new possibilities for visualizing complex molecular
-          data in accessible, lightweight formats. The technique is particularly useful for educational
-          content, research presentations, and interactive demonstrations where traditional 3D rendering
-          may be impractical or unnecessary.
+          Nie prowadzimy żadnych regularnych wykładów ani wprowadzeń. Preferujemy pracę nad konkretnymi problemami badawczymi. Większość komunikacji odbywa się na Discordzie, GitHubie, Notion i Zotero. 
         </p>
         
-        <h2>Educational Applications</h2>
+        <h2>Nasze potrzeby</h2>
         <p>
-          ASCII-based protein visualization provides several advantages for teaching molecular biology
-          and biochemistry:
+          Jesteśmy sekcją projektową, a nie typowo edukacyjną. Szukamy ludzi: 
         </p>
         
         <ul>
-          <li>Works on any device without requiring specialized software or plugins</li>
-          <li>Loads quickly even on slow connections, improving accessibility</li>
+          <li>którzy nie boją się pytać o pomoc, </li>
+          <li>mają dużą autonomię, </li>
           <li>Text-based format is inherently accessible to screen readers</li>
-          <li>Can be embedded in documentation, wikis, and educational materials</li>
-          <li>Reduces cognitive load by focusing on motion and overall structure</li>
+          <li>potrafią wskazywać błędy i usprawnienia, </li>
+          <li>chcą robić grind. </li>
         </ul>
         
-        <h2>Research Communication</h2>
+        <h2>Dołącz do pracy nad przybliżaniem nieuniknionego:</h2>
         <p>
-          For researchers presenting molecular dynamics simulations, ASCII rendering offers
-          unique benefits:
+          Potrzebujemy zajawkowiczów, tzn.: 
         </p>
         
         <ul>
-          <li>Lightweight animations suitable for supplementary materials</li>
-          <li>Version control friendly - frames stored as simple text files</li>
-          <li>Easy to integrate into static site generators and documentation</li>
-          <li>Reproducible rendering from raw simulation data</li>
-          <li>Platform-independent playback without proprietary software</li>
+          <li>DevOpsów, którzy ogarną infrastrukturę pod projekty (ogarnięcie dużej bazy danych z aplikacją generującą te dane i interfejsem webowym), </li>
+          <li>osób z biologicznym lub chemicznym zapleczem do analizy wyników i interpretacji modeli (analiza działania białka, jak już widzimy wyniki symulacji: „co? dlaczego?”), </li>
+          <li>programistów, którzy dowiozą solidne oprogramowanie po etapie PoC z Pythonem (tworzenie kerneli do PMARLO, inne magie, żeby działało szybko i tanio).</li>
         </ul>
-        
-        <h2>Customization Options</h2>
-        <p>
-          The rendering pipeline is designed to be highly configurable. You can adapt it
-          for your specific needs:
-        </p>
-        
-        <ol>
-          <li><strong>Character Palette:</strong> Adjust the ASCII character set to control
-          density and visual style</li>
-          <li><strong>Frame Rate:</strong> Balance smoothness against file size by modifying
-          the sampling interval</li>
-          <li><strong>Resolution:</strong> Configure target character dimensions for different
-          screen sizes</li>
-          <li><strong>Color Schemes:</strong> Apply color coding to highlight specific molecular
-          features or regions</li>
-          <li><strong>Playback Speed:</strong> Control animation tempo to emphasize particular
-          conformational changes</li>
-        </ol>
-        
-        <p>
-          To process your own molecular dynamics trajectory, simply run <code>build_ascii.py</code>
-          with your simulation files. The script handles frame extraction, projection, and
-          character mapping automatically. Output files are ready to deploy to any static
-          hosting service, including GitHub Pages, Netlify, or traditional web servers.
-        </p>
-        
-        <p>
-          The entire system is open source and designed for experimentation. Fork the repository,
-          modify the rendering parameters, and create visualizations tailored to your specific
-          research or educational needs.
-        </p>
+        </div>
+        <div class="page-image">
+          <img src="./images/protein.png" alt="Protein structure visualization" />
+        </div>
       </div>
     </section>
   </main>
+  <footer class="site-footer">
+    <div class="footer-content">
+      <div class="footer-section">
+        <h3>Projekt tworzony na bazie marzen o obliczaniu tego co niemożliwe</h3>
+        <p>
+          Jedynym pytaniem na jakie próbujemy odpowiedzieć to, czy mozna zaprojektowac lek bez labolatorium? Jest to piekelnie trudne, jednak z pomoca metod komputerowych moze uda nam pomoc sie zwiekszyc jakos rozwiazan przed etapem klinicznym. 
+        </p>
+      </div>
+      <div class="footer-section">
+        <h3>Kontakt i adresy</h3>
+        <p>
+          <a href="https://github.com/Komputerowe-Projektowanie-Lekow">Repozytorium na GitHubie</a><br>
+          <a href="mailto:sknwpl@proton.me">Kontakt</a><br>
+          Email: sknwpl(at)proton(dot)me
+        </p>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>dolacz do nas i pomoz swoimi umiejetnosciami</p>
+    </div>
+  </footer>
   <script type="module" src="./main.js"></script>
 </body>
 </html>
