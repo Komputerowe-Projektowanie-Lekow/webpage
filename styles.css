@@ -399,6 +399,113 @@ a:not(.cta):hover {
   margin: 0;
 }
 
+/* Projects Section Full Width */
+.projects-section .page-content {
+  max-width: 100%;
+  width: 100%;
+  display: block;
+}
+
+.projects-section .page-text {
+  max-width: 60ch;
+  margin-bottom: 2rem;
+}
+
+/* Projects Accordion Styles */
+.projects-accordion {
+  margin-top: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  max-width: 100%;
+  width: 100%;
+}
+
+.accordion-item {
+  border: 2px solid var(--primary-blue);
+  background: var(--bg-white);
+  transition: all 200ms ease;
+}
+
+.accordion-item:hover {
+  border-color: var(--secondary-blue);
+}
+
+.accordion-header {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.2rem 1.5rem;
+  background: var(--bg-white);
+  border: none;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 0.95rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  transition: all 200ms ease;
+  text-align: left;
+}
+
+.accordion-header:hover {
+  color: var(--secondary-blue);
+}
+
+.accordion-title {
+  font-weight: 400;
+  color: inherit;
+}
+
+.accordion-icon {
+  font-size: 1.5rem;
+  color: inherit;
+  transition: transform 200ms ease;
+  font-weight: 400;
+  line-height: 1;
+  display: inline-block;
+}
+
+.accordion-header[aria-expanded="true"] .accordion-icon {
+  transform: rotate(180deg);
+}
+
+.accordion-content {
+  max-height: 0 !important;
+  overflow: hidden !important;
+  opacity: 0 !important;
+  visibility: hidden !important;
+  transition: max-height 300ms ease, opacity 300ms ease, visibility 0s 300ms !important;
+}
+
+.accordion-header[aria-expanded="true"] + .accordion-content {
+  max-height: 1000px !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transition: max-height 300ms ease, opacity 300ms ease, visibility 0s 0s !important;
+}
+
+.accordion-problems {
+  list-style: none;
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  margin: 0;
+}
+
+.accordion-problems li {
+  padding: 0.75rem 0;
+  color: var(--text-mid);
+  font-size: 0.9rem;
+  letter-spacing: 0.02em;
+  border-top: 1px dashed rgba(0, 0, 0, 0.1);
+  line-height: 1.6;
+}
+
+.accordion-problems li:first-child {
+  border-top: none;
+  padding-top: 1rem;
+}
+
 @media (max-width: 900px) {
   .page {
     padding: clamp(3rem, 10vw, 5rem) clamp(1.5rem, 6vw, 2.5rem);
@@ -499,5 +606,18 @@ a:not(.cta):hover {
   .hero .page-content {
     margin-left: 0;
     margin-right: 0;
+  }
+  
+  .accordion-header {
+    padding: 1rem;
+    font-size: 0.85rem;
+  }
+  
+  .accordion-problems {
+    padding: 0 1rem 1rem 1rem;
+  }
+  
+  .accordion-problems li {
+    font-size: 0.85rem;
   }
 }

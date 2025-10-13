@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Sekcja Koła Naukowego Wspierania Projektów Leków</title>
 <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-<link rel="stylesheet" href="./styles.css" />
+<link rel="stylesheet" href="./styles.css?v=4" />
 </head>
 <body>
   <div class="ascii-layer">
@@ -81,6 +81,60 @@
         </div>
       </div>
     </section>
+    <section class="page projects-section">
+      <div class="page-content">
+        <div class="page-text">
+        <h1>Obecne działania projektów</h1>
+        <p>
+          Poniżej znajdziesz listę naszych bieżących projektów wraz z problemami, nad którymi obecnie pracujemy. Kliknij na projekt, aby zobaczyć szczegóły.
+        </p>
+        </div>
+        
+        <div class="projects-accordion">
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title">Workflow Computer-Aided Drug Design</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <ul class="accordion-problems">
+                <li>PROBLEM 1: Optymalizacja procesu wirtualnego screeningu dla Akwaporyny 4</li>
+                <li>PROBLEM 2: Integracja narzędzi molekularnej dynamiki z pipeline'm</li>
+                <li>PROBLEM 3: Walidacja wyników dokowania z danymi eksperymentalnymi</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title">Paczka Python dla konformacji białek</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <ul class="accordion-problems">
+                <li>PROBLEM 1: Unifikacja API różnych narzędzi do analizy konformacyjnej</li>
+                <li>PROBLEM 2: Implementacja algorytmów Markov State Models</li>
+                <li>PROBLEM 3: Optymalizacja wydajności obliczeń dla dużych systemów</li>
+              </ul>
+            </div>
+          </div>
+          
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title">Przygotowania do Polaris Hub</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <ul class="accordion-problems">
+                <li>PROBLEM 1: Wybór odpowiedniego targetu terapeutycznego</li>
+                <li>PROBLEM 2: Przygotowanie zestawu danych treningowych</li>
+                <li>PROBLEM 3: Opracowanie strategii walidacji modeli ML</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
   </main>
   <footer class="site-footer">
     <div class="footer-content">
@@ -104,5 +158,33 @@
     </div>
   </footer>
   <script type="module" src="./main.js"></script>
+  <script>
+    // Accordion functionality - inline to ensure it loads
+    document.addEventListener("DOMContentLoaded", function() {
+      const accordionHeaders = document.querySelectorAll(".accordion-header");
+      console.log("Accordion headers found:", accordionHeaders.length);
+      
+      accordionHeaders.forEach(function(header) {
+        // Make sure it starts closed
+        header.setAttribute("aria-expanded", "false");
+        
+        header.addEventListener("click", function(e) {
+          e.preventDefault();
+          const isExpanded = header.getAttribute("aria-expanded") === "true";
+          console.log("Clicked, current state:", isExpanded);
+          
+          // Close all other accordions
+          accordionHeaders.forEach(function(otherHeader) {
+            if (otherHeader !== header) {
+              otherHeader.setAttribute("aria-expanded", "false");
+            }
+          });
+          
+          // Toggle current accordion
+          header.setAttribute("aria-expanded", !isExpanded ? "true" : "false");
+        });
+      });
+    });
+  </script>
 </body>
 </html>
