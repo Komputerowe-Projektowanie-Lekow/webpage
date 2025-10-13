@@ -845,3 +845,67 @@ a:not(.cta):hover {
     font-size: 0.85rem !important;
   }
 }
+
+/* Position Items Styling for Dołącz page */
+.position-item {
+  margin-bottom: 2.5rem;
+  padding: 1.5rem;
+  border-left: 4px solid var(--primary-blue);
+  background: var(--bg-light);
+}
+
+.position-item h3 {
+  font-family: inherit;
+  font-size: 1.1rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--primary-blue);
+  margin: 0 0 1rem 0;
+}
+
+.position-item p {
+  margin: 0 0 0.75rem 0;
+  color: var(--text-mid);
+  font-size: 0.95rem;
+  line-height: 1.7;
+}
+
+.position-item p:last-child {
+  margin-bottom: 0;
+}
+
+.position-workflow {
+  font-style: italic;
+  color: var(--secondary-blue) !important;
+  font-size: 0.9rem !important;
+  margin-top: 1rem !important;
+}
+
+/* FAQ Items Styling */
+.faq-item {
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  border: 2px solid var(--primary-blue);
+  background: var(--bg-white);
+  transition: all 200ms ease;
+}
+
+.faq-item:hover {
+  border-color: var(--secondary-blue);
+  background: var(--bg-light);
+}
+
+.faq-question {
+  font-weight: 600;
+  color: var(--primary-blue);
+  margin: 0 0 0.5rem 0 !important;
+  font-size: 0.95rem !important;
+}
+
+.faq-answer {
+  color: var(--text-mid);
+  margin: 0 !important;
+  font-size: 0.95rem !important;
+  font-weight: 400;
+}
