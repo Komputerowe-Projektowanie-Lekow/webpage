@@ -99,7 +99,15 @@
                     <li><strong>Biblioteka ligandów:</strong> połączyć związki z baz z generacją de novo (REINVENT4, LinkInvent/Mol2Mol) oraz scaffold-hopping dla wariantów chemicznych.</li>
                     <li><strong>Właściwości/ADMET:</strong> przeprowadzić QSAR/SAR i profilowanie ADMET (w tym Tanimoto/porównania chemoinform.), odrzucając chemie toksyczne lub nienadające się do BBB.</li>
                     <li><strong>Ulepszanie cząsteczek:</strong> iteracyjnie stosować bioizosterie, R-group replacement i scaffold-hopping, by podnieść selektywność i okno terapeutyczne.</li>
+                    <li><strong>Autodokowanie (L1–L3):</strong> zautomatyzować protokół AutoGrid→AutoDock z kontrolą reprodukcji pozy, focused i blind, raportując TC-score vs energia i klasyfikując pozycje allo/orto. <br>
+                      7a. <em>Holo-MD stabilności wiązania:</em> przeprowadzić niebiasowane/słabo biasowane MD kompleksów, kwantyfikując stabilność (kontakty, frakcje interakcji, trajektorie RMSD).<br>
+                      7b. <em>Analiza kontaktów/interfejsu:</em> użyć LigPlot/fingerprintów i umbrella sampling do oceny kluczowych oddziaływań oraz wpływu na tetrameryzację/interfejs.<br>
+                    </li>
+                    <li><strong>Aktywność i punkty mocy:</strong> oszacować IC50/EC50/Ki (modelowo/in-silico) oraz wpływ na homeostazę wody i ryzyko obrzęku jako kryterium go/no-go.</li>
+                    <li><strong>Kompleksy białko-białko:</strong> wykonać MD PPI AQP4±ligand, policzyć MM-GBSA/MM-PBSA i rozważyć molekuły bivalentne z linkerem, gdy pojedynczy ligand nie wystarcza.</li>
+                    <li><strong>FAIR:</strong> zapewnić pełną reprodukowalność (dane, metadane, workflow, wersje oprogramowania, raporty) oraz publikowalne artefakty.</li>
                   </ol>
+                  <p> Dalszy horyzont: skalibrować pipeline na kompleksach z PDBbind z danymi eksperymentalnymi, aby ustawić progi akceptacji i walidację energii; następnie przetestować szybkie modele ML, w tym ligand-transformera (2025), jako wsparcie screeningu i porównać je z GPU-Vina na reprezentatywnych celach; wreszcie pogłębić przewidywanie konformacji (next-gen), badając metody rozszerzające przestrzeń konformacyjną (np. alternatywy do SILCS, lepsze MSA/AlphaFold-RF/rozpoznanie stanów), by zmniejszyć ryzyko dokowania do artefaktów.</p>
                 </div>
                 
                 <div class="project-section">
