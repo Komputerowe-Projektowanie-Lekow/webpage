@@ -11,19 +11,37 @@ const CONFIG = {
 };
 
 const screen = document.getElementById("screen");
+const screenGhost1 = document.getElementById("screen-ghost-1");
+const screenGhost2 = document.getElementById("screen-ghost-2");
 const wrap = document.querySelector(".ascii-layer");
 const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
 function setScreenFrame(text) {
-  if (!screen) {
+  if (!screen && !screenGhost1 && !screenGhost2) {
     return;
   }
-  screen.textContent = text;
-  screen.setAttribute("data-ready", "true");
+  if (screen) {
+    screen.textContent = text;
+    screen.setAttribute("data-ready", "true");
+  }
+  if (screenGhost1) {
+    screenGhost1.textContent = text;
+    screenGhost1.setAttribute("data-ready", "true");
+  }
+  if (screenGhost2) {
+    screenGhost2.textContent = text;
+    screenGhost2.setAttribute("data-ready", "true");
+  }
 }
 
 if (screen) {
   screen.setAttribute("data-ready", "false");
+}
+if (screenGhost1) {
+  screenGhost1.setAttribute("data-ready", "false");
+}
+if (screenGhost2) {
+  screenGhost2.setAttribute("data-ready", "false");
 }
 
 if (screen && wrap) {
