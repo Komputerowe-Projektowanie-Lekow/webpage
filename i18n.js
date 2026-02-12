@@ -47,11 +47,33 @@ class I18n {
   updatePage() {
     // Update meta tags
     document.documentElement.lang = this.currentLanguage;
-    const metaDescription = document.querySelector('meta[name="description"]');
-    if (metaDescription) {
-      metaDescription.content = this.t('meta.description');
+
+    const pageMetaTags = document.querySelectorAll('meta[data-i18n-meta]');
+    if (pageMetaTags.length > 0) {
+      pageMetaTags.forEach((metaTag) => {
+        const key = metaTag.getAttribute('data-i18n-meta');
+        if (key) {
+          metaTag.content = this.t(key);
+        }
+      });
+    } else {
+      const metaDescription = document.querySelector('meta[name="description"]');
+      if (metaDescription) {
+        metaDescription.content = this.t('meta.description');
+      }
     }
-    document.title = this.t('meta.title');
+
+    const pageTitleTag = document.querySelector('title[data-i18n-meta]');
+    if (pageTitleTag) {
+      const key = pageTitleTag.getAttribute('data-i18n-meta');
+      if (key) {
+        const translatedTitle = this.t(key);
+        pageTitleTag.textContent = translatedTitle;
+        document.title = translatedTitle;
+      }
+    } else {
+      document.title = this.t('meta.title');
+    }
 
     // Update all elements with data-i18n attribute
     const elements = document.querySelectorAll('[data-i18n]');

@@ -14,10 +14,22 @@ const screen = document.getElementById("screen");
 const wrap = document.querySelector(".ascii-layer");
 const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
+function setScreenFrame(text) {
+  if (!screen) {
+    return;
+  }
+  screen.textContent = text;
+  screen.setAttribute("data-ready", "true");
+}
+
+if (screen) {
+  screen.setAttribute("data-ready", "false");
+}
+
 if (screen && wrap) {
   bootstrap().catch((error) => {
     console.error(error);
-    screen.textContent = "Unable to load ASCII frames.";
+    setScreenFrame("Unable to load ASCII frames.");
   });
 }
 
@@ -30,13 +42,13 @@ async function bootstrap() {
   } else {
     const fallback = await loadFallbackFrames();
     if (!fallback) {
-      screen.textContent = "Frames manifest not found.";
+      setScreenFrame("Frames manifest not found.");
       return;
     }
     engine = createPrecomputedEngine(fallback);
   }
 
-  screen.textContent = engine.firstFrame;
+  setScreenFrame(engine.firstFrame);
   fitFont(engine);
   if (engine.preloadFrom) {
     engine.preloadFrom(0);
@@ -53,7 +65,7 @@ async function bootstrap() {
     const token = ++paintToken;
     engine.ensureFrame(index).then((frame) => {
       if (token === paintToken) {
-        screen.textContent = frame;
+        setScreenFrame(frame);
         if (engine.preloadFrom) {
           engine.preloadFrom(index);
         }
@@ -98,16 +110,16 @@ async function bootstrap() {
     paintToken++;
     engine.ensureFrame((frameIndex + engine.frameCount - 1) % engine.frameCount)
       .then((frame) => {
-        screen.textContent = frame;
-      }).catch(() => {});
+        setScreenFrame(frame);
+      }).catch(() => { });
   };
 
   prefersReducedMotion.addEventListener("change", (event) => {
     if (event.matches) {
       stop();
       engine.ensureFrame(0).then((frame) => {
-        screen.textContent = frame;
-      }).catch(() => {});
+        setScreenFrame(frame);
+      }).catch(() => { });
     } else {
       start();
     }
@@ -229,7 +241,7 @@ async function createAsciiEngine(manifest, wrap) {
   const preloadFrom = (index) => {
     for (let offset = 1; offset <= CONFIG.preloadAhead; offset++) {
       const next = (index + offset) % state.frameCount;
-      ensureFrame(next).catch(() => {});
+      ensureFrame(next).catch(() => { });
     }
   };
 
@@ -255,15 +267,15 @@ function cacheKey(index, state) {
 function updateResolutionInternal(state, wrap, cache, inflight, force = false) {
   const width = wrap.clientWidth || 1;
   const height = wrap.clientHeight || 1;
-  
+
   // Calculate columns and rows based on viewport dimensions to fill entire screen
   let cols = Math.floor(width / CONFIG.charPixelTarget);
   cols = Math.max(CONFIG.minCols, Math.min(CONFIG.maxCols, cols));
-  
+
   // Calculate rows based on viewport height to ensure full vertical coverage
   let rows = Math.floor(height / (CONFIG.charPixelTarget * CONFIG.lineAspect));
   rows = Math.max(rows, 24);
-  
+
   const key = `${cols}x${rows}`;
   if (force || key !== state.resKey) {
     state.cols = cols;
@@ -335,8 +347,8 @@ function createPrecomputedEngine(fallback) {
     firstFrame: first,
     getDimensions() { return { cols: width, rows: height }; },
     ensureFrame(index) { return Promise.resolve(frames[index]); },
-    preloadFrom() {},
-    updateResolution() {}
+    preloadFrom() { },
+    updateResolution() { }
   };
 }
 
@@ -357,7 +369,7 @@ function fitFont(engine) {
   // Calculate font size to exactly fill viewport dimensions
   const pxByWidth = width / cols;
   const pxByHeight = height / (rows * CONFIG.lineAspect);
-  
+
   // Use the larger value to ensure full coverage, then add a small buffer
   const px = Math.ceil(Math.max(pxByWidth, pxByHeight) * 1.01);
 
