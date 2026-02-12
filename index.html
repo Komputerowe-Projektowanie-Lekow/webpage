@@ -20,10 +20,18 @@
     <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
   </div>
 
-  <div class="ascii-layer" data-scene="scene-1" data-final-hold="false">
-    <pre id="screen-ghost-1" data-ready="false" aria-hidden="true"></pre>
-    <pre id="screen-ghost-2" data-ready="false" aria-hidden="true"></pre>
-    <pre id="screen" data-ready="false"></pre>
+  <div id="protein-ascii-layer" class="ascii-layer protein-ascii-layer">
+    <pre id="protein-screen-ghost-1" class="ascii-screen ascii-screen-ghost" data-ready="false" aria-hidden="true"></pre>
+    <pre id="protein-screen-ghost-2" class="ascii-screen ascii-screen-ghost" data-ready="false" aria-hidden="true"></pre>
+    <pre id="protein-screen" class="ascii-screen ascii-screen-main" data-ready="false" aria-hidden="true"></pre>
+    <div class="ascii-caption protein-caption">
+      <span data-i18n="micro.ascii.caption">Pipeline GUB - wizualizacja aktywności białka</span>
+    </div>
+  </div>
+  <div id="narrative-ascii-layer" class="ascii-layer narrative-ascii-layer" data-scene="scene-1" data-final-hold="false">
+    <pre id="narrative-screen-ghost-1" class="ascii-screen ascii-screen-ghost" data-ready="false" aria-hidden="true"></pre>
+    <pre id="narrative-screen-ghost-2" class="ascii-screen ascii-screen-ghost" data-ready="false" aria-hidden="true"></pre>
+    <pre id="narrative-screen" class="ascii-screen ascii-screen-main" data-ready="false" aria-hidden="true"></pre>
     <div id="ascii-story-overlay" aria-live="polite">
       <p id="ascii-story-kicker">Narracja ASCII</p>
       <h2 id="ascii-story-title">Komorka pojedyncza</h2>
@@ -33,9 +41,6 @@
         <a class="ascii-story-action join-action" href="#dolacz">Dołącz</a>
         <a class="ascii-story-action contact-action" href="mailto:sknwpl@proton.me">Kontakt</a>
       </div>
-    </div>
-    <div class="ascii-caption">
-      <span data-i18n="micro.ascii.caption">Pipeline GUB - wizualizacja aktywności białka</span>
     </div>
   </div>
 

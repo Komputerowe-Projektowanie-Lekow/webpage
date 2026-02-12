@@ -1,8 +1,7 @@
 const CONFIG = {
   fps: 60,
-  speed: 0.40,
+  speed: 0.4,
   palette: "/\\.|",
-  yScale: 5.0,
   lineAspect: 1.0,
   charPixelTarget: 6,
   minCols: 100,
@@ -11,59 +10,25 @@ const CONFIG = {
 };
 
 const NARRATIVE_SCENES = [
-  {
-    id: "scene-1",
-    durationMs: 3200,
-    kicker: "Scena 1/6",
-    title: "Komorka pojedyncza",
-    meta: "Waskie gardlo Gram-ujemnych: dobry score in-silico nie gwarantuje efektu komorkowego."
-  },
-  {
-    id: "scene-2",
-    durationMs: 3400,
-    kicker: "Scena 2/6",
-    title: "Retencja i wejscie do komorki",
-    meta: "Stage 2: stage2a_output.csv + stage2b_output.csv jako filtr wejscia i retencji."
-  },
-  {
-    id: "scene-3",
-    durationMs: 3400,
-    kicker: "Scena 3/6",
-    title: "Target engagement przed struktura",
-    meta: "stage3_for_boltz2.csv: top 200 kandydatow przed etapem strukturalnym."
-  },
-  {
-    id: "scene-4",
-    durationMs: 3400,
-    kicker: "Scena 4/6",
-    title: "Boltz2 i KD_pred",
-    meta: "stage4_output.csv z KD_pred buduje ranking przed MD i etapami systemowymi."
-  },
-  {
-    id: "scene-5",
-    durationMs: 4200,
-    kicker: "Scena 5/6",
-    title: "MD i system",
-    meta: "stage3_for_gromacs.csv (top 50) -> stage5_output.csv -> Stage 6A/6B."
-  },
-  {
-    id: "scene-6",
-    durationMs: 6200,
-    holdStartMs: 2200,
-    kicker: "Scena 6/6",
-    title: "Wirtualna komorka",
-    meta: "Stan 2026-02-10: EXP3 pilot15 (top_n=10) przeszedl Stage1->Stage6 + finalize.",
-    note: "full10 po fixie Stage6B czeka na potwierdzenie rerunu."
-  }
+  { id: "scene-1", durationMs: 1600, kicker: "Scena 1/6", title: "Komorka pojedyncza", meta: "Waskie gardlo Gram-ujemnych: dobry score in-silico nie gwarantuje efektu komorkowego." },
+  { id: "scene-2", durationMs: 1700, kicker: "Scena 2/6", title: "Retencja i wejscie do komorki", meta: "Stage 2: stage2a_output.csv + stage2b_output.csv jako filtr wejscia i retencji." },
+  { id: "scene-3", durationMs: 1700, kicker: "Scena 3/6", title: "Target engagement przed struktura", meta: "stage3_for_boltz2.csv: top 200 kandydatow przed etapem strukturalnym." },
+  { id: "scene-4", durationMs: 1700, kicker: "Scena 4/6", title: "Boltz2 i KD_pred", meta: "stage4_output.csv z KD_pred buduje ranking przed MD i etapami systemowymi." },
+  { id: "scene-5", durationMs: 2100, kicker: "Scena 5/6", title: "MD i system", meta: "stage3_for_gromacs.csv (top 50) -> stage5_output.csv -> Stage 6A/6B." },
+  { id: "scene-6", durationMs: 4200, holdStartMs: 1500, kicker: "Scena 6/6", title: "Wirtualna komorka", meta: "Stan 2026-02-10: EXP3 pilot15 (top_n=10) przeszedl Stage1->Stage6 + finalize.", note: "full10 po fixie Stage6B czeka na potwierdzenie rerunu." }
 ];
+const NARRATIVE_TOTAL_MS = NARRATIVE_SCENES.reduce((s, x) => s + x.durationMs, 0);
 
-const NARRATIVE_TOTAL_MS = NARRATIVE_SCENES.reduce((sum, scene) => sum + scene.durationMs, 0);
+const body = document.body;
+const heroSection = document.getElementById("kontekst-sekcji");
+const statusSection = document.getElementById("status");
+const footer = document.querySelector(".site-footer");
 
-const screen = document.getElementById("screen");
-const screenGhost1 = document.getElementById("screen-ghost-1");
-const screenGhost2 = document.getElementById("screen-ghost-2");
-const wrap = document.querySelector(".ascii-layer");
-const asciiLayer = document.querySelector(".ascii-layer");
+const proteinLayer = document.getElementById("protein-ascii-layer");
+const narrativeLayer = document.getElementById("narrative-ascii-layer");
+
+const proteinScreens = mkScreens("protein-screen", "protein-screen-ghost-1", "protein-screen-ghost-2");
+const narrativeScreens = mkScreens("narrative-screen", "narrative-screen-ghost-1", "narrative-screen-ghost-2");
 
 const storyOverlay = document.getElementById("ascii-story-overlay");
 const storyKicker = document.getElementById("ascii-story-kicker");
@@ -73,674 +38,435 @@ const storyNote = document.getElementById("ascii-story-note");
 const storyActions = document.getElementById("ascii-story-actions");
 
 const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
+let heroVisible = false;
+let heroObserver = null;
+let activityRaf = null;
+let proteinController = null;
+let narrativeController = null;
 
-function setScreenFrame(text) {
-  if (!screen && !screenGhost1 && !screenGhost2) {
-    return;
-  }
-  if (screen) {
-    screen.textContent = text;
-    screen.setAttribute("data-ready", "true");
-  }
-  if (screenGhost1) {
-    screenGhost1.textContent = text;
-    screenGhost1.setAttribute("data-ready", "true");
-  }
-  if (screenGhost2) {
-    screenGhost2.textContent = text;
-    screenGhost2.setAttribute("data-ready", "true");
-  }
-}
+bootstrap().catch((err) => console.error("ASCII bootstrap failed:", err));
 
-function setStoryOverlay(sceneState) {
-  if (!asciiLayer || !storyOverlay) {
-    return;
-  }
-
-  if (!sceneState) {
-    asciiLayer.setAttribute("data-scene", "none");
-    asciiLayer.setAttribute("data-final-hold", "false");
-    if (storyActions) {
-      storyActions.setAttribute("aria-hidden", "true");
-    }
-    return;
-  }
-
-  asciiLayer.setAttribute("data-scene", sceneState.sceneId);
-  asciiLayer.setAttribute("data-final-hold", sceneState.isFinalHold ? "true" : "false");
-
-  if (storyKicker) {
-    storyKicker.textContent = sceneState.kicker;
-  }
-  if (storyTitle) {
-    storyTitle.textContent = sceneState.title;
-  }
-  if (storyMeta) {
-    storyMeta.textContent = sceneState.meta;
-  }
-  if (storyNote) {
-    storyNote.textContent = sceneState.note ?? "";
-  }
-  if (storyActions) {
-    storyActions.setAttribute("aria-hidden", sceneState.isFinalHold ? "false" : "true");
-  }
-}
-
-if (screen) {
-  screen.setAttribute("data-ready", "false");
-}
-if (screenGhost1) {
-  screenGhost1.setAttribute("data-ready", "false");
-}
-if (screenGhost2) {
-  screenGhost2.setAttribute("data-ready", "false");
-}
-setStoryOverlay(null);
-
-if (screen && wrap) {
-  bootstrap().catch((error) => {
-    console.error(error);
-    setScreenFrame("Unable to load ASCII frames.");
-  });
+function mkScreens(mainId, g1Id, g2Id) {
+  return { main: document.getElementById(mainId), ghost1: document.getElementById(g1Id), ghost2: document.getElementById(g2Id) };
 }
 
 async function bootstrap() {
-  let engine;
+  resetScreens(proteinScreens);
+  resetScreens(narrativeScreens);
+  setNarrativeOverlay(null);
+  setBodyActivity(false, false);
 
-  if (shouldUseNarrativeEngine()) {
-    try {
-      engine = createNarrativeAsciiEngine(wrap);
-    } catch (error) {
-      console.error("Narrative ASCII init failed, using fallback engine:", error);
-      engine = await createBitmapOrFallbackEngine();
-      setStoryOverlay(null);
-    }
-  } else {
-    engine = await createBitmapOrFallbackEngine();
-  }
+  proteinController = createController({
+    layerEl: proteinLayer,
+    screens: proteinScreens,
+    initEngine: initProteinEngine,
+    staticIndex: () => 0
+  });
+  narrativeController = createController({
+    layerEl: narrativeLayer,
+    screens: narrativeScreens,
+    initEngine: initNarrativeEngine,
+    staticIndex: (engine) => engine?.reducedFrameIndex ?? Math.max(0, (engine?.frameCount ?? 1) - 1)
+  });
 
-  setScreenFrame(engine.firstFrame);
-  fitFont(engine);
-  if (engine.preloadFrom) {
-    engine.preloadFrom(0);
-  }
+  await Promise.all([proteinController.init(), narrativeController.init()]);
+  setupHeroObserver();
 
+  addEventListener("scroll", scheduleActivityCheck, { passive: true });
+  addEventListener("resize", onResize, { passive: true });
+  document.addEventListener("visibilitychange", scheduleActivityCheck);
+  prefersReducedMotion.addEventListener("change", () => {
+    proteinController.onMotion();
+    narrativeController.onMotion();
+    scheduleActivityCheck();
+  });
+  scheduleActivityCheck();
+}
+
+function createController({ layerEl, screens, initEngine, staticIndex }) {
+  let engine = null;
+  let active = false;
   let running = false;
-  let raf = null;
-  let lastTick = performance.now();
+  let inited = false;
   let frameIndex = 1;
+  let lastTick = performance.now();
+  let raf = null;
   let paintToken = 0;
-  const frameInterval = (1000 / (engine.fps ?? CONFIG.fps)) / CONFIG.speed;
 
-  const renderFrame = (index) => {
+  function setFrame(text) {
+    [screens.main, screens.ghost1, screens.ghost2].forEach((el) => {
+      if (el) {
+        el.textContent = text;
+        el.setAttribute("data-ready", "true");
+      }
+    });
+  }
+
+  function render(index) {
+    if (!engine) return;
     const token = ++paintToken;
     engine.ensureFrame(index).then((frame) => {
-      if (token === paintToken) {
-        setScreenFrame(frame);
-        if (engine.preloadFrom) {
-          engine.preloadFrom(index);
-        }
-      }
-    }).catch((error) => console.error("Frame render failed:", error));
-  };
+      if (token !== paintToken) return;
+      setFrame(frame);
+      if (engine.preloadFrom) engine.preloadFrom(index);
+    }).catch((e) => console.error("Frame render failed:", e));
+  }
 
-  const showReducedFrame = () => {
-    const index = engine.reducedFrameIndex ?? 0;
+  function showStatic() {
+    if (!engine) return;
+    const index = staticIndex(engine);
     paintToken++;
-    engine.ensureFrame(index).then((frame) => {
-      setScreenFrame(frame);
-    }).catch(() => { });
-  };
+    engine.ensureFrame(index).then((frame) => setFrame(frame)).catch(() => { });
+  }
 
-  const tick = (now) => {
-    if (!running) {
-      return;
-    }
-    if (now - lastTick >= frameInterval) {
+  function tick(now) {
+    if (!running || !engine) return;
+    const interval = (1000 / (engine.fps ?? CONFIG.fps)) / CONFIG.speed;
+    if (now - lastTick >= interval) {
       lastTick = now;
-      renderFrame(frameIndex);
+      render(frameIndex);
       frameIndex = (frameIndex + 1) % engine.frameCount;
     }
     raf = requestAnimationFrame(tick);
-  };
+  }
 
-  const start = () => {
-    if (running) {
+  function start() {
+    if (!engine || running) return;
+    if (prefersReducedMotion.matches) {
+      showStatic();
       return;
     }
     running = true;
     lastTick = performance.now();
     raf = requestAnimationFrame(tick);
-  };
+  }
 
-  const stop = () => {
+  function stop() {
     running = false;
     if (raf !== null) {
       cancelAnimationFrame(raf);
       raf = null;
     }
-  };
+  }
 
-  const onResize = () => {
-    if (engine.updateResolution) {
-      engine.updateResolution(true);
-    }
-    fitFont(engine);
-    paintToken++;
-    const currentIndex = (frameIndex + engine.frameCount - 1) % engine.frameCount;
-    engine.ensureFrame(currentIndex).then((frame) => {
-      setScreenFrame(frame);
-    }).catch(() => { });
-  };
+  function fit() {
+    if (!engine || !layerEl || !screens.main) return;
+    const dims = engine.getDimensions();
+    if (!dims.cols || !dims.rows) return;
+    const w = screens.main.clientWidth || layerEl.clientWidth;
+    const h = screens.main.clientHeight || layerEl.clientHeight;
+    if (!w || !h) return;
+    const px = Math.ceil(Math.max(w / dims.cols, h / (dims.rows * CONFIG.lineAspect)) * 1.01);
+    [screens.main, screens.ghost1, screens.ghost2].forEach((el) => {
+      if (el && px > 0) {
+        el.style.fontSize = `${px}px`;
+        el.style.lineHeight = `${px * CONFIG.lineAspect}px`;
+      }
+    });
+  }
 
-  prefersReducedMotion.addEventListener("change", (event) => {
-    if (event.matches) {
-      stop();
-      showReducedFrame();
-    } else {
-      frameIndex = 1;
+  return {
+    async init() {
+      try {
+        engine = await initEngine();
+        setFrame(engine.firstFrame);
+        if (engine.preloadFrom) engine.preloadFrom(0);
+        fit();
+        inited = true;
+      } catch (e) {
+        inited = false;
+        console.error("Controller init failed:", e);
+      }
+    },
+    setActive(next) {
+      active = next;
+      if (!inited || !engine) return;
+      if (active) start();
+      else stop();
+    },
+    onResize() {
+      if (!inited || !engine) return;
+      if (engine.updateResolution) engine.updateResolution(true);
+      fit();
       paintToken++;
-      renderFrame(0);
-      start();
+      const idx = (frameIndex + engine.frameCount - 1) % engine.frameCount;
+      engine.ensureFrame(idx).then((frame) => setFrame(frame)).catch(() => { });
+    },
+    onMotion() {
+      if (!inited || !engine || !active) return;
+      if (prefersReducedMotion.matches) {
+        stop();
+        showStatic();
+      } else {
+        start();
+      }
     }
+  };
+}
+
+function resetScreens(screens) {
+  [screens.main, screens.ghost1, screens.ghost2].forEach((el) => {
+    if (el) el.setAttribute("data-ready", "false");
   });
+}
 
-  addEventListener("resize", onResize, { passive: true });
-
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) {
-      stop();
-    } else if (!prefersReducedMotion.matches) {
-      start();
-    }
-  });
-
-  if (prefersReducedMotion.matches) {
-    showReducedFrame();
-    return;
+function setupHeroObserver() {
+  if (!heroSection) return;
+  if ("IntersectionObserver" in window) {
+    heroObserver = new IntersectionObserver((entries) => {
+      heroVisible = entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.05);
+      scheduleActivityCheck();
+    }, { threshold: [0, 0.05, 0.15, 0.35, 0.6] });
+    heroObserver.observe(heroSection);
+  } else {
+    const rect = heroSection.getBoundingClientRect();
+    heroVisible = rect.bottom > 0 && rect.top < innerHeight;
   }
-
-  start();
 }
 
-function shouldUseNarrativeEngine() {
-  return Boolean(storyOverlay && document.getElementById("kontekst-sekcji"));
+function scheduleActivityCheck() {
+  if (activityRaf !== null) return;
+  activityRaf = requestAnimationFrame(() => {
+    activityRaf = null;
+    if (!heroObserver && heroSection) {
+      const rect = heroSection.getBoundingClientRect();
+      heroVisible = rect.bottom > 0 && rect.top < innerHeight;
+    }
+    applyActivity();
+  });
 }
 
-async function createBitmapOrFallbackEngine() {
+function onResize() {
+  proteinController?.onResize();
+  narrativeController?.onResize();
+  scheduleActivityCheck();
+}
+
+function applyActivity() {
+  const visible = !document.hidden;
+  const proteinActive = visible && heroVisible;
+  const narrativeActive = visible && computeNarrativeActive();
+  setBodyActivity(proteinActive, narrativeActive);
+  proteinController?.setActive(proteinActive);
+  narrativeController?.setActive(narrativeActive);
+}
+
+function computeNarrativeActive() {
+  if (innerWidth <= 900 || !statusSection) return false;
+  const anchorY = scrollY + innerHeight * 0.35;
+  const statusTop = statusSection.offsetTop;
+  const footerBottom = footer ? footer.offsetTop + footer.offsetHeight : document.documentElement.scrollHeight;
+  return anchorY >= statusTop && scrollY <= footerBottom;
+}
+
+function setBodyActivity(proteinActive, narrativeActive) {
+  if (!body) return;
+  body.setAttribute("data-protein-active", proteinActive ? "true" : "false");
+  body.setAttribute("data-narrative-active", narrativeActive ? "true" : "false");
+}
+
+async function initProteinEngine() {
+  if (!proteinLayer) throw new Error("protein layer missing");
   const manifest = await loadManifest();
-  if (manifest.length) {
-    return createAsciiEngine(manifest, wrap);
-  }
-
+  if (manifest.length) return createBitmapEngine(manifest, proteinLayer);
   const fallback = await loadFallbackFrames();
-  if (!fallback) {
-    setScreenFrame("Frames manifest not found.");
-    throw new Error("No ASCII manifest/fallback frames available.");
-  }
+  if (!fallback) throw new Error("no protein frames available");
   return createPrecomputedEngine(fallback);
 }
 
-function createNarrativeAsciiEngine(asciiWrap) {
-  const fps = 18;
+async function initNarrativeEngine() {
+  if (!narrativeLayer) throw new Error("narrative layer missing");
+  return createNarrativeEngine(narrativeLayer);
+}
+
+function setNarrativeOverlay(sceneState) {
+  if (!narrativeLayer || !storyOverlay) return;
+  if (!sceneState) {
+    narrativeLayer.setAttribute("data-scene", "none");
+    narrativeLayer.setAttribute("data-final-hold", "false");
+    if (storyActions) storyActions.setAttribute("aria-hidden", "true");
+    return;
+  }
+  narrativeLayer.setAttribute("data-scene", sceneState.sceneId);
+  narrativeLayer.setAttribute("data-final-hold", sceneState.isFinalHold ? "true" : "false");
+  if (storyKicker) storyKicker.textContent = sceneState.kicker;
+  if (storyTitle) storyTitle.textContent = sceneState.title;
+  if (storyMeta) storyMeta.textContent = sceneState.meta;
+  if (storyNote) storyNote.textContent = sceneState.note ?? "";
+  if (storyActions) storyActions.setAttribute("aria-hidden", sceneState.isFinalHold ? "false" : "true");
+}
+
+function createNarrativeEngine(layerEl) {
+  const fps = 24;
   const frameCount = Math.max(1, Math.round((NARRATIVE_TOTAL_MS / 1000) * fps));
-  const dims = {
-    cols: 0,
-    rows: 0,
-    mobile: false,
-    resKey: ""
-  };
+  const dims = { cols: 0, rows: 0, mobile: false, key: "" };
 
-  const updateResolution = (force = false) => {
-    const width = asciiWrap.clientWidth || window.innerWidth || 1;
-    const height = asciiWrap.clientHeight || window.innerHeight || 1;
-    const mobile = width <= 900;
-
-    let cols;
-    if (mobile) {
-      cols = Math.floor(width / 7.2);
-      cols = clamp(cols, 78, 128);
-    } else {
-      cols = Math.floor((width * 0.62) / 6.8);
-      cols = clamp(cols, 92, 176);
-    }
-
-    let rows = Math.floor(height / (mobile ? 12 : 11));
-    rows = clamp(rows, mobile ? 26 : 30, mobile ? 52 : 64);
-
+  function updateResolution(force = false) {
+    const w = layerEl.clientWidth || innerWidth || 1;
+    const h = layerEl.clientHeight || innerHeight || 1;
+    const mobile = w <= 900;
+    const cols = clamp(Math.floor(w / (mobile ? 7.2 : 6.3)), mobile ? 78 : 82, mobile ? 128 : 164);
+    const rows = clamp(Math.floor(h / (mobile ? 12 : 10.8)), mobile ? 26 : 30, mobile ? 52 : 66);
     const key = `${cols}x${rows}|${mobile ? "m" : "d"}`;
-    if (force || key !== dims.resKey) {
+    if (force || key !== dims.key) {
       dims.cols = cols;
       dims.rows = rows;
       dims.mobile = mobile;
-      dims.resKey = key;
+      dims.key = key;
     }
-  };
-
-  const getSceneStateForFrame = (frameIndex) => {
-    const normalizedIndex = ((frameIndex % frameCount) + frameCount) % frameCount;
-    const timeMs = (normalizedIndex / fps) * 1000;
-    return getNarrativeSceneState(timeMs);
-  };
+  }
 
   updateResolution(true);
-  const initialSceneState = getNarrativeSceneState(0);
-  setStoryOverlay(initialSceneState);
-  const firstFrame = renderNarrativeFrame(initialSceneState, dims, 0);
+  const firstScene = getNarrativeSceneState(0);
+  setNarrativeOverlay(firstScene);
+  const firstFrame = renderNarrativeFrame(firstScene, dims, 0);
 
   return {
     fps,
     frameCount,
     firstFrame,
-    isNarrative: true,
     reducedFrameIndex: Math.max(0, frameCount - 1),
-    getDimensions() {
-      return { cols: dims.cols, rows: dims.rows };
-    },
+    getDimensions: () => ({ cols: dims.cols, rows: dims.rows }),
     ensureFrame(index) {
       updateResolution(false);
-      const normalizedIndex = ((index % frameCount) + frameCount) % frameCount;
-      const timeMs = (normalizedIndex / fps) * 1000;
-      const sceneState = getNarrativeSceneState(timeMs);
-      setStoryOverlay(sceneState);
-      const frame = renderNarrativeFrame(sceneState, dims, timeMs);
-      return Promise.resolve(frame);
+      const normalized = ((index % frameCount) + frameCount) % frameCount;
+      const t = (normalized / fps) * 1000;
+      const scene = getNarrativeSceneState(t);
+      setNarrativeOverlay(scene);
+      return Promise.resolve(renderNarrativeFrame(scene, dims, t));
     },
     preloadFrom() { },
-    updateResolution(force = false) {
-      updateResolution(force);
-    },
-    getSceneStateForFrame
+    updateResolution(force = false) { updateResolution(force); }
   };
 }
 
 function getNarrativeSceneState(timeMs) {
-  const loopedTimeMs = ((timeMs % NARRATIVE_TOTAL_MS) + NARRATIVE_TOTAL_MS) % NARRATIVE_TOTAL_MS;
+  const t = ((timeMs % NARRATIVE_TOTAL_MS) + NARRATIVE_TOTAL_MS) % NARRATIVE_TOTAL_MS;
   let cursor = 0;
-
   for (let i = 0; i < NARRATIVE_SCENES.length; i++) {
-    const scene = NARRATIVE_SCENES[i];
-    const end = cursor + scene.durationMs;
-    if (loopedTimeMs < end || i === NARRATIVE_SCENES.length - 1) {
-      const sceneElapsedMs = loopedTimeMs - cursor;
-      const sceneProgress = scene.durationMs > 0 ? sceneElapsedMs / scene.durationMs : 0;
-      const holdStartMs = scene.holdStartMs ?? scene.durationMs + 1;
+    const s = NARRATIVE_SCENES[i];
+    const end = cursor + s.durationMs;
+    if (t < end || i === NARRATIVE_SCENES.length - 1) {
+      const elapsed = t - cursor;
       return {
-        sceneId: scene.id,
+        sceneId: s.id,
         sceneIndex: i,
-        sceneElapsedMs,
-        sceneProgress: clamp(sceneProgress, 0, 1),
-        isFinalHold: scene.id === "scene-6" && sceneElapsedMs >= holdStartMs,
-        kicker: scene.kicker,
-        title: scene.title,
-        meta: scene.meta,
-        note: scene.note ?? ""
+        sceneProgress: clamp(elapsed / s.durationMs, 0, 1),
+        isFinalHold: s.id === "scene-6" && elapsed >= (s.holdStartMs ?? s.durationMs + 1),
+        kicker: s.kicker,
+        title: s.title,
+        meta: s.meta,
+        note: s.note ?? ""
       };
     }
     cursor = end;
   }
-
-  return {
-    sceneId: "scene-1",
-    sceneIndex: 0,
-    sceneElapsedMs: 0,
-    sceneProgress: 0,
-    isFinalHold: false,
-    kicker: NARRATIVE_SCENES[0].kicker,
-    title: NARRATIVE_SCENES[0].title,
-    meta: NARRATIVE_SCENES[0].meta,
-    note: ""
-  };
+  return { sceneId: "scene-1", sceneIndex: 0, sceneProgress: 0, isFinalHold: false, kicker: "", title: "", meta: "", note: "" };
 }
 
-function renderNarrativeFrame(sceneState, dims, absoluteTimeMs) {
-  const { cols, rows, mobile } = dims;
-  const grid = createGrid(cols, rows, " ");
-
-  drawAmbientLayer(grid, absoluteTimeMs);
-
-  switch (sceneState.sceneId) {
-    case "scene-1":
-      drawSceneSingleCell(grid, sceneState, absoluteTimeMs);
-      break;
-    case "scene-2":
-      drawSceneMembraneEntry(grid, sceneState, absoluteTimeMs);
-      break;
-    case "scene-3":
-      drawSceneTargetGate(grid, sceneState, absoluteTimeMs);
-      break;
-    case "scene-4":
-      drawSceneBoltzRanking(grid, sceneState, absoluteTimeMs);
-      break;
-    case "scene-5":
-      drawSceneSystemBranch(grid, sceneState, absoluteTimeMs);
-      break;
-    case "scene-6":
-      drawSceneVirtualCell(grid, sceneState, absoluteTimeMs);
-      break;
-    default:
-      break;
-  }
-
-  drawPipelineLegend(grid, sceneState, mobile);
-  drawProgressBar(grid, sceneState, mobile);
-
-  return grid.map((row) => row.join("")).join("\n");
-}
-
-function drawAmbientLayer(grid, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0]?.length ?? 0;
-  const time = absoluteTimeMs * 0.001;
-
+function renderNarrativeFrame(scene, dims, t) {
+  const cols = dims.cols;
+  const rows = dims.rows;
+  const lines = Array.from({ length: rows }, () => Array(cols).fill(" "));
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      const wave = Math.sin(x * 0.12 + y * 0.09 + time * 0.85);
-      const wave2 = Math.cos(x * 0.03 - y * 0.11 + time * 0.65);
-      const signal = wave + wave2;
-      if (signal > 1.93) {
-        grid[y][x] = ".";
-      } else if (signal < -1.96 && y % 3 === 0) {
-        grid[y][x] = "'";
-      }
+      const s = Math.sin(x * 0.12 + y * 0.09 + t * 0.001) + Math.cos(x * 0.03 - y * 0.11 + t * 0.0008);
+      if (s > 1.94) lines[y][x] = ".";
     }
   }
+  const labelMap = { "scene-1": "[komorka pojedyncza]", "scene-2": "[retencja i wejscie]", "scene-3": "[target engagement]", "scene-4": "[boltz2 + KD_pred]", "scene-5": "[MD i system]", "scene-6": "[wirtualna komorka]" };
+  writeText(lines, Math.floor(cols * 0.06), Math.floor(rows * 0.16), labelMap[scene.sceneId] ?? "");
+  writeText(lines, Math.floor(cols * 0.06), rows - 4, dims.mobile ? "S1->S2a+2b->S3(200)->S4(KD)->S5(50)->6A/6B" : "REINVENT4->S2a+S2b->S3(top200)->S4(KD)->S5(top50)->6A/6B");
+  drawSceneShape(lines, scene.sceneId, t);
+  drawProgress(lines, scene.sceneIndex, scene.sceneProgress);
+  return lines.map((r) => r.join("")).join("\n");
 }
 
-function drawSceneSingleCell(grid, sceneState, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const pulse = Math.sin(absoluteTimeMs * 0.0032) * 0.8;
-  const cx = Math.floor(cols * 0.25);
-  const cy = Math.floor(rows * 0.5);
-  const rx = Math.max(6, Math.floor(cols * 0.1 + pulse));
-  const ry = Math.max(5, Math.floor(rows * 0.18 + pulse * 0.6));
-
-  drawEllipseRing(grid, cx, cy, rx, ry, "@");
-  drawEllipseRing(grid, cx, cy, Math.max(3, rx - 3), Math.max(3, ry - 2), "o");
-
-  const nucleusRadius = Math.max(2, Math.floor(Math.min(rx, ry) * 0.35));
-  for (let a = 0; a < 36; a++) {
-    const theta = (Math.PI * 2 * a) / 36;
-    setChar(
-      grid,
-      Math.round(cx + Math.cos(theta) * nucleusRadius),
-      Math.round(cy + Math.sin(theta) * nucleusRadius),
-      "*"
-    );
-  }
-
-  drawArrow(grid, cx + rx + 3, cy, Math.floor(cols * 0.63), cy, "=");
-  drawClampedText(grid, Math.floor(cols * 0.07), Math.floor(rows * 0.16), "[komorka pojedyncza]");
-}
-
-function drawSceneMembraneEntry(grid, sceneState, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0].length;
+function drawSceneShape(lines, sceneId, t) {
+  const rows = lines.length;
+  const cols = lines[0].length;
   const cx = Math.floor(cols * 0.24);
   const cy = Math.floor(rows * 0.5);
-  const rx = Math.max(6, Math.floor(cols * 0.09));
-  const ry = Math.max(5, Math.floor(rows * 0.17));
-  const gateX = Math.floor(cols * 0.48);
-
-  drawEllipseRing(grid, cx, cy, rx, ry, "@");
-  drawEllipseRing(grid, cx, cy, Math.max(3, rx - 3), Math.max(3, ry - 2), "o");
-
-  for (let y = Math.floor(rows * 0.23); y <= Math.floor(rows * 0.77); y++) {
-    setChar(grid, gateX, y, "|");
-    if (y % 2 === 0) {
-      setChar(grid, gateX + 1, y, "|");
-    }
+  const pulse = Math.sin(t * 0.004) * 0.8;
+  const rx = Math.max(6, Math.floor(cols * 0.1 + pulse));
+  const ry = Math.max(5, Math.floor(rows * 0.17 + pulse * 0.5));
+  ellipse(lines, cx, cy, rx, ry, "@");
+  if (sceneId === "scene-2" || sceneId === "scene-3") {
+    const gx = Math.floor(cols * 0.48);
+    for (let y = Math.floor(rows * 0.24); y <= Math.floor(rows * 0.76); y++) lines[y][gx] = "|";
   }
-
-  const particleSpan = Math.max(10, Math.floor(rows * 0.46));
-  const travelSpan = Math.max(1, gateX - cx - rx - 6);
-  for (let i = 0; i < 12; i++) {
-    const offset = (absoluteTimeMs * 0.018 + i * 11) % travelSpan;
-    const px = Math.floor(cx + rx + 2 + offset);
-    const py = Math.floor(cy - particleSpan / 2 + ((i * 7) % particleSpan));
-    setChar(grid, px, py, i % 3 === 0 ? "*" : ".");
+  if (sceneId === "scene-4") {
+    box(lines, Math.floor(cols * 0.18), Math.floor(rows * 0.24), Math.floor(cols * 0.22), Math.floor(rows * 0.4), "#");
+    writeText(lines, Math.floor(cols * 0.2), Math.floor(rows * 0.32), "stage4_output.csv");
   }
-
-  drawArrow(grid, gateX + 3, cy, Math.floor(cols * 0.77), cy, "-");
-  drawClampedText(grid, Math.floor(cols * 0.07), Math.floor(rows * 0.16), "[retencja i wejscie]");
-}
-
-function drawSceneTargetGate(grid, sceneState, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const leftX = Math.floor(cols * 0.2);
-  const centerX = Math.floor(cols * 0.52);
-  const cy = Math.floor(rows * 0.5);
-  const gateWidth = Math.max(14, Math.floor(cols * 0.15));
-  const gateHeight = Math.max(7, Math.floor(rows * 0.2));
-
-  drawEllipseRing(grid, leftX, cy, Math.max(5, Math.floor(cols * 0.07)), Math.max(4, Math.floor(rows * 0.12)), "@");
-  drawArrow(grid, leftX + Math.floor(cols * 0.08), cy, centerX - 6, cy, "=");
-
-  drawBox(grid, centerX - Math.floor(gateWidth / 2), cy - Math.floor(gateHeight / 2), gateWidth, gateHeight, "#");
-  drawClampedText(grid, centerX - Math.floor(gateWidth / 2) + 2, cy, "top 200");
-
-  const wave = Math.sin(absoluteTimeMs * 0.005);
-  drawArrow(grid, centerX + Math.floor(gateWidth / 2) + 2, cy, Math.floor(cols * 0.82), cy + Math.round(wave * 2), "-");
-  drawClampedText(grid, Math.floor(cols * 0.06), Math.floor(rows * 0.16), "[target engagement]");
-}
-
-function drawSceneBoltzRanking(grid, sceneState, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const tableX = Math.floor(cols * 0.2);
-  const tableY = Math.floor(rows * 0.24);
-  const tableW = Math.max(16, Math.floor(cols * 0.2));
-  const tableH = Math.max(10, Math.floor(rows * 0.42));
-  const barsX = Math.floor(cols * 0.56);
-  const barsBaseY = Math.floor(rows * 0.72);
-
-  drawBox(grid, tableX, tableY, tableW, tableH, "#");
-  drawClampedText(grid, tableX + 2, tableY + 2, "stage4_output.csv");
-  drawClampedText(grid, tableX + 2, tableY + 4, "KD_pred rank");
-
-  for (let i = 0; i < 7; i++) {
-    const phase = absoluteTimeMs * 0.003 + i * 0.6;
-    const h = 3 + Math.floor((Math.sin(phase) * 0.5 + 0.5) * 8);
-    const x = barsX + i * 3;
-    for (let y = 0; y < h; y++) {
-      setChar(grid, x, barsBaseY - y, "|");
-      setChar(grid, x + 1, barsBaseY - y, "|");
-    }
-    setChar(grid, x, barsBaseY + 1, "_");
-    setChar(grid, x + 1, barsBaseY + 1, "_");
+  if (sceneId === "scene-5") {
+    box(lines, Math.floor(cols * 0.7), Math.floor(rows * 0.28), 12, 6, "#");
+    box(lines, Math.floor(cols * 0.7), Math.floor(rows * 0.62), 12, 6, "#");
+    writeText(lines, Math.floor(cols * 0.74), Math.floor(rows * 0.32), "6A");
+    writeText(lines, Math.floor(cols * 0.74), Math.floor(rows * 0.66), "6B");
   }
-
-  drawArrow(grid, tableX + tableW + 2, tableY + Math.floor(tableH * 0.55), barsX - 3, barsBaseY - 2, "=");
-  drawClampedText(grid, Math.floor(cols * 0.08), Math.floor(rows * 0.16), "[boltz2 + KD_pred]");
-}
-
-function drawSceneSystemBranch(grid, sceneState, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const srcX = Math.floor(cols * 0.24);
-  const srcY = Math.floor(rows * 0.5);
-  const splitX = Math.floor(cols * 0.55);
-  const topY = Math.floor(rows * 0.3);
-  const botY = Math.floor(rows * 0.7);
-  const pulse = Math.sin(absoluteTimeMs * 0.004);
-
-  drawEllipseRing(grid, srcX, srcY, Math.max(5, Math.floor(cols * 0.08)), Math.max(5, Math.floor(rows * 0.14)), "@");
-  drawArrow(grid, srcX + Math.floor(cols * 0.09), srcY, splitX, srcY, "=");
-  drawLine(grid, splitX, srcY, splitX + 9, topY, "/");
-  drawLine(grid, splitX, srcY, splitX + 9, botY, "\\");
-
-  drawBox(grid, splitX + 11, topY - 3, 14, 7, "#");
-  drawBox(grid, splitX + 11, botY - 3, 14, 7, "#");
-  drawClampedText(grid, splitX + 14, topY, "6A");
-  drawClampedText(grid, splitX + 14, botY, "6B");
-  drawClampedText(grid, splitX + 3, srcY - 1, pulse > 0 ? "stage5" : "top 50");
-
-  drawClampedText(grid, Math.floor(cols * 0.08), Math.floor(rows * 0.16), "[MD i system]");
-}
-
-function drawSceneVirtualCell(grid, sceneState, absoluteTimeMs) {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const cellX = Math.floor(cols * 0.62);
-  const cellY = Math.floor(rows * 0.5);
-  const cellW = Math.max(26, Math.floor(cols * 0.28));
-  const cellH = Math.max(14, Math.floor(rows * 0.46));
-  const leftX = Math.floor(cols * 0.18);
-  const shimmer = Math.sin(absoluteTimeMs * 0.0028);
-
-  drawClampedText(grid, Math.floor(cols * 0.08), Math.floor(rows * 0.17), "[wirtualna komorka]");
-  drawArrow(grid, leftX, cellY, cellX - 4, cellY, "=");
-  drawClampedText(grid, leftX - 3, cellY - 2, "pipeline");
-
-  drawBox(grid, cellX, cellY - Math.floor(cellH / 2), cellW, cellH, "#");
-
-  const nodeCount = 11;
-  for (let i = 0; i < nodeCount; i++) {
-    const nx = cellX + 2 + ((i * 5) % Math.max(4, cellW - 4));
-    const ny = cellY - Math.floor(cellH / 2) + 2 + ((i * 3) % Math.max(4, cellH - 4));
-    setChar(grid, nx, ny, i % 2 === 0 ? "*" : "+");
-    if (i > 0) {
-      const prevX = cellX + 2 + (((i - 1) * 5) % Math.max(4, cellW - 4));
-      const prevY = cellY - Math.floor(cellH / 2) + 2 + (((i - 1) * 3) % Math.max(4, cellH - 4));
-      drawLine(grid, prevX, prevY, nx, ny, shimmer > 0 ? "." : ":");
-    }
+  if (sceneId === "scene-6") {
+    box(lines, Math.floor(cols * 0.56), Math.floor(rows * 0.28), Math.floor(cols * 0.34), Math.floor(rows * 0.42), "#");
   }
-
-  if (sceneState.isFinalHold) {
-    const bannerY = Math.floor(rows * 0.78);
-    drawBox(grid, Math.floor(cols * 0.08), bannerY - 2, Math.floor(cols * 0.48), 6, "=");
-    drawClampedText(grid, Math.floor(cols * 0.1), bannerY, "final hold: dolacz / kontakt");
-  }
+  arrow(lines, cx + rx + 3, cy, Math.floor(cols * 0.58), cy, "=");
 }
 
-function drawPipelineLegend(grid, sceneState, mobile) {
-  const rows = grid.length;
-  const cols = grid[0].length;
-  const legendY = rows - 4;
-  const markerY = rows - 3;
-  const legend = mobile
-    ? "S1 -> S2a/S2b -> S3(200) -> S4(KD) -> S5(50) -> 6A/6B"
-    : "REINVENT4 -> stage2a+2b -> stage3_for_boltz2(top200) -> stage4(KD_pred) -> stage5 -> 6A/6B";
-  drawCenteredText(grid, legendY, legend);
-
-  const markerX = Math.floor((sceneState.sceneIndex / (NARRATIVE_SCENES.length - 1)) * (cols - 1));
-  setChar(grid, markerX, markerY, "^");
-}
-
-function drawProgressBar(grid, sceneState, mobile) {
-  const rows = grid.length;
-  const cols = grid[0].length;
+function drawProgress(lines, sceneIndex, sceneProgress) {
+  const rows = lines.length;
+  const cols = lines[0].length;
+  const width = Math.min(cols - 6, 64);
+  const left = Math.max(1, Math.floor((cols - width - 2) / 2));
   const barY = rows - 2;
-  const maxWidth = Math.min(cols - 4, mobile ? 54 : 78);
-  const left = Math.max(1, Math.floor((cols - maxWidth - 2) / 2));
-  const progress = (sceneState.sceneIndex + sceneState.sceneProgress) / NARRATIVE_SCENES.length;
-  const filled = Math.floor(maxWidth * progress);
-
-  setChar(grid, left, barY, "[");
-  for (let i = 0; i < maxWidth; i++) {
-    setChar(grid, left + 1 + i, barY, i < filled ? "=" : ".");
-  }
-  setChar(grid, left + maxWidth + 1, barY, "]");
+  lines[barY][left] = "[";
+  const filled = Math.floor(width * ((sceneIndex + sceneProgress) / NARRATIVE_SCENES.length));
+  for (let i = 0; i < width; i++) lines[barY][left + 1 + i] = i < filled ? "=" : ".";
+  lines[barY][left + width + 1] = "]";
 }
 
-function createGrid(cols, rows, fill = " ") {
-  return Array.from({ length: rows }, () => Array(cols).fill(fill));
-}
-
-function drawEllipseRing(grid, cx, cy, rx, ry, char) {
+function ellipse(lines, cx, cy, rx, ry, ch) {
   const steps = Math.max(48, Math.round((rx + ry) * 8));
   for (let i = 0; i < steps; i++) {
-    const theta = (Math.PI * 2 * i) / steps;
-    const x = Math.round(cx + Math.cos(theta) * rx);
-    const y = Math.round(cy + Math.sin(theta) * ry);
-    setChar(grid, x, y, char);
+    const th = (Math.PI * 2 * i) / steps;
+    const x = Math.round(cx + Math.cos(th) * rx);
+    const y = Math.round(cy + Math.sin(th) * ry);
+    if (y >= 0 && y < lines.length && x >= 0 && x < lines[0].length) lines[y][x] = ch;
   }
 }
 
-function drawBox(grid, x, y, w, h, borderChar) {
-  if (w < 2 || h < 2) {
-    return;
-  }
+function box(lines, x, y, w, h, ch) {
+  if (w < 2 || h < 2) return;
   for (let i = 0; i < w; i++) {
-    setChar(grid, x + i, y, borderChar);
-    setChar(grid, x + i, y + h - 1, borderChar);
+    if (y >= 0 && y < lines.length && x + i >= 0 && x + i < lines[0].length) lines[y][x + i] = ch;
+    if (y + h - 1 >= 0 && y + h - 1 < lines.length && x + i >= 0 && x + i < lines[0].length) lines[y + h - 1][x + i] = ch;
   }
   for (let j = 0; j < h; j++) {
-    setChar(grid, x, y + j, borderChar);
-    setChar(grid, x + w - 1, y + j, borderChar);
+    if (x >= 0 && x < lines[0].length && y + j >= 0 && y + j < lines.length) lines[y + j][x] = ch;
+    if (x + w - 1 >= 0 && x + w - 1 < lines[0].length && y + j >= 0 && y + j < lines.length) lines[y + j][x + w - 1] = ch;
   }
 }
 
-function drawLine(grid, x1, y1, x2, y2, char) {
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const steps = Math.max(Math.abs(dx), Math.abs(dy), 1);
+function arrow(lines, x1, y1, x2, y2, ch) {
+  const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1), 1);
   for (let i = 0; i <= steps; i++) {
-    const t = i / steps;
-    const x = Math.round(x1 + dx * t);
-    const y = Math.round(y1 + dy * t);
-    setChar(grid, x, y, char);
+    const x = Math.round(x1 + ((x2 - x1) * i) / steps);
+    const y = Math.round(y1 + ((y2 - y1) * i) / steps);
+    if (y >= 0 && y < lines.length && x >= 0 && x < lines[0].length) lines[y][x] = ch;
   }
+  if (y2 >= 0 && y2 < lines.length && x2 >= 0 && x2 < lines[0].length) lines[y2][x2] = x2 >= x1 ? ">" : "<";
 }
 
-function drawArrow(grid, x1, y1, x2, y2, bodyChar) {
-  drawLine(grid, x1, y1, x2, y2, bodyChar);
-  const dx = x2 - x1;
-  const dy = y2 - y1;
-  const arrowX = x2;
-  const arrowY = y2;
-  if (Math.abs(dx) >= Math.abs(dy)) {
-    setChar(grid, arrowX, arrowY, dx >= 0 ? ">" : "<");
-  } else {
-    setChar(grid, arrowX, arrowY, dy >= 0 ? "v" : "^");
+function writeText(lines, x, y, text) {
+  if (y < 0 || y >= lines.length) return;
+  for (let i = 0; i < text.length; i++) {
+    const px = x + i;
+    if (px >= 0 && px < lines[0].length) lines[y][px] = text[i];
   }
-}
-
-function drawCenteredText(grid, y, text) {
-  const cols = grid[0].length;
-  const x = Math.max(0, Math.floor((cols - text.length) / 2));
-  drawClampedText(grid, x, y, text);
-}
-
-function drawClampedText(grid, x, y, text) {
-  if (y < 0 || y >= grid.length) {
-    return;
-  }
-  const cols = grid[0].length;
-  if (x >= cols || x + text.length < 0) {
-    return;
-  }
-  const start = Math.max(0, x);
-  const textStart = Math.max(0, -x);
-  const available = cols - start;
-  const slice = text.slice(textStart, textStart + available);
-  for (let i = 0; i < slice.length; i++) {
-    setChar(grid, start + i, y, slice[i]);
-  }
-}
-
-function setChar(grid, x, y, value) {
-  if (y < 0 || y >= grid.length) {
-    return;
-  }
-  if (x < 0 || x >= grid[0].length) {
-    return;
-  }
-  grid[y][x] = value;
-}
-
-function clamp(value, min, max) {
-  return Math.max(min, Math.min(max, value));
 }
 
 async function loadManifest() {
   try {
     const res = await fetch(new URL("./frames-manifest.json", import.meta.url));
-    if (!res.ok) {
-      return [];
-    }
+    if (!res.ok) return [];
     const data = await res.json();
     return Array.isArray(data) ? data : [];
   } catch (error) {
@@ -752,9 +478,7 @@ async function loadManifest() {
 async function loadFallbackFrames() {
   try {
     const mod = await import("./frames.js");
-    if (Array.isArray(mod.FRAMES) && mod.FRAMES.length) {
-      return { frames: mod.FRAMES, fps: mod.FPS ?? CONFIG.fps };
-    }
+    if (Array.isArray(mod.FRAMES) && mod.FRAMES.length) return { frames: mod.FRAMES, fps: mod.FPS ?? CONFIG.fps };
   } catch (error) {
     console.warn("No precomputed frames.js fallback found.", error);
   }
@@ -764,9 +488,7 @@ async function loadFallbackFrames() {
 async function loadBitmap(path) {
   const url = new URL(path, import.meta.url);
   const response = await fetch(url);
-  if (!response.ok) {
-    throw new Error(`Failed to load frame: ${url}`);
-  }
+  if (!response.ok) throw new Error(`Failed to load frame: ${url}`);
   const blob = await response.blob();
   if (typeof createImageBitmap === "function") {
     try {
@@ -778,134 +500,84 @@ async function loadBitmap(path) {
   return blobToImage(blob);
 }
 
-async function createAsciiEngine(manifest, asciiWrap) {
+async function createBitmapEngine(manifest, layerEl) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
-  const asciiCache = new Map();
+  const cache = new Map();
   const inflight = new Map();
+  const state = { layerEl, cols: 0, rows: 0, key: "", frameCount: manifest.length };
 
-  const state = {
-    manifest,
-    wrap: asciiWrap,
-    cols: 0,
-    rows: 0,
-    resKey: "",
-    aspect: 1,
-    frameCount: manifest.length
-  };
-
-  const firstBitmap = await loadBitmap(manifest[0]);
-  state.aspect = firstBitmap.height / firstBitmap.width;
-  updateResolutionInternal(state, asciiWrap, asciiCache, inflight);
-  const firstAscii = convertBitmapToAscii(firstBitmap, canvas, ctx, state);
-  asciiCache.set(cacheKey(0, state), firstAscii);
-  if (typeof firstBitmap.close === "function") {
-    firstBitmap.close();
+  function update(force = false) {
+    const width = layerEl.clientWidth || 1;
+    const height = layerEl.clientHeight || 1;
+    const cols = clamp(Math.floor(width / CONFIG.charPixelTarget), CONFIG.minCols, CONFIG.maxCols);
+    const rows = Math.max(Math.floor(height / (CONFIG.charPixelTarget * CONFIG.lineAspect)), 24);
+    const key = `${cols}x${rows}`;
+    if (force || key !== state.key) {
+      state.cols = cols;
+      state.rows = rows;
+      state.key = key;
+      cache.clear();
+      inflight.clear();
+    }
   }
 
-  const ensureFrame = (index) => {
-    updateResolutionInternal(state, asciiWrap, asciiCache, inflight);
-    const key = cacheKey(index, state);
-    if (asciiCache.has(key)) {
-      return Promise.resolve(asciiCache.get(key));
-    }
-    if (inflight.has(key)) {
-      return inflight.get(key);
-    }
+  function keyFor(i) { return `${i}|${state.key}`; }
+  update(true);
+  const firstBmp = await loadBitmap(manifest[0]);
+  const first = bmpToAscii(firstBmp, canvas, ctx, state.cols, state.rows);
+  if (typeof firstBmp.close === "function") firstBmp.close();
+  cache.set(keyFor(0), first);
 
-    const promise = loadBitmap(manifest[index])
-      .then((bitmap) => {
-        const ascii = convertBitmapToAscii(bitmap, canvas, ctx, state);
-        if (typeof bitmap.close === "function") {
-          bitmap.close();
-        }
-        const freshKey = cacheKey(index, state);
-        asciiCache.set(freshKey, ascii);
-        return ascii;
-      })
-      .finally(() => {
-        inflight.delete(key);
-      });
-
-    inflight.set(key, promise);
-    return promise;
-  };
-
-  const preloadFrom = (index) => {
-    for (let offset = 1; offset <= CONFIG.preloadAhead; offset++) {
-      const next = (index + offset) % state.frameCount;
-      ensureFrame(next).catch(() => { });
-    }
-  };
+  function ensureFrame(index) {
+    update(false);
+    const i = ((index % state.frameCount) + state.frameCount) % state.frameCount;
+    const key = keyFor(i);
+    if (cache.has(key)) return Promise.resolve(cache.get(key));
+    if (inflight.has(key)) return inflight.get(key);
+    const p = loadBitmap(manifest[i]).then((bmp) => {
+      const ascii = bmpToAscii(bmp, canvas, ctx, state.cols, state.rows);
+      if (typeof bmp.close === "function") bmp.close();
+      cache.set(keyFor(i), ascii);
+      return ascii;
+    }).finally(() => inflight.delete(key));
+    inflight.set(key, p);
+    return p;
+  }
 
   return {
-    ensureFrame,
-    preloadFrom,
-    updateResolution(force = false) {
-      updateResolutionInternal(state, asciiWrap, asciiCache, inflight, force);
-    },
-    getDimensions() {
-      return { cols: state.cols, rows: state.rows };
-    },
+    fps: CONFIG.fps,
     frameCount: state.frameCount,
-    firstFrame: firstAscii,
-    fps: CONFIG.fps
+    firstFrame: first,
+    getDimensions: () => ({ cols: state.cols, rows: state.rows }),
+    ensureFrame,
+    preloadFrom(index) {
+      for (let k = 1; k <= CONFIG.preloadAhead; k++) ensureFrame((index + k) % state.frameCount).catch(() => { });
+    },
+    updateResolution(force = false) { update(force); }
   };
 }
 
-function cacheKey(index, state) {
-  return `${index}|${state.resKey}`;
-}
-
-function updateResolutionInternal(state, asciiWrap, cache, inflight, force = false) {
-  const width = asciiWrap.clientWidth || 1;
-  const height = asciiWrap.clientHeight || 1;
-
-  let cols = Math.floor(width / CONFIG.charPixelTarget);
-  cols = Math.max(CONFIG.minCols, Math.min(CONFIG.maxCols, cols));
-
-  let rows = Math.floor(height / (CONFIG.charPixelTarget * CONFIG.lineAspect));
-  rows = Math.max(rows, 24);
-
-  const key = `${cols}x${rows}`;
-  if (force || key !== state.resKey) {
-    state.cols = cols;
-    state.rows = rows;
-    state.resKey = key;
-    cache.clear();
-    inflight.clear();
-  }
-}
-
-function convertBitmapToAscii(bitmap, canvas, ctx, state) {
-  const cols = state.cols;
-  const rows = state.rows;
-
+function bmpToAscii(bitmap, canvas, ctx, cols, rows) {
   canvas.width = cols;
   canvas.height = rows;
   ctx.clearRect(0, 0, cols, rows);
   ctx.drawImage(bitmap, 0, 0, cols, rows);
-
-  const image = ctx.getImageData(0, 0, cols, rows).data;
-  const lines = new Array(rows);
-  const paletteSize = CONFIG.palette.length - 1;
-
-  for (let row = 0; row < rows; row++) {
+  const data = ctx.getImageData(0, 0, cols, rows).data;
+  const palMax = CONFIG.palette.length - 1;
+  const out = new Array(rows);
+  for (let y = 0; y < rows; y++) {
     let line = "";
-    let offset = row * cols * 4;
+    let off = y * cols * 4;
     for (let x = 0; x < cols; x++) {
-      const r = image[offset];
-      const g = image[offset + 1];
-      const b = image[offset + 2];
-      const luminance = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-      const idx = Math.min(paletteSize, Math.round(luminance * paletteSize));
-      line += CONFIG.palette[idx];
-      offset += 4;
+      const r = data[off], g = data[off + 1], b = data[off + 2];
+      const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
+      line += CONFIG.palette[Math.min(palMax, Math.round(lum * palMax))];
+      off += 4;
     }
-    lines[row] = line;
+    out[y] = line;
   }
-
-  return lines.join("\n");
+  return out.join("\n");
 }
 
 function blobToImage(blob) {
@@ -916,9 +588,9 @@ function blobToImage(blob) {
       URL.revokeObjectURL(url);
       resolve(img);
     };
-    img.onerror = (event) => {
+    img.onerror = (evt) => {
       URL.revokeObjectURL(url);
-      reject(event?.error || new Error("Image load failed"));
+      reject(evt?.error || new Error("Image load failed"));
     };
     img.src = url;
   });
@@ -930,51 +602,20 @@ function createPrecomputedEngine(fallback) {
   const rows = first.split("\n");
   const height = rows.length;
   const width = rows[0] ? rows[0].length : 0;
-
   return {
     fps: fallback.fps,
     frameCount: frames.length,
     firstFrame: first,
-    getDimensions() {
-      return { cols: width, rows: height };
-    },
+    getDimensions: () => ({ cols: width, rows: height }),
     ensureFrame(index) {
-      return Promise.resolve(frames[index]);
+      const i = ((index % frames.length) + frames.length) % frames.length;
+      return Promise.resolve(frames[i]);
     },
     preloadFrom() { },
     updateResolution() { }
   };
 }
 
-function fitFont(engine) {
-  const dims = engine.getDimensions();
-  const cols = dims.cols;
-  const rows = dims.rows;
-  if (!cols || !rows || !wrap) {
-    return;
-  }
-
-  const width = screen?.clientWidth || wrap.clientWidth;
-  const height = screen?.clientHeight || wrap.clientHeight;
-  if (!width || !height) {
-    return;
-  }
-
-  const pxByWidth = width / cols;
-  const pxByHeight = height / (rows * CONFIG.lineAspect);
-  const px = Math.ceil(Math.max(pxByWidth, pxByHeight) * 1.01);
-
-  if (px > 0) {
-    applyAsciiTypography(screen, px);
-    applyAsciiTypography(screenGhost1, px);
-    applyAsciiTypography(screenGhost2, px);
-  }
-}
-
-function applyAsciiTypography(target, px) {
-  if (!target) {
-    return;
-  }
-  target.style.fontSize = `${px}px`;
-  target.style.lineHeight = `${px * CONFIG.lineAspect}px`;
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
 }
