@@ -171,6 +171,20 @@ body {
   border: 2px solid var(--primary-blue);
 }
 
+#dlaczego .why-image {
+  position: sticky;
+  top: clamp(1.25rem, 3vw, 2.25rem);
+  align-self: flex-start;
+}
+
+#dolacz .page-content {
+  display: block;
+}
+
+#dolacz .page-text {
+  max-width: 72ch;
+}
+
 .page h1 {
   font-family: inherit;
   font-size: clamp(1.5rem, 3vw, 2rem);
@@ -494,6 +508,10 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
   backdrop-filter: blur(7px) saturate(112%);
 }
 
+body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
+  display: none;
+}
+
 .narrative-ascii-layer[data-scene="scene-6"] #ascii-story-overlay {
   opacity: 0.74;
   transform: translateY(0);
@@ -765,7 +783,7 @@ a:not(.cta):hover {
   border-top: 2px solid var(--primary-blue);
   padding: clamp(3rem, 6vw, 5rem) clamp(2rem, 5vw, 6rem);
   position: relative;
-  z-index: 10;
+  z-index: 30;
 }
 
 .footer-content {
@@ -1440,6 +1458,11 @@ a:not(.cta):hover {
     width: 100%;
     max-width: 400px;
     margin: 2rem auto 0;
+  }
+
+  #dlaczego .why-image {
+    position: relative;
+    top: 0;
   }
 
   .ascii-caption {

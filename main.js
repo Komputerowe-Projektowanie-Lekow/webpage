@@ -3,8 +3,8 @@ const CONFIG = {
   speed: 0.4,
   palette: "/\\.|",
   lineAspect: 1.0,
-  charPixelTarget: 6,
-  minCols: 100,
+  charPixelTarget: 6.4,
+  minCols: 96,
   maxCols: 500,
   preloadAhead: 15
 };
@@ -21,7 +21,7 @@ const NARRATIVE_TOTAL_MS = NARRATIVE_SCENES.reduce((s, x) => s + x.durationMs, 0
 
 const body = document.body;
 const heroSection = document.getElementById("kontekst-sekcji");
-const statusSection = document.getElementById("status");
+const supportSection = document.getElementById("support");
 const footer = document.querySelector(".site-footer");
 
 const proteinLayer = document.getElementById("protein-ascii-layer");
@@ -186,8 +186,9 @@ function createController({ layerEl, screens, initEngine, staticIndex }) {
     },
     onResize() {
       if (!inited || !engine) return;
-      if (engine.updateResolution) engine.updateResolution(true);
+      const resolutionChanged = engine.updateResolution ? engine.updateResolution(false) : true;
       fit();
+      if (!resolutionChanged) return;
       paintToken++;
       const idx = (frameIndex + engine.frameCount - 1) % engine.frameCount;
       engine.ensureFrame(idx).then((frame) => setFrame(frame)).catch(() => { });
@@ -252,11 +253,11 @@ function applyActivity() {
 }
 
 function computeNarrativeActive() {
-  if (innerWidth <= 900 || !statusSection) return false;
+  if (innerWidth <= 900 || !supportSection) return false;
   const anchorY = scrollY + innerHeight * 0.35;
-  const statusTop = statusSection.offsetTop;
-  const footerBottom = footer ? footer.offsetTop + footer.offsetHeight : document.documentElement.scrollHeight;
-  return anchorY >= statusTop && scrollY <= footerBottom;
+  const supportTop = supportSection.offsetTop;
+  const footerTop = footer ? footer.offsetTop : document.documentElement.scrollHeight;
+  return anchorY >= supportTop && anchorY < footerTop;
 }
 
 function setBodyActivity(proteinActive, narrativeActive) {
@@ -281,6 +282,8 @@ async function initNarrativeEngine() {
 
 function setNarrativeOverlay(sceneState) {
   if (!narrativeLayer || !storyOverlay) return;
+  storyOverlay.hidden = true;
+  storyOverlay.setAttribute("aria-hidden", "true");
   if (!sceneState) {
     narrativeLayer.setAttribute("data-scene", "none");
     narrativeLayer.setAttribute("data-final-hold", "false");
@@ -293,7 +296,7 @@ function setNarrativeOverlay(sceneState) {
   if (storyTitle) storyTitle.textContent = sceneState.title;
   if (storyMeta) storyMeta.textContent = sceneState.meta;
   if (storyNote) storyNote.textContent = sceneState.note ?? "";
-  if (storyActions) storyActions.setAttribute("aria-hidden", sceneState.isFinalHold ? "false" : "true");
+  if (storyActions) storyActions.setAttribute("aria-hidden", "true");
 }
 
 function createNarrativeEngine(layerEl) {
@@ -305,15 +308,25 @@ function createNarrativeEngine(layerEl) {
     const w = layerEl.clientWidth || innerWidth || 1;
     const h = layerEl.clientHeight || innerHeight || 1;
     const mobile = w <= 900;
-    const cols = clamp(Math.floor(w / (mobile ? 7.2 : 6.3)), mobile ? 78 : 82, mobile ? 128 : 164);
-    const rows = clamp(Math.floor(h / (mobile ? 12 : 10.8)), mobile ? 26 : 30, mobile ? 52 : 66);
+    const denseDesktop = w >= 1500;
+    const cols = clamp(
+      Math.floor(w / (mobile ? 7.6 : denseDesktop ? 6.9 : 7.6)),
+      mobile ? 72 : 74,
+      mobile ? 122 : 150
+    );
+    const rows = clamp(
+      Math.floor(h / (mobile ? 12.4 : denseDesktop ? 11.4 : 12.2)),
+      mobile ? 24 : 26,
+      mobile ? 48 : 58
+    );
     const key = `${cols}x${rows}|${mobile ? "m" : "d"}`;
-    if (force || key !== dims.key) {
-      dims.cols = cols;
-      dims.rows = rows;
-      dims.mobile = mobile;
-      dims.key = key;
-    }
+    const changed = force || key !== dims.key;
+    if (!changed) return false;
+    dims.cols = cols;
+    dims.rows = rows;
+    dims.mobile = mobile;
+    dims.key = key;
+    return true;
   }
 
   updateResolution(true);
@@ -336,7 +349,7 @@ function createNarrativeEngine(layerEl) {
       return Promise.resolve(renderNarrativeFrame(scene, dims, t));
     },
     preloadFrom() { },
-    updateResolution(force = false) { updateResolution(force); }
+    updateResolution(force = false) { return updateResolution(force); }
   };
 }
 
@@ -375,8 +388,15 @@ function renderNarrativeFrame(scene, dims, t) {
     }
   }
   const labelMap = { "scene-1": "[komorka pojedyncza]", "scene-2": "[retencja i wejscie]", "scene-3": "[target engagement]", "scene-4": "[boltz2 + KD_pred]", "scene-5": "[MD i system]", "scene-6": "[wirtualna komorka]" };
-  writeText(lines, Math.floor(cols * 0.06), Math.floor(rows * 0.16), labelMap[scene.sceneId] ?? "");
-  writeText(lines, Math.floor(cols * 0.06), rows - 4, dims.mobile ? "S1->S2a+2b->S3(200)->S4(KD)->S5(50)->6A/6B" : "REINVENT4->S2a+S2b->S3(top200)->S4(KD)->S5(top50)->6A/6B");
+  const compactLabelMap = { "scene-1": "[komorka]", "scene-2": "[retencja]", "scene-3": "[engagement]", "scene-4": "[S4 KD]", "scene-5": "[MD + system]", "scene-6": "[wirtualna]" };
+  const label = cols < 110 ? (compactLabelMap[scene.sceneId] ?? "") : (labelMap[scene.sceneId] ?? "");
+  const pipelineLine = cols < 100
+    ? "S1>S2>S3>S4>S5>6A/6B"
+    : cols < 126
+      ? "S1->S2a+2b->S3(200)->S4(KD)->S5(50)->6A/6B"
+      : "REINVENT4->S2a+S2b->S3(top200)->S4(KD)->S5(top50)->6A/6B";
+  writeText(lines, Math.floor(cols * 0.06), Math.floor(rows * 0.16), label);
+  writeText(lines, Math.floor(cols * 0.06), rows - 4, pipelineLine);
   drawSceneShape(lines, scene.sceneId, t);
   drawProgress(lines, scene.sceneIndex, scene.sceneProgress);
   return lines.map((r) => r.join("")).join("\n");
@@ -385,30 +405,56 @@ function renderNarrativeFrame(scene, dims, t) {
 function drawSceneShape(lines, sceneId, t) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const cx = Math.floor(cols * 0.24);
+  const compact = cols < 96;
+  const cx = Math.floor(cols * (compact ? 0.2 : 0.24));
   const cy = Math.floor(rows * 0.5);
   const pulse = Math.sin(t * 0.004) * 0.8;
-  const rx = Math.max(6, Math.floor(cols * 0.1 + pulse));
-  const ry = Math.max(5, Math.floor(rows * 0.17 + pulse * 0.5));
+  const rx = clamp(
+    Math.floor((compact ? cols * 0.075 : cols * 0.1) + pulse),
+    compact ? 5 : 6,
+    Math.max(compact ? 7 : 9, Math.floor(cols * (compact ? 0.1 : 0.13)))
+  );
+  const ry = clamp(
+    Math.floor((compact ? rows * 0.13 : rows * 0.17) + pulse * 0.5),
+    compact ? 4 : 5,
+    Math.max(compact ? 8 : 10, Math.floor(rows * 0.22))
+  );
   ellipse(lines, cx, cy, rx, ry, "@");
+  const gateX = clamp(Math.floor(cols * (compact ? 0.44 : 0.48)), cx + rx + 3, cols - 3);
   if (sceneId === "scene-2" || sceneId === "scene-3") {
-    const gx = Math.floor(cols * 0.48);
-    for (let y = Math.floor(rows * 0.24); y <= Math.floor(rows * 0.76); y++) lines[y][gx] = "|";
+    for (let y = Math.floor(rows * 0.24); y <= Math.floor(rows * 0.76); y++) lines[y][gateX] = "|";
   }
   if (sceneId === "scene-4") {
-    box(lines, Math.floor(cols * 0.18), Math.floor(rows * 0.24), Math.floor(cols * 0.22), Math.floor(rows * 0.4), "#");
-    writeText(lines, Math.floor(cols * 0.2), Math.floor(rows * 0.32), "stage4_output.csv");
+    const boxW = clamp(Math.floor(cols * (compact ? 0.18 : 0.22)), compact ? 10 : 14, compact ? 16 : 24);
+    const boxH = clamp(Math.floor(rows * (compact ? 0.28 : 0.4)), compact ? 7 : 10, compact ? 11 : 18);
+    const minX = Math.max(1, cx - Math.floor(boxW * 0.35));
+    const boxX = clamp(Math.floor(cols * (compact ? 0.22 : 0.18)), minX, Math.max(minX, cols - boxW - 2));
+    const boxY = clamp(Math.floor(rows * 0.24), 1, Math.max(1, rows - boxH - 2));
+    box(lines, boxX, boxY, boxW, boxH, "#");
+    writeText(lines, boxX + 2, Math.min(rows - 2, boxY + Math.max(2, Math.floor(boxH * 0.35))), compact ? "s4.csv" : "stage4_output.csv");
   }
   if (sceneId === "scene-5") {
-    box(lines, Math.floor(cols * 0.7), Math.floor(rows * 0.28), 12, 6, "#");
-    box(lines, Math.floor(cols * 0.7), Math.floor(rows * 0.62), 12, 6, "#");
-    writeText(lines, Math.floor(cols * 0.74), Math.floor(rows * 0.32), "6A");
-    writeText(lines, Math.floor(cols * 0.74), Math.floor(rows * 0.66), "6B");
+    const boxW = compact ? 8 : 12;
+    const boxH = compact ? 4 : 6;
+    const boxX = clamp(Math.floor(cols * (compact ? 0.74 : 0.7)), 1, cols - boxW - 2);
+    const topY = clamp(Math.floor(rows * 0.28), 1, Math.max(1, rows - boxH - 2));
+    const bottomY = clamp(Math.floor(rows * (compact ? 0.58 : 0.62)), topY + boxH + 1, Math.max(topY + boxH + 1, rows - boxH - 2));
+    box(lines, boxX, topY, boxW, boxH, "#");
+    box(lines, boxX, bottomY, boxW, boxH, "#");
+    writeText(lines, boxX + Math.max(2, Math.floor(boxW * 0.35)), Math.min(rows - 2, topY + Math.max(1, Math.floor(boxH * 0.5))), "6A");
+    writeText(lines, boxX + Math.max(2, Math.floor(boxW * 0.35)), Math.min(rows - 2, bottomY + Math.max(1, Math.floor(boxH * 0.5))), "6B");
   }
   if (sceneId === "scene-6") {
-    box(lines, Math.floor(cols * 0.56), Math.floor(rows * 0.28), Math.floor(cols * 0.34), Math.floor(rows * 0.42), "#");
+    const boxW = clamp(Math.floor(cols * (compact ? 0.24 : 0.34)), compact ? 12 : 18, compact ? 18 : 34);
+    const boxH = clamp(Math.floor(rows * (compact ? 0.28 : 0.42)), compact ? 8 : 12, compact ? 14 : 28);
+    const minX = cx + rx + 6;
+    const boxX = clamp(Math.floor(cols * (compact ? 0.6 : 0.56)), minX, Math.max(minX, cols - boxW - 2));
+    const boxY = clamp(Math.floor(rows * 0.28), 1, Math.max(1, rows - boxH - 2));
+    box(lines, boxX, boxY, boxW, boxH, "#");
   }
-  arrow(lines, cx + rx + 3, cy, Math.floor(cols * 0.58), cy, "=");
+  const arrowStartX = clamp(cx + rx + 2, 1, cols - 2);
+  const arrowTargetX = clamp(Math.floor(cols * (compact ? 0.54 : 0.58)), arrowStartX + 1, cols - 2);
+  arrow(lines, arrowStartX, cy, arrowTargetX, cy, "=");
 }
 
 function drawProgress(lines, sceneIndex, sceneProgress) {
@@ -513,13 +559,14 @@ async function createBitmapEngine(manifest, layerEl) {
     const cols = clamp(Math.floor(width / CONFIG.charPixelTarget), CONFIG.minCols, CONFIG.maxCols);
     const rows = Math.max(Math.floor(height / (CONFIG.charPixelTarget * CONFIG.lineAspect)), 24);
     const key = `${cols}x${rows}`;
-    if (force || key !== state.key) {
-      state.cols = cols;
-      state.rows = rows;
-      state.key = key;
-      cache.clear();
-      inflight.clear();
-    }
+    const changed = force || key !== state.key;
+    if (!changed) return false;
+    state.cols = cols;
+    state.rows = rows;
+    state.key = key;
+    cache.clear();
+    inflight.clear();
+    return true;
   }
 
   function keyFor(i) { return `${i}|${state.key}`; }
@@ -554,7 +601,7 @@ async function createBitmapEngine(manifest, layerEl) {
     preloadFrom(index) {
       for (let k = 1; k <= CONFIG.preloadAhead; k++) ensureFrame((index + k) % state.frameCount).catch(() => { });
     },
-    updateResolution(force = false) { update(force); }
+    updateResolution(force = false) { return update(force); }
   };
 }
 
@@ -612,7 +659,7 @@ function createPrecomputedEngine(fallback) {
       return Promise.resolve(frames[i]);
     },
     preloadFrom() { },
-    updateResolution() { }
+    updateResolution() { return false; }
   };
 }
 
