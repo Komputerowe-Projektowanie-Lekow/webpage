@@ -20,10 +20,20 @@
     <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
   </div>
 
-  <div class="ascii-layer">
+  <div class="ascii-layer" data-scene="scene-1" data-final-hold="false">
     <pre id="screen-ghost-1" data-ready="false" aria-hidden="true"></pre>
     <pre id="screen-ghost-2" data-ready="false" aria-hidden="true"></pre>
     <pre id="screen" data-ready="false"></pre>
+    <div id="ascii-story-overlay" aria-live="polite">
+      <p id="ascii-story-kicker">Narracja ASCII</p>
+      <h2 id="ascii-story-title">Komorka pojedyncza</h2>
+      <p id="ascii-story-meta">Przejscie od sygnalu komorkowego do modelu wirtualnej komorki.</p>
+      <p id="ascii-story-note"></p>
+      <div id="ascii-story-actions">
+        <a class="ascii-story-action join-action" href="#dolacz">Dołącz</a>
+        <a class="ascii-story-action contact-action" href="mailto:sknwpl@proton.me">Kontakt</a>
+      </div>
+    </div>
     <div class="ascii-caption">
       <span data-i18n="micro.ascii.caption">Pipeline GUB - wizualizacja aktywności białka</span>
     </div>

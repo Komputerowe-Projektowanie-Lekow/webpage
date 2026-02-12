@@ -446,6 +446,118 @@ body {
   font-weight: 400;
 }
 
+#ascii-story-overlay {
+  position: fixed;
+  left: clamp(1.2rem, 3vw, 2.4rem);
+  bottom: clamp(5.2rem, 9vh, 7rem);
+  width: min(38rem, 46vw);
+  z-index: 4;
+  padding: 0.95rem 1.15rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 260ms ease, transform 260ms ease;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.85), rgba(255, 255, 255, 0.66)),
+    linear-gradient(130deg, rgba(1, 119, 155, 0.08), rgba(255, 255, 255, 0));
+  border: 1px solid rgba(1, 119, 155, 0.5);
+  box-shadow: 0 18px 38px rgba(1, 62, 90, 0.2);
+  backdrop-filter: blur(7px) saturate(112%);
+}
+
+.ascii-layer[data-scene="scene-6"] #ascii-story-overlay {
+  opacity: 0.74;
+  transform: translateY(0);
+}
+
+.ascii-layer[data-final-hold="true"] #ascii-story-overlay {
+  opacity: 1;
+  pointer-events: auto;
+  box-shadow: 0 20px 44px rgba(1, 62, 90, 0.25);
+}
+
+#ascii-story-kicker {
+  margin: 0 0 0.35rem;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--secondary-blue);
+}
+
+#ascii-story-title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(0.95rem, 1.3vw, 1.08rem);
+  letter-spacing: 0.04em;
+  color: var(--primary-blue);
+  text-transform: uppercase;
+  line-height: 1.35;
+}
+
+#ascii-story-meta,
+#ascii-story-note {
+  margin: 0;
+  font-size: 0.83rem;
+  line-height: 1.55;
+  color: var(--text-dark);
+}
+
+#ascii-story-note {
+  margin-top: 0.45rem;
+  color: var(--text-mid);
+}
+
+#ascii-story-actions {
+  display: flex;
+  gap: 0.55rem;
+  margin-top: 0.7rem;
+  opacity: 0;
+  max-height: 0;
+  overflow: hidden;
+  transform: translateY(4px);
+  transition: opacity 220ms ease, transform 220ms ease, max-height 220ms ease;
+  pointer-events: none;
+}
+
+.ascii-layer[data-final-hold="true"] #ascii-story-actions {
+  opacity: 1;
+  max-height: 3rem;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.ascii-story-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid var(--primary-blue);
+  border-bottom: none;
+  padding: 0.4rem 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  font-size: 0.72rem;
+  background: rgba(255, 255, 255, 0.8);
+  color: var(--primary-blue);
+  text-decoration: none;
+  transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+}
+
+#ascii-story-actions a.ascii-story-action,
+#ascii-story-actions a.ascii-story-action:hover {
+  text-decoration: none;
+  border-bottom: none;
+}
+
+.ascii-story-action.join-action {
+  background: var(--primary-blue);
+  color: #ffffff;
+}
+
+.ascii-story-action:hover {
+  background: var(--secondary-blue);
+  border-color: var(--secondary-blue);
+  color: #ffffff;
+}
+
 /* Hide ASCII behind non-hero sections */
 .page:not(.hero) {
   position: relative;
@@ -1292,6 +1404,40 @@ a:not(.cta):hover {
     font-size: 0.7rem;
   }
 
+  #ascii-story-overlay {
+    width: min(28rem, calc(100vw - 2rem));
+    left: 1rem;
+    bottom: 4.7rem;
+    padding: 0.8rem 0.9rem;
+    box-shadow: 0 12px 26px rgba(1, 62, 90, 0.18);
+  }
+
+  #ascii-story-kicker {
+    font-size: 0.63rem;
+    margin-bottom: 0.3rem;
+  }
+
+  #ascii-story-title {
+    font-size: 0.88rem;
+    margin-bottom: 0.28rem;
+  }
+
+  #ascii-story-meta,
+  #ascii-story-note {
+    font-size: 0.76rem;
+    line-height: 1.45;
+  }
+
+  #ascii-story-actions {
+    gap: 0.42rem;
+    margin-top: 0.55rem;
+  }
+
+  .ascii-story-action {
+    padding: 0.34rem 0.56rem;
+    font-size: 0.65rem;
+  }
+
   .page h1 {
     font-size: clamp(1.3rem, 5vw, 1.8rem);
     margin-bottom: 1.5rem;
@@ -1432,6 +1578,8 @@ a:not(.cta):hover {
   .ascii-layer::after,
   #screen-ghost-1,
   #screen-ghost-2,
+  #ascii-story-overlay,
+  #ascii-story-actions,
   .accordion-item,
   .info-card,
   .task-item,
