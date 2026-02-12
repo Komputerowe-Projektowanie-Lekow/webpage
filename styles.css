@@ -247,7 +247,15 @@ body {
   position: relative;
   z-index: 10;
 }
+.highlight-text {
+  color: var(--warning-color);
+  font-weight: bold;
+  margin-bottom: 0.5rem;
+}
 
+.special-feature .accordion-button {
+  border-left: 2px solid var(--warning-color);
+}
 #screen {
   margin: 0;
   padding: 0;

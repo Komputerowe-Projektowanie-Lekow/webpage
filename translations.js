@@ -3,28 +3,28 @@ export const translations = {
     // Meta
     "meta.description": "Sekcja CADD Politechniki Poznańskiej: budujemy otwarty workflow projektowania leków (REMD, MSM, TRAM, ML) i paczkę PMARLO. Aktualnie: AQP4/Alzheimer, przygotowania do Polaris Hub. Dołącz — projekty, PR-y, wyniki.",
     "meta.title": "Sekcja Koła Naukowego Wspierania Projektów Leków",
-    
+
     // ASCII Caption
     "ascii.caption": "Dokowanie ligandu do białka",
-    
+
     // Navigation
     "nav.context": "Kontekst sekcji",
     "nav.projects": "Projekty",
     "nav.join": "Dołącz",
-    
+
     // Hero Section
     "hero.title": "Sekcja Koła Naukowego Wspierania Projektów Leków",
     "hero.subtitle": "Cześć, w naszej sekcji zajmujemy się projektowaniem leków wspomaganym komputerowo.",
     "hero.cta": "Dowiedz się więcej",
-    
+
     // Context Section
     "context.title": "Kontekst sekcji",
     "context.content": "Dążymy do medycyny indywidualnej: budujemy workflow, które komputerowo przesiewa tysiące cząsteczek aż do progu przedklinicznego (gdzie i tak przechodzi < 0,1 %). W pierwszym zastosowaniu sprawdzamy modulatory akwaporyny-4 w kontekście Alzheimera. Równolegle tworzymy open-source'ową bibliotekę w Pythonie (stylistyką zbliżoną do PyEMMA2), scalającą najlepsze metody predykcji konformacji białek w jeden ekosystem. Gdy tylko na Polaris Hub ogłoszą kolejną edycję konkursu – startujemy.",
-    
+
     // Projects Section
     "projects.title": "Obecne działania projektów",
     "projects.intro": "Poniżej znajdziesz listę naszych bieżących projektów wraz z problemami, nad którymi obecnie pracujemy. Kliknij na projekt, aby zobaczyć szczegóły.",
-    
+
     // Project 1 - CADD Workflow
     "project1.title": "Workflow Computer-Aided Drug Design",
     "project1.subtitle": "Stworzenie sposobu testowania tysięcy związków o potencjalnym działaniu terapeutycznym aż do etapu przedklinicznego:",
@@ -50,7 +50,7 @@ export const translations = {
     "project1.step5.desc": "przeprowadzić QSAR/SAR i profilowanie ADMET (w tym Tanimoto/porównania chemoinform.), odrzucając chemie toksyczne lub nienadające się do BBB.",
     "project1.step6": "Ulepszanie cząsteczek:",
     "project1.step6.desc": "iteracyjnie stosować bioizosterie, R-group replacement i scaffold-hopping, by podnieść selektywność i okno terapeutyczne.",
-    
+
     "project1.problems.title": "Problemy",
     "project1.problem1.title": "Problem 1",
     "project1.problem1.premise": "Przesłanki:",
@@ -60,7 +60,7 @@ export const translations = {
     "project1.problem1.point1.bold": "nie jesteśmy pewni, jak dokładnie zachowuje się ten kompleks i czy powinniśmy go zatrzymywać, czy katalizować",
     "project1.problem1.point2": "każde białko, które jest w bazie danych, musi przejść konkretne przygotowanie; jednak na naszym przykładzie nie jesteśmy pewni, czy obecna konfiguracja białka jest dobrze zrobiona, i ",
     "project1.problem1.point2.bold": "nie jesteśmy w stanie zidentyfikować i naprawić wszystkich mostków dwusiarczkowych, żeby nie było jakiś bezsensownych grup -SH.",
-    
+
     "project1.problem2.title": "Problem 2",
     "project1.problem2.premise": "Przesłanki:",
     "project1.problem2.premise.text": "homologiczne białka powinny działać na podobnej zasadzie jak inne o znanej już funkcji, w innym znaczeniu czy organizmie.",
@@ -68,16 +68,16 @@ export const translations = {
     "project1.problem2.point1": "chcemy zrobić duże MSA (multi-sequence alignment), żeby stworzyć sobie nasze białko akwaporynę 4, a nie polegać na banku białek, w którym jest tylko konkretny jeden snapshot tego białka w krysztale z PDB, i konkretną sekwencję kodującą to białko, żeby następnie użyć jakichś modeli do predykcji białek; jednak ",
     "project1.problem2.point1.bold": "nie jesteśmy w stanie powiedzieć, jak dobrze zrobić ten element, żeby wszystko, co będzie po tym, było stabilnie opisane i na przesłankach, że nasze białko nie jest widmem.",
     "project1.problem2.point2.bold": "nie potrafimy zebrać homologów i przygotować MSA w celu porównania konserwacji reszt orto- vs allosterycznych",
-    
+
     "project1.problem3.title": "Problem 3",
     "project1.problem3.premise": "Przesłanki:",
     "project1.problem3.premise.text": "do naszego badania musimy (albo nie) sprawdzić metodę SILCS (Site Identification by Ligand Competitive Saturation), ale nie ma jej obecnie nielicencjonowanej, z tego co wiemy. Musimy zrobić samemu implementację tej metody lub znaleźć narzędzie, które to zrobi.",
     "project1.problem3.content": "Treść:",
     "project1.problem3.point1.bold": "implementacja wydaje się być nieosiągalnym celem, a poszukanie działającej wersji na otwartej licencji jest bardzo trudne, choć może się tutaj mylimy",
-    
+
     "project1.conclusion.title": "Końcowy opis",
     "project1.conclusion.text": "To są obecne problemy, jakie wiążą się z tym projektem. To jest bardzo mały horyzont, a sam plan jest znacznie większy oraz prowadzi do ciekawych rezultatów.",
-    
+
     // Project 2 - PMARLO
     "project2.title": "Paczka Python dla konformacji białek (PMARLO)",
     "project2.subtitle": "Zrobienie paczki w Pythonie jako program umożliwiający szukanie konformacji białek w sposób łączący wiele technik optymalizacyjnych do szukania najszybszej drogi przeszukania search-space'u obiektu",
@@ -112,7 +112,7 @@ export const translations = {
     "project2.method.step13.desc": "klastruj w CV-space (ważone), zlicz przejścia → macierz przejść → ITS/CK → PCCA+; jeśli CK/ITS nie przechodzi, popraw liczbę klastrów/τ i powtórz ten krok.",
     "project2.method.step14": "FES + eksport:",
     "project2.method.step14.desc": "zbuduj FES (hist/KDE w CV-space z wagami), wyznacz stany i populacje, a następnie wyeksportuj artefakty (cv_model, scaler, cv_projection, msm/*.npz, fes/*, report.html).",
-    
+
     "project2.problems.title": "Problemy",
     "project2.problem1.title": "Problem 1",
     "project2.problem1.premise": "Przesłanki:",
@@ -122,12 +122,12 @@ export const translations = {
     "project2.problem1.point1.rest": " który pokaże, jak system krótkich, wąskich symulacji kompensuje ograniczone zasoby. Tutaj jest ",
     "project2.problem1.link": "przykład",
     "project2.problem1.link.rest": " koncepcji z czatu GPT – obecnie to szkic bez aparatu matematycznego.",
-    
+
     "project2.conclusion.title": "Końcowy opis",
     "project2.conclusion.text1": "Reszta problemów jest zebrana w ",
     "project2.conclusion.link": "issue trackerze PMARLO",
     "project2.conclusion.text2": ", gdzie znajdziecie pełną listę zadań przybliżających paczkę do działania.",
-    
+
     // Project 3 - Polaris Hub
     "project3.title": "Przygotowania do Polaris Hub",
     "project3.subtitle": "Wystartowanie w konkursie Polaris Hub na bazie Kaggle, w ktorym mozna porownac swoje metody do SOTA z branz CADD",
@@ -143,7 +143,7 @@ export const translations = {
     "project3.conclusion.title": "Koncowy opis",
     "project3.conclusion.text1": "Samodzielnie sprawdz co mozemy wyniesc z Polaris Hub — to srodowisko, do ktorego regularnie bedziemy wracac, zeby benchmarkowac nasze metody. ",
     "project3.conclusion.link": "Polaris — benchmarking dla drug discovery",
-    
+
     // Join Section
     "join.title": "Dołącz do nas",
     "join.intro1": "Dołącz do nas, tworząc jednostkę badawczą tutaj na politechnice.",
@@ -158,7 +158,7 @@ export const translations = {
     "join.build.group3.desc": " – tworzenie biblioteki ligandów.",
     "join.build.text2": "Bez żadnych reklam, bez jakiejkolwiek agendy. Chcemy tylko stworzyć ten workflow.",
     "join.build.text3": "Jeżeli jesteś zainteresowany jakimiś koncernami farmaceutycznymi jak: Polpharma, Selvita, Celon Pharma, Ryvu Therapeutics, Mabion, Bioton, Captor Therapeutics, Bioceltix, Biotts, Polfa Tarchomin, Adamed Pharma, Molecure, Molecule One czy Pure Biologics, Helix Immuno-Oncology – to jest to świetne miejsce, żeby pokazać swój wkład w R&D.",
-    
+
     "join.looking.title": "Czego szukamy",
     "join.looking.text1": "Nie obchodzi nas do jakiej szkoły chodziłeś, czy w ogóle chodziłeś. Nie obchodzi nas czy masz tradycyjne wyszkolenie z jakiejś dziedziny. Jesteśmy sekcją projektową, a nie typowo edukacyjną. Szukamy ludzi którzy indywidualnie i w zespole potrafią wpłynąć na kierunek naszych badań:",
     "join.looking.point1": "jeżeli nie boisz się pytać o pomoc,",
@@ -167,7 +167,7 @@ export const translations = {
     "join.looking.point4": "chcesz robić grind.",
     "join.looking.text2": "Fajnie gdybyś pokazał swój GitHub, jakiś wkład w to co lubisz, jakikolwiek projekt który próbowałeś poprawić albo rozwiązać jakiś problem samemu.",
     "join.looking.text3": "Nie musisz udowadniać swoich umiejętności, wystarczy porozmawiać. Jednak gdy chcesz wstępnie móc wiedzieć co robimy zobacz zakładkę 'projekty' w których masz obecne przykładowe problemy jakie trzeba rozwiązać.",
-    
+
     "join.positions.title": "Aktywnie szukamy ludzi",
     "join.positions.intro": "Pamiętajcie, że wszystko zajawkowo:",
     "join.position1.title": "DevOpsów",
@@ -190,12 +190,12 @@ export const translations = {
     "join.position4.desc.bold": "uzupełnić wszystkie eksperymenty numeryczne o solidną analizę",
     "join.position4.desc.rest": ", która pokaże, że te obliczenia mają jakikolwiek sens.",
     "join.position4.workflow": "PMARLO, Polaris Hub",
-    
+
     "join.apply.title": "Aplikowanie",
     "join.apply.step1": "Jeżeli chcesz uczestniczyć w sekcji to należy dołączyć do koła bioinformatyki i powiedzieć mi jak chcesz pomóc w robieniu tego co wydaje się dla ciebie interesujące w naszej sekcji.",
     "join.apply.step2": "Później porozmawiasz z jednym z liderów naszej sekcji na temat jak możesz się wdrożyć, pomóc lub robić.",
     "join.apply.text": "Jeżeli wszystko pójdzie dobrze to będziemy robić ciekawe rzeczy.",
-    
+
     "join.faq.title": "FAQ",
     "join.faq.q1": "Jakieś komputery do obliczeń?",
     "join.faq.a1": "Nie",
@@ -203,7 +203,7 @@ export const translations = {
     "join.faq.a2": "Nie",
     "join.faq.q3": "Jakiekolwiek licencje czy pozwolenia?",
     "join.faq.a3": "Nie",
-    
+
     // Footer
     "footer.dream.title": "Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.",
     "footer.dream.text": "Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania przetrwają etap kliniczny.",
@@ -213,35 +213,75 @@ export const translations = {
     "footer.contact.email.text": "Email: sknwpl(at)proton(dot)me",
     "footer.partners.title": "Partnerzy / wsparcie",
     "footer.partners.text": "Otwarte zaproszenie do współpracy (sprzęt, granty, konsultacje).<br>Jeżeli chcesz się odezwać z pytaniem, jakąś współpracą naukową itp. - skontaktuj się z nami.",
-    "footer.bottom": "Dołącz do nas i podziel się swoimi umiejętnościami."
+    "footer.bottom": "Dołącz do nas i podziel się swoimi umiejętnościami.",
+
+    // Microorganism Project (New Index - PL)
+    "micro.nav.aqp4": "Archiwum: AQP4",
+    "micro.nav.home": "GUB Pipeline",
+
+    "micro.hero.title": "Sekcja Koła Naukowego Komputerowego Wspierania Projektów Leków",
+    "micro.hero.subtitle": "Projekt GUB: Inżynieria leków przeciwbakteryjnych i systemy biologiczne.",
+    "micro.hero.cta": "Zobacz Pipeline GUB",
+
+    "micro.pipeline.title": "Pipeline GUB (Gram-Negative & Universal Bacteria)",
+    "micro.pipeline.intro": "Zintegrowany workflow CADD do projektowania celowanego w bakterie Gram-ujemne (E. coli). Od generowania cyfrowego do weryfikacji systemowej.",
+
+    "micro.step1.title": "1. Generowanie (REINVENT4)",
+    "micro.step1.desc": "Modele generatywne tworzące nowe struktury molekularne, ukierunkowane na specyficzne cele bakteryjne.",
+
+    "micro.step2.title": "2. Retencja i Engagement",
+    "micro.step2.desc": "Modelowanie przenikalności przez błony (retencja) i kinetyki wiązania (Target Engagement ODE) w środowisku komórkowym.",
+
+    "micro.step3.title": "3. Predykcja Struktur (Boltz-2)",
+    "micro.step3.desc": "Wyznaczanie struktur 3D kompleksów białko-ligand i wstępna ocena powinowactwa (KD prediction).",
+
+    "micro.step4.title": "4. Dynamika Molekularna (GROMACS)",
+    "micro.step4.desc": "Weryfikacja stabilności kompleksu w czasie i badanie interakcji w środowisku wodnym.",
+
+    "micro.step5.title": "5. Biologia Systemowa (COBRApy)",
+    "micro.step5.desc": "Analiza wpływu na metabolizm całego organizmu (FBA/FVA). Czy cząsteczka skutecznie hamuje wzrost bakterii bez toksyczności?",
+
+    "micro.problems.title": "Wyzwania Projektowe",
+    "micro.problems.intro": "Rozwiązujemy problemy specyficzne dla projektowania leków przeciwbakteryjnych.",
+    "micro.problem1.title": "Luka Rzeczywistości (Reality Gap)",
+    "micro.problem1.desc": "Integracja danych in-silico z fenotypem in-vivo. Modelujemy nie tylko wiązanie, ale i losy metaboliczne leku.",
+    "micro.problem2.title": "Metaboliczne Martwe Pola (Blindspots)",
+    "micro.problem2.desc": "Standardowe ekrany pomijają toksyczność systemową. Nasz model wykrywa 'niewidzialne' zagrożenia dla metabolizmu gospodarza.",
+
+    "micro.ouroboros.title": "Pętla Ouroboros",
+    "micro.ouroboros.subtitle": "Pipeline, który uczy się sam od siebie.",
+    "micro.ouroboros.desc": "Zamknęliśmy pętlę. Wyniki z eksperymentów in-silico wracają do systemu jako dane treningowe. Każda iteracja ulepsza modele generatywne (Surrogate Optimization), tworząc coraz precyzyjniejsze cząsteczki bez interwencji człowieka.",
+
+    "micro.join.title": "Dołącz do Frontu",
+    "micro.join.text": "Szukamy wizjonerów. Jeśli chcesz budować przyszłość biotechnologii, dołącz do nas."
   },
-  
+
   en: {
     // Meta
     "meta.description": "CADD Section of Poznan University of Technology: building an open drug design workflow (REMD, MSM, TRAM, ML) and the PMARLO package. Currently: AQP4/Alzheimer, preparations for Polaris Hub. Join — projects, PRs, results.",
     "meta.title": "Drug Design Support Research Group Section",
-    
+
     // ASCII Caption
     "ascii.caption": "Ligand docking to protein",
-    
+
     // Navigation
     "nav.context": "Section Context",
     "nav.projects": "Projects",
     "nav.join": "Join Us",
-    
+
     // Hero Section
     "hero.title": "Drug Design Support Research Group Section",
     "hero.subtitle": "Hi, in our section we focus on computer-aided drug design.",
     "hero.cta": "Learn more",
-    
+
     // Context Section
     "context.title": "Section Context",
     "context.content": "We strive for personalized medicine: building a workflow that computationally screens thousands of molecules up to the preclinical threshold (where < 0.1% pass anyway). In the first application, we're examining aquaporin-4 modulators in the context of Alzheimer's. In parallel, we're creating an open-source Python library (stylistically similar to PyEMMA2), integrating the best protein conformation prediction methods into one ecosystem. As soon as Polaris Hub announces the next competition edition – we'll start.",
-    
+
     // Projects Section
     "projects.title": "Current Project Activities",
     "projects.intro": "Below you'll find a list of our ongoing projects along with problems we're currently working on. Click on a project to see details.",
-    
+
     // Project 1 - CADD Workflow
     "project1.title": "Computer-Aided Drug Design Workflow",
     "project1.subtitle": "Creating a method to test thousands of compounds with potential therapeutic action up to the preclinical stage:",
@@ -267,7 +307,7 @@ export const translations = {
     "project1.step5.desc": "conduct QSAR/SAR and ADMET profiling (including Tanimoto/cheminformatics comparisons), rejecting toxic chemistries or those unsuitable for BBB.",
     "project1.step6": "Molecule Optimization:",
     "project1.step6.desc": "iteratively apply bioisosteres, R-group replacement, and scaffold-hopping to enhance selectivity and therapeutic window.",
-    
+
     "project1.problems.title": "Problems",
     "project1.problem1.title": "Problem 1",
     "project1.problem1.premise": "Premises:",
@@ -277,7 +317,7 @@ export const translations = {
     "project1.problem1.point1.bold": "we're not sure exactly how this complex behaves and whether we should stop it or catalyze it",
     "project1.problem1.point2": "every protein in the database must undergo specific preparation; however, in our example we're not sure if the current protein configuration is done correctly, and ",
     "project1.problem1.point2.bold": "we cannot identify and fix all disulfide bridges to avoid nonsensical -SH groups.",
-    
+
     "project1.problem2.title": "Problem 2",
     "project1.problem2.premise": "Premises:",
     "project1.problem2.premise.text": "homologous proteins should work on a similar principle as others with known function, in a different meaning or organism.",
@@ -285,16 +325,16 @@ export const translations = {
     "project1.problem2.point1": "we want to create a large MSA (multi-sequence alignment) to build our aquaporin 4 protein, rather than rely on the protein bank, which only has a specific snapshot of this protein in a crystal from PDB, and a specific sequence encoding this protein, to then use some models for protein prediction; however, ",
     "project1.problem2.point1.bold": "we cannot say how to do this element well, so that everything that follows will be stably described and on the premise that our protein is not a phantom.",
     "project1.problem2.point2.bold": "we cannot collect homologs and prepare MSA to compare conservation of ortho- vs allosteric residues",
-    
+
     "project1.problem3.title": "Problem 3",
     "project1.problem3.premise": "Premises:",
     "project1.problem3.premise.text": "for our study we need to (or not) check the SILCS (Site Identification by Ligand Competitive Saturation) method, but as far as we know, there is currently no unlicensed version. We need to implement this method ourselves or find a tool that will do it.",
     "project1.problem3.content": "Content:",
     "project1.problem3.point1.bold": "implementation seems to be an unattainable goal, and finding a working version with an open license is very difficult, although we may be wrong here",
-    
+
     "project1.conclusion.title": "Final Description",
     "project1.conclusion.text": "These are the current problems associated with this project. This is a very small horizon, and the plan itself is much larger and leads to interesting results.",
-    
+
     // Project 2 - PMARLO
     "project2.title": "Python Package for Protein Conformations (PMARLO)",
     "project2.subtitle": "Creating a Python package as a program enabling protein conformation search by combining multiple optimization techniques to find the fastest way to search an object's search-space",
@@ -329,7 +369,7 @@ export const translations = {
     "project2.method.step13.desc": "cluster in CV-space (weighted), count transitions → transition matrix → ITS/CK → PCCA+; if CK/ITS fails, adjust cluster number/τ and repeat this step.",
     "project2.method.step14": "FES + export:",
     "project2.method.step14.desc": "build FES (hist/KDE in CV-space with weights), determine states and populations, then export artifacts (cv_model, scaler, cv_projection, msm/*.npz, fes/*, report.html).",
-    
+
     "project2.problems.title": "Problems",
     "project2.problem1.title": "Problem 1",
     "project2.problem1.premise": "Premises:",
@@ -339,12 +379,12 @@ export const translations = {
     "project2.problem1.point1.rest": " which will show how a system of short, narrow simulations compensates for limited resources. Here is an ",
     "project2.problem1.link": "example",
     "project2.problem1.link.rest": " concept from GPT chat – currently a sketch without mathematical apparatus.",
-    
+
     "project2.conclusion.title": "Final Description",
     "project2.conclusion.text1": "The rest of the problems are collected in the ",
     "project2.conclusion.link": "PMARLO issue tracker",
     "project2.conclusion.text2": ", where you'll find the complete list of tasks bringing the package to operation.",
-    
+
     // Project 3 - Polaris Hub
     "project3.title": "Preparations for Polaris Hub",
     "project3.subtitle": "Participating in the Polaris Hub competition on Kaggle, where you can compare your methods to SOTA from the CADD industry",
@@ -360,7 +400,7 @@ export const translations = {
     "project3.conclusion.title": "Final Description",
     "project3.conclusion.text1": "Independently check what we can get from Polaris Hub — this is an environment we'll regularly return to for benchmarking our methods. ",
     "project3.conclusion.link": "Polaris — benchmarking for drug discovery",
-    
+
     // Join Section
     "join.title": "Join Us",
     "join.intro1": "Join us in creating a research unit here at the university.",
@@ -375,7 +415,7 @@ export const translations = {
     "join.build.group3.desc": " – creating ligand libraries.",
     "join.build.text2": "No advertising, no agenda. We just want to create this workflow.",
     "join.build.text3": "If you're interested in pharmaceutical companies like: Polpharma, Selvita, Celon Pharma, Ryvu Therapeutics, Mabion, Bioton, Captor Therapeutics, Bioceltix, Biotts, Polfa Tarchomin, Adamed Pharma, Molecure, Molecule One or Pure Biologics, Helix Immuno-Oncology – this is a great place to showcase your R&D contributions.",
-    
+
     "join.looking.title": "What We're Looking For",
     "join.looking.text1": "We don't care what school you went to, or if you went at all. We don't care if you have traditional training in any field. We're a project section, not a typical educational one. We're looking for people who, individually and as a team, can influence the direction of our research:",
     "join.looking.point1": "if you're not afraid to ask for help,",
@@ -384,7 +424,7 @@ export const translations = {
     "join.looking.point4": "you want to grind.",
     "join.looking.text2": "It would be great if you showed your GitHub, some contribution to what you love, any project you tried to improve or solve a problem yourself.",
     "join.looking.text3": "You don't have to prove your skills, just talk. However, if you want to know upfront what we do, check the 'projects' tab which has current example problems that need to be solved.",
-    
+
     "join.positions.title": "Actively Looking For People",
     "join.positions.intro": "Remember, everything is for passion:",
     "join.position1.title": "DevOps",
@@ -407,12 +447,12 @@ export const translations = {
     "join.position4.desc.bold": "supplement all numerical experiments with solid analysis",
     "join.position4.desc.rest": ", which will show that these calculations make any sense.",
     "join.position4.workflow": "PMARLO, Polaris Hub",
-    
+
     "join.apply.title": "Applying",
     "join.apply.step1": "If you want to participate in the section, you should join the bioinformatics club and tell me how you want to help do what seems interesting to you in our section.",
     "join.apply.step2": "Later you'll talk to one of our section leaders about how you can onboard, help or do.",
     "join.apply.text": "If everything goes well, we'll do interesting things.",
-    
+
     "join.faq.title": "FAQ",
     "join.faq.q1": "Any computers for calculations?",
     "join.faq.a1": "No",
@@ -420,7 +460,7 @@ export const translations = {
     "join.faq.a2": "No",
     "join.faq.q3": "Any licenses or permits?",
     "join.faq.a3": "No",
-    
+
     // Footer
     "footer.dream.title": "Project born from dreams of computing what seems impossible.",
     "footer.dream.text": "The only question we're seeking to answer is: can you design a drug without a laboratory? This task is hellishly difficult, but with computational methods we can at least increase the chance that solutions will survive the clinical stage.",
@@ -430,8 +470,38 @@ export const translations = {
     "footer.contact.email.text": "Email: sknwpl(at)proton(dot)me",
     "footer.partners.title": "Partners / Support",
     "footer.partners.text": "Open invitation to collaborate (equipment, grants, consultations).<br>If you want to reach out with a question, scientific collaboration, etc. - contact us.",
-    "footer.bottom": "Join us and share your skills."
+    "footer.bottom": "Join us and share your skills.",
+
+    // Microorganism Project (New Index)
+    "micro.nav.aqp4": "Archive: AQP4",
+    "micro.nav.home": "GUB Pipeline",
+    "micro.hero.title": "Computational Drug Design Section",
+    "micro.hero.subtitle": "GUB Project: Antibacterial Drug Engineering and Biological Systems.",
+    "micro.hero.cta": "Explore GUB Pipeline",
+    "micro.pipeline.title": "GUB Pipeline (Gram-Negative & Universal Bacteria)",
+    "micro.pipeline.intro": "Integrated CADD workflow for targeting Gram-negative bacteria (E. coli). From digital generation to systemic verification.",
+    "micro.step1.title": "1. Generation (REINVENT4)",
+    "micro.step1.desc": "Generative models creating new molecular structures targeted at specific bacterial objectives.",
+    "micro.step2.title": "2. Retention & Engagement",
+    "micro.step2.desc": "Modeling membrane permeability (retention) and binding kinetics (Target Engagement ODE) in a cellular environment.",
+    "micro.step3.title": "3. Structure Prediction (Boltz-2)",
+    "micro.step3.desc": "Determining 3D structures of protein-ligand complexes and preliminary affinity assessment (KD prediction).",
+    "micro.step4.title": "4. Molecular Dynamics (GROMACS)",
+    "micro.step4.desc": "Verifying complex stability over time and studying interactions in an aqueous environment.",
+    "micro.step5.title": "5. Systems Biology (COBRApy)",
+    "micro.step5.desc": "Analyzing impact on whole-organism metabolism (FBA/FVA). Does the molecule effectively inhibit bacterial growth without toxicity?",
+    "micro.problems.title": "Design Challenges",
+    "micro.problems.intro": "Solving problems specific to antibacterial drug design.",
+    "micro.problem1.title": "Reality Gap",
+    "micro.problem1.desc": "Integrating in-silico data with in-vivo phenotype. We model not just binding, but the metabolic fate of the drug.",
+    "micro.problem2.title": "Metabolic Blindspots",
+    "micro.problem2.desc": "Standard screens miss systemic toxicity. Our model detects 'invisible' threats to host metabolism.",
+
+    "micro.ouroboros.title": "The Ouroboros Loop",
+    "micro.ouroboros.subtitle": "A pipeline that learns from itself.",
+    "micro.ouroboros.desc": "We closed the loop. Results from in-silico experiments feed back into the system as training data. Every iteration improves the generative models (Surrogate Optimization), creating increasingly precise molecules without human intervention.",
+
+    "micro.join.title": "Join the Frontier",
+    "micro.join.text": "We are looking for visionaries. If you want to build the future of biotechnology, join us."
   }
 };
-
-

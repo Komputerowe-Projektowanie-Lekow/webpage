@@ -1,16 +1,18 @@
 <!doctype html>
 <html lang="pl">
+
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<meta name="description" content="Sekcja CADD Politechniki Poznańskiej: budujemy otwarty workflow projektowania leków (REMD, MSM, TRAM, ML) i paczkę PMARLO. Aktualnie: AQP4/Alzheimer, przygotowania do Polaris Hub. Dołącz — projekty, PR-y, wyniki." />
-<title>Sekcja Koła Naukowego Wspierania Projektów Leków</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-<link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-<link rel="stylesheet" href="./styles.css?v=7" />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="Sekcja Engineeringu Mikroorganizmów: projektujemy systemy biologiczne." />
+  <title data-i18n="micro.hero.title">Sekcja Inżynierii Mikroorganizmów</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
+  <link rel="stylesheet" href="./styles.css?v=7" />
 </head>
+
 <body>
   <div class="language-switcher">
     <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
@@ -25,358 +27,210 @@
   <nav class="sticky-nav" id="stickyNav">
     <div class="nav-content">
       <a href="#kontekst-sekcji" class="nav-link" data-i18n="nav.context">Kontekst sekcji</a>
-      <a href="#projekty" class="nav-link" data-i18n="nav.projects">Projekty</a>
+      <a href="#pipeline" class="nav-link" data-i18n="micro.pipeline.title">Pipeline</a>
       <a href="#dolacz" class="nav-link" data-i18n="nav.join">Dołącz</a>
+      <a href="aqp4.html" class="nav-link project-switch" data-i18n="micro.nav.aqp4">Archiwum: AQP4</a>
     </div>
   </nav>
   <main class="pages">
-    <section class="page hero">
+    <section class="page hero" id="kontekst-sekcji">
       <div class="page-content">
         <div class="logo-container">
           <img src="./images/logo/sknwpl.png" alt="SKNWPL Logo" class="site-logo" />
         </div>
-        <h1 data-i18n="hero.title">Sekcja Koła Naukowego Komputerowego Wspierania Projektów Leków</h1>
-        <p data-i18n="hero.subtitle">
-          Cześć, w naszej sekcji zajmujemy się projektowaniem leków metodami obliczeniowymi.
+        <h1 data-i18n="micro.hero.title">Sekcja Koła Naukowego Komputerowego Wspierania Projektów Leków</h1>
+        <p data-i18n="micro.hero.subtitle">
+          Projekt GUB: Inżynieria leków przeciwbakteryjnych i systemy biologiczne.
         </p>
-        <a class="cta" href="#kontekst-sekcji" data-i18n="hero.cta">Dowiedz się więcej</a>
+        <a class="cta" href="#pipeline" data-i18n="micro.hero.cta">Poznaj Pipeline</a>
       </div>
     </section>
-    <section class="page" id="kontekst-sekcji">
+
+    <section class="page projects-section" id="pipeline">
       <div class="page-content">
         <div class="page-text">
-        <h1 data-i18n="context.title">Kontekst sekcji</h1>
-        <p data-i18n="context.content">
-          Dążymy do medycyny indywidualnej: budujemy workflow, które komputerowo przesiewa tysiące cząsteczek aż do progu przedklinicznego (gdzie i tak przechodzi < 0,1 %). W pierwszym zastosowaniu sprawdzamy modulatory akwaporyny-4 w kontekście Alzheimera. Równolegle tworzymy open-source'ową bibliotekę w Pythonie (stylistyką zbliżoną do PyEMMA2), scalającą najlepsze metody predykcji konformacji białek w jeden ekosystem. Gdy tylko na Polaris Hub ogłoszą kolejną edycję konkursu – startujemy.
-        </p>
+          <h1 data-i18n="micro.pipeline.title">Pipeline Mikroorganizmów</h1>
+          <p data-i18n="micro.pipeline.intro">
+            Specjalistyczny workflow do testowania idei biologicznych in vivo. Od cyfrowego projektu do
+            mikrobiologicznej rzeczywistości.
+          </p>
         </div>
-        <div class="page-image">
-          <img src="./images/computer.png" alt="Rendering pipeline visualization" />
-        </div>
-      </div>
-    </section>
-    <section class="page projects-section" id="projekty">
-      <div class="page-content">
-        <div class="page-text">
-        <h1 data-i18n="projects.title">Obecne działania projektów</h1>
-        <p data-i18n="projects.intro">
-          Poniżej znajdziesz listę naszych bieżących projektów wraz z problemami, nad którymi obecnie pracujemy. Kliknij na projekt, aby zobaczyć szczegóły.
-        </p>
-        </div>
-        
+
         <div class="projects-accordion">
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="project1.title">Workflow Computer-Aided Drug Design</span>
+          <!-- Ouroboros Loop (Special Feature) -->
+          <div class="accordion-item special-feature">
+            <button class="accordion-header" aria-expanded="true">
+              <span class="accordion-title" data-i18n="micro.ouroboros.title">Pętla Ouroboros</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
               <div class="project-details">
                 <div class="project-intro">
-                  <p><strong data-i18n="project1.subtitle">Stworzenie sposobu testowania tysięcy związków o potencjalnym działaniu terapeutycznym aż do etapu przedklinicznego:</strong></p>
-                </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project1.desc.title">Opis</h3>
-                  <p data-i18n="project1.desc.intro">Case study – opracowanie metody na paradoksalnie dobrze i źle opisanym problemie: badanie białka akwaporyny 4 w patogenezie Alzheimera.</p>
-                  
-                  <p><strong data-i18n="project1.desc.plan">Nasz obecny plan:</strong></p>
-                  <ol class="project-list">
-                    <li><strong>Zebranie związków:</strong> zintegrować pobieranie kandydatów z PDB, PubChem, ChEMBL i własnych baz/API do jednej, deduplikowanej listy wejściowej.</li>
-                    <li><strong>Wstępna analiza/klasteryzacja:</strong> oczyścić zbiór Chemmine-tool/VS, zastosować reguły (np. Lipiński, XlogP) i wybrać podzbiór do dokowania.</li>
-                    <li><strong>Przygotowanie białek:</strong> przygotować AQP4 (i warianty) do symulacji: protonacja, brakujące atomy, mostki S-S, usunięcie artefaktów, wybór jednostki biologicznej i kontrola jakości geometrii.<br>
-                      3a. <em>Apo-MD (charakterystyka ruchów):</em> wykonać serie niezależnych MD apo (±CG) i przeanalizować RMSD/RMSF, PCA oraz DCCM, aby ujawnić naturalne tryby i regiony sprzężeń.<br>
-                      3b. <em>Apo-ensemble + FES:</em> zbudować ensemble stanów (REST2/Metadynamics + PMARLO), wyznaczyć CV, FES i MSM, a następnie wyekstrahować 10–30 reprezentantów do dalszych kroków.<br>
-                      3c. <em>Kieszenie allosteryczne:</em> wykryć i zweryfikować przejściowe kieszenie (MDPocket/FTMap/TRAPP) i ścieżki allosteryczne (AlloSigMa/PRS/RTA) jako cele dokowania.
-                    </li>
-                  </ol>
-                  
-                  <p class="current-status"><strong data-i18n="project1.current">Tutaj jesteśmy obecnie (13/10/2025)</strong></p>
-                  
-                  <p class="status-divider">─────</p>
-                  
-                  <ol class="project-list" start="4">
-                    <li><strong>Biblioteka ligandów:</strong> połączyć związki z baz z generacją de novo (REINVENT4, LinkInvent/Mol2Mol) oraz scaffold-hopping dla wariantów chemicznych.</li>
-                    <li><strong>Właściwości/ADMET:</strong> przeprowadzić QSAR/SAR i profilowanie ADMET (w tym Tanimoto/porównania chemoinform.), odrzucając chemie toksyczne lub nienadające się do BBB.</li>
-                    <li><strong>Ulepszanie cząsteczek:</strong> iteracyjnie stosować bioizosterie, R-group replacement i scaffold-hopping, by podnieść selektywność i okno terapeutyczne.</li>
-                    <li><strong>Autodokowanie (L1–L3):</strong> zautomatyzować protokół AutoGrid→AutoDock z kontrolą reprodukcji pozy, focused i blind, raportując TC-score vs energia i klasyfikując pozycje allo/orto. <br>
-                      7a. <em>Holo-MD stabilności wiązania:</em> przeprowadzić niebiasowane/słabo biasowane MD kompleksów, kwantyfikując stabilność (kontakty, frakcje interakcji, trajektorie RMSD).<br>
-                      7b. <em>Analiza kontaktów/interfejsu:</em> użyć LigPlot/fingerprintów i umbrella sampling do oceny kluczowych oddziaływań oraz wpływu na tetrameryzację/interfejs.<br>
-                    </li>
-                    <li><strong>Aktywność i punkty mocy:</strong> oszacować IC50/EC50/Ki (modelowo/in-silico) oraz wpływ na homeostazę wody i ryzyko obrzęku jako kryterium go/no-go.</li>
-                    <li><strong>Kompleksy białko-białko:</strong> wykonać MD PPI AQP4±ligand, policzyć MM-GBSA/MM-PBSA i rozważyć molekuły bivalentne z linkerem, gdy pojedynczy ligand nie wystarcza.</li>
-                    <li><strong>FAIR:</strong> zapewnić pełną reprodukowalność (dane, metadane, workflow, wersje oprogramowania, raporty) oraz publikowalne artefakty.</li>
-                  </ol>
-                  <p> Dalszy horyzont: skalibrować pipeline na kompleksach z PDBbind z danymi eksperymentalnymi, aby ustawić progi akceptacji i walidację energii; następnie przetestować szybkie modele ML, w tym ligand-transformera (2025), jako wsparcie screeningu i porównać je z GPU-Vina na reprezentatywnych celach; wreszcie pogłębić przewidywanie konformacji (next-gen), badając metody rozszerzające przestrzeń konformacyjną (np. alternatywy do SILCS, lepsze MSA/AlphaFold-RF/rozpoznanie stanów), by zmniejszyć ryzyko dokowania do artefaktów.</p>
-                </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project1.problems.title">Problemy</h3>
-                  
-                  <div class="problem-item">
-                    <h4 data-i18n="project1.problem1.title">Problem 1</h4>
-                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
-                    żeby znaleźć jakiś konkretny cel terapeutyczny, trzeba znać działanie biologiczne tego elementu w otoczeniu.</p>
-                    <p class="problem-content"><strong>Treść:</strong></p>
-                    <ul>
-                      <li>biologiczne opisanie akwaporyny 4 i jej działania w szlaku syntrofiny alfa 1 w mózgu. Jak będzie to oddziaływać na tworzenie się późniejszych kanałów. Czy powinniśmy szukać elementów, które będą robić inhibicję, czy może jakoś katalizować proces transportu/tworzenia się tych białek. <strong>nie jesteśmy pewni, jak dokładnie zachowuje się ten kompleks i czy powinniśmy go zatrzymywać, czy katalizować</strong></li>
-                      <li>każde białko, które jest w bazie danych, musi przejść konkretne przygotowanie; jednak na naszym przykładzie nie jesteśmy pewni, czy obecna konfiguracja białka jest dobrze zrobiona, i <strong>nie jesteśmy w stanie zidentyfikować i naprawić wszystkich mostków dwusiarczkowych, żeby nie było jakiś bezsensownych grup -SH.</strong></li>
-                    </ul>
-                  </div>
-                  
-                  <div class="problem-item">
-                    <h4 data-i18n="project1.problem2.title">Problem 2</h4>
-                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
-                    homologiczne białka powinny działać na podobnej zasadzie jak inne o znanej już funkcji, w innym znaczeniu czy organizmie.</p>
-                    <p class="problem-content"><strong>Treść:</strong></p>
-                    <ul>
-                      <li>chcemy zrobić duże MSA (multi-sequence alignment), żeby stworzyć sobie nasze białko akwaporynę 4, a nie polegać na banku białek, w którym jest tylko konkretny jeden snapshot tego białka w krysztale z PDB, i konkretną sekwencję kodującą to białko, żeby następnie użyć jakichś modeli do predykcji białek; jednak <strong>nie jesteśmy w stanie powiedzieć, jak dobrze zrobić ten element, żeby wszystko, co będzie po tym, było stabilnie opisane i na przesłankach, że nasze białko nie jest widmem.</strong></li>
-                      <li><strong>nie potrafimy zebrać homologów i przygotować MSA w celu porównania konserwacji reszt orto- vs allosterycznych</strong></li>
-                    </ul>
-                  </div>
-                  
-                  <div class="problem-item">
-                    <h4 data-i18n="project1.problem3.title">Problem 3</h4>
-                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
-                    do naszego badania musimy (albo nie) sprawdzić metodę SILCS (Site Identification by Ligand Competitive Saturation), ale nie ma jej obecnie nielicencjonowanej, z tego co wiemy. Musimy zrobić samemu implementację tej metody lub znaleźć narzędzie, które to zrobi.</p>
-                    <p class="problem-content"><strong>Treść:</strong></p>
-                    <ul>
-                      <li><strong>implementacja wydaje się być nieosiągalnym celem, a poszukanie działającej wersji na otwartej licencji jest bardzo trudne, choć może się tutaj mylimy</strong></li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div class="project-section project-conclusion">
-                  <h3 data-i18n="project1.conclusion.title">Końcowy opis</h3>
-                  <p data-i18n="project1.conclusion.text">To są obecne problemy, jakie wiążą się z tym projektem. To jest bardzo mały horyzont, a sam plan jest znacznie większy oraz prowadzi do ciekawych rezultatów.</p>
+                  <p class="highlight-text" data-i18n="micro.ouroboros.subtitle">Pipeline, który uczy się sam od siebie.
+                  </p>
+                  <p data-i18n="micro.ouroboros.desc">Zamknęliśmy pętlę. Wyniki z eksperymentów in-silico wracają do
+                    systemu jako dane treningowe. Każda iteracja ulepsza modele generatywne (Surrogate Optimization),
+                    tworząc coraz precyzyjniejsze cząsteczki bez interwencji człowieka.</p>
                 </div>
               </div>
             </div>
           </div>
-          
+
+          <!-- Step 1 -->
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="project2.title">Paczka Python dla konformacji białek (PMARLO)</span>
+              <span class="accordion-title" data-i18n="micro.step1.title">1. Projektowanie Generatywne</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <div class="project-details">
+                <p data-i18n="micro.step1.desc">Wykorzystujemy zaawansowane modele generatywne do tworzenia nowych
+                  struktur molekularnych zoptymalizowanych pod kątem konkretnych celów biologicznych.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 2 -->
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title" data-i18n="micro.step2.title">2. Interakcja Komórkowa</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <div class="project-details">
+                <p data-i18n="micro.step2.desc">Modelowanie podróży cząsteczki. Przenikalność, retencja i interakcja w
+                  złożonym środowisku komórkowym.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 3 -->
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title" data-i18n="micro.step3.title">3. Predykcja Powinowactwa</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <div class="project-details">
+                <p data-i18n="micro.step3.desc">Najnowocześniejsze predykcje siły wiązania, by odfiltrować najbardziej
+                  obiecujące kandydatury zanim trafią do probówki.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 4 -->
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title" data-i18n="micro.step4.title">4. Weryfikacja Stabilności</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <div class="project-details">
+                <p data-i18n="micro.step4.desc">Symulacje dynamiki molekularnej, by upewnić się, że to co pasuje,
+                  również zostaje. Weryfikacja stabilności i czasu rezydencji kompleksu.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Step 5 -->
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title" data-i18n="micro.step5.title">5. Wpływ Systemowy</span>
+              <span class="accordion-icon">˅</span>
+            </button>
+            <div class="accordion-content">
+              <div class="project-details">
+                <p data-i18n="micro.step5.desc">Ostateczny test. Przewidywanie losów metabolicznych cząsteczki i jej
+                  systemowego wpływu na mikroorganizm. Czy to zadziała? Czy przetrwa?</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Problems Section -->
+          <div class="accordion-item">
+            <button class="accordion-header" aria-expanded="false">
+              <span class="accordion-title" data-i18n="micro.problems.title">Obecne Wyzwania</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
               <div class="project-details">
                 <div class="project-intro">
-                  <p><strong data-i18n="project2.subtitle">Zrobienie paczki w Pythonie jako program umożliwiający szukanie konformacji białek w sposób łączący wiele technik optymalizacyjnych do szukania najszybszej drogi przeszukania search-space'u obiektu</strong></p>
+                  <p data-i18n="micro.problems.intro">Przesuwamy granice tego, co możliwe. Oto przeszkody, które obecnie
+                    pokonujemy.</p>
                 </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project2.desc.title">Opis</h3>
-                  <p data-i18n="project2.desc.text">Obecnie mamy jedynie szkielet PoC. Pełne wdrożenie stanie się realne, gdy dopracujemy spójną teorię matematyczną obejmującą dystrybucję obliczeń, metadynamikę z różnymi rodzajami biasu oraz parametry modeli Markova.</p>
+                <div class="problem-item">
+                  <h4 data-i18n="micro.problem1.title">Luka Rzeczywistości</h4>
+                  <p data-i18n="micro.problem1.desc">Zasypanie przepaści między predykcjami in-silico a zachowaniem
+                    in-vivo pozostaje ostatecznym wyzwaniem. My budujemy ten most.</p>
                 </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project2.method.title">Metoda</h3>
-                  <ol class="project-list">
-                    <li><strong>Init/Config:</strong> wczytaj config, ustaw seedy, utwórz <code>run_root</code>, zdefiniuj plan transformacji (features, &tau;-curriculum, <code>T_ref</code>).</li>
-                    <li><strong>Protein prep &rarr; Transform plan:</strong> przygotuj układ i listę cech (np. odległości/kontakty/RMSD), które będą liczone dla każdej ramki.</li>
-                    <li><strong>REMD (krótkie przebiegi):</strong> uruchom multi-T REMD z wymianami; na starcie bias = 0 (tylko fizyka), loguj metadane każdej repliki/segmentu.</li>
-                    <li><strong>DEMUX:</strong> rozdziel trajektorie po temperaturze i segmentach; zweryfikuj inwarianty (intra-T, intra-segment, ciągłość czasu) &mdash; w razie naruszeń fail-fast.</li>
-                    <li><strong>Emit shards:</strong> dla każdego shardu policz cechy <code>X</code>, <code>t_index</code>, <code>dt_ps</code> (+ opcjonalnie <code>energy</code>, <code>bias</code>), zapisz <code>*.npz</code> + <code>*.json</code>.</li>
-                    <li><strong>(Opcjonalnie) TRAM/MBAR-wagi:</strong> z energii/biasu policz <code>w_frame</code> do re-weightingu i ewentualnego ważenia próbek w trenowaniu CV.</li>
-                    <li><strong>Bootstrap CV @T_ref:</strong> uruchom losową liniową/TICA projekcję jako CV-v0; zamroź ją jako punkt odniesienia.</li>
-                    <li><strong>Budowa par (&tau;-curriculum):</strong> generuj pary (t, t+&tau;) wyłącznie intra-T/intra-segment; sampler równoważy temperatury i doboostowuje rzadkie regiony.</li>
-                    <li><strong>Trening DeepTICA:</strong> ucz CV na parach (z <code>sample_weight = w_frame</code>, jeśli dostępne) i monitoruj VAMP-2/ITS na time-holdout; zapisuj checkpointy.</li>
-                    <li><strong>Guided-REMD (pętla joint):</strong> jeśli metryki rosną, ale pokrycie przestrzeni słabe &mdash; uruchom kolejne krótkie REMD z lekkim biasem w CV, zdemuxuj i dopisz nowe shardy; wróć do kroku 8.</li>
-                    <li><strong>Kryteria stopu:</strong> gdy VAMP-2 plateau oraz ITS stabilne (i/lub limit iteracji) &mdash; zamknij pętlę joint i zamroź finalny model CV.</li>
-                    <li><strong>Reweight do T_ref:</strong> przelicz końcowe <code>w_frame</code> TRAM/MBAR i rzutuj wszystkie ramki do przestrzeni CV (Y), przygotowując dane ważone do analizy stanów.</li>
-                    <li><strong>MSM @T_ref:</strong> klastruj w CV-space (ważone), zlicz przejścia &rarr; macierz przejść &rarr; ITS/CK &rarr; PCCA+; jeśli CK/ITS nie przechodzi, popraw liczbę klastrów/&tau; i powtórz ten krok.</li>
-                    <li><strong>FES + eksport:</strong> zbuduj FES (hist/KDE w CV-space z wagami), wyznacz stany i populacje, a następnie wyeksportuj artefakty (<code>cv_model</code>, <code>scaler</code>, <code>cv_projection</code>, <code>msm/*.npz</code>, <code>fes/*</code>, <code>report.html</code>).</li>
-                  </ol>
-                </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project2.problems.title">Problemy</h3>
-                  <div class="problem-item">
-                    <h4 data-i18n="project2.problem1.title">Problem 1</h4>
-                    <p class="problem-premise"><strong>Przesłanki:</strong><br>
-                    trudno zrobić to dobrze, jeśli nie ma ewaluacji i ciągłego sprawdzania regresji czy jakości algorytmów, które robią główną pracę. Potrzebujemy solidnych podstaw, żeby udowodnić, że symulując w krótkich porcjach, zyskujemy więcej informacji.</p>
-                    <p class="problem-content"><strong>Treść:</strong></p>
-                    <ul>
-                      <li><strong>Zbudować matematyczny opis całego eksperymentu,</strong> który pokaże, jak system krótkich, wąskich symulacji kompensuje ograniczone zasoby. Tutaj jest <a href="./files/pdfs/theory.pdf" target="_blank" rel="noopener">przykład</a> koncepcji z czatu GPT – obecnie to szkic bez aparatu matematycznego.</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div class="project-section project-conclusion">
-                  <h3 data-i18n="project2.conclusion.title">Końcowy opis</h3>
-                  <p><span data-i18n="project2.conclusion.text1">Reszta problemów jest zebrana w </span><a href="https://github.com/Komputerowe-Projektowanie-Lekow/pmarlo/issues" target="_blank" rel="noopener" data-i18n="project2.conclusion.link">issue trackerze PMARLO</a><span data-i18n="project2.conclusion.text2">, gdzie znajdziecie pełną listę zadań przybliżających paczkę do działania.</span></p>
+                <div class="problem-item">
+                  <h4 data-i18n="micro.problem2.title">Metaboliczne Martwe Pola</h4>
+                  <p data-i18n="micro.problem2.desc">Standardowe ekrany pomijają toksyczność systemową. Nasz model
+                    wykrywa 'niewidzialne' zagrożenia dla metabolizmu gospodarza.</p>
                 </div>
               </div>
             </div>
           </div>
-          
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="project3.title">Przygotowania do Polaris Hub</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <div class="project-intro">
-                  <p><strong data-i18n="project3.subtitle">Wystartowanie w konkursie Polaris Hub na bazie Kaggle, w ktorym mozna porownac swoje metody do SOTA z branz CADD</strong></p>
-                </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project3.desc.title">Opis</h3>
-                  <p data-i18n="project3.desc.text">Obecnie analizowalismy tylko modele, ktore wygraly ostatni konkurs Antiviral Competition na platformie Open Molecular Software Foundation, ASAP i Polaris.</p>
-                </div>
-                
-                <div class="project-section">
-                  <h3 data-i18n="project3.problems.title">Problemy</h3>
-                  <div class="problem-item">
-                    <h4 data-i18n="project3.problem1.title">Problem 1</h4>
-                    <p class="problem-premise"><strong>Przeslanki:</strong><br>
-                    jesli chcemy zbudowac model ADMET przewidujacy wlasciwosci chemikofizyczne zwiazku tylko na podstawie reprezentacji stringowej, potrzebujemy dobrze dobranych technik ML.</p>
-                    <p class="problem-content"><strong>Tresc:</strong></p>
-                    <ul>
-                      <li><strong>Opracowac innowacyjna metode modelowania ADMET,</strong> ktora korzysta z dostepnych danych (rowniez zrodel open-source) i radzi sobie bez ogromnych, zamknietych zbiorow.</li>
-                    </ul>
-                  </div>
-                </div>
-                
-                <div class="project-section project-conclusion">
-                  <h3 data-i18n="project3.conclusion.title">Koncowy opis</h3>
-                  <p><span data-i18n="project3.conclusion.text1">Samodzielnie sprawdz co mozemy wyniesc z Polaris Hub &mdash; to srodowisko, do ktorego regularnie bedziemy wracac, zeby benchmarkowac nasze metody. </span><a href="https://polarishub.io/" target="_blank" rel="noopener" data-i18n="project3.conclusion.link">Polaris &mdash; benchmarking dla drug discovery</a></p>
-                </div>
-              </div>
-            </div>
-          </div>
+
         </div>
       </div>
     </section>
+
+    <!-- Shared Join Section -->
     <section class="page" id="dolacz">
       <div class="page-content">
         <div class="page-text">
-        <h1 data-i18n="join.title">Dołącz do nas</h1>
-        <p data-i18n="join.intro1">
-          Dołącz do nas, tworząc jednostkę badawczą tutaj na politechnice.
-        </p>
-        <p data-i18n="join.intro2">
-          Nie prowadzimy żadnych regularnych wykładów ani wprowadzeń. Preferujemy pracę nad konkretnymi problemami badawczymi. Większość komunikacji odbywa się na Discordzie, GitHubie, Notion i Zotero.
-        </p>
-        
-        <h2 data-i18n="join.build.title">Chodź budować</h2>
-        <p>
-          Obecnie sknwpl składa się z 5 osób, która jest rozłożona na 3 grupy:
-        </p>
-        <ul>
-          <li><strong>Infrastruktura</strong> – tutaj jest budowa rzeczy pod workflow, żeby inni nie musieli robić jakichś konfiguracji narzędzi, jeżeli my możemy to zrobić.</li>
-          <li><strong>Bioinformatyka strukturalna</strong> – badanie konformacji, badanie właściwości białek.</li>
-          <li><strong>Chemiinformatyka</strong> – tworzenie biblioteki ligandów.</li>
-        </ul>
-        
-        <p>
-          Bez żadnych reklam, bez jakiejkolwiek agendy. Chcemy tylko stworzyć ten workflow.
-        </p>
-        
-        <p>
-          Jeżeli jesteś zainteresowany jakimiś koncernami farmaceutycznymi jak: Polpharma, Selvita, Celon Pharma, Ryvu Therapeutics, Mabion, Bioton, Captor Therapeutics, Bioceltix, Biotts, Polfa Tarchomin, Adamed Pharma, Molecure, Molecule One czy Pure Biologics, Helix Immuno-Oncology – to jest to świetne miejsce, żeby pokazać swój wkład w R&D.
-        </p>
-        
-        <h2 data-i18n="join.looking.title">Czego szukamy</h2>
-        <p>
-          Nie obchodzi nas do jakiej szkoły chodziłeś, czy w ogóle chodziłeś. Nie obchodzi nas czy masz tradycyjne wyszkolenie z jakiejś dziedziny. Jesteśmy sekcją projektową, a nie typowo edukacyjną. Szukamy ludzi którzy indywidualnie i w zespole potrafią wpłynąć na kierunek naszych badań:
-        </p>
-        <ul>
-          <li>jeżeli nie boisz się pytać o pomoc,</li>
-          <li>masz dużą autonomię i możesz pracować samodzielnie, nie będąc prowadzonym za rękę,</li>
-          <li>potrafisz wskazywać błędy i usprawnienia bez wstydu, że możesz być w błędzie,</li>
-          <li>chcesz robić grind.</li>
-        </ul>
-        
-        <p>
-          Fajnie gdybyś pokazał swój GitHub, jakiś wkład w to co lubisz, jakikolwiek projekt który próbowałeś poprawić albo rozwiązać jakiś problem samemu.
-        </p>
-        
-        <p>
-          Nie musisz udowadniać swoich umiejętności, wystarczy porozmawiać. Jednak gdy chcesz wstępnie móc wiedzieć co robimy zobacz zakładkę 'projekty' w których masz obecne przykładowe problemy jakie trzeba rozwiązać.
-        </p>
-        
-        <h2 data-i18n="join.positions.title">Aktywnie szukamy ludzi</h2>
-        <p>
-          Pamiętajcie, że wszystko zajawkowo:
-        </p>
-        
-        <div class="position-item">
-          <h3>DevOpsów</h3>
-          <p>
-            którzy ogarną <strong>infrastrukturę pod projekty</strong> (ogarnięcie dużej bazy danych z aplikacją generującą te dane i interfejsem webowym).
+          <h1 data-i18n="micro.join.title">Dołącz do Frontu</h1>
+          <p data-i18n="micro.join.text">
+            Szukamy wizjonerów. Jeśli chcesz budować przyszłość biotechnologii, dołącz do nas.
           </p>
-          <p class="position-workflow">workflow od CADD</p>
-        </div>
-        
-        <div class="position-item">
-          <h3>Biologów molekularnych / chemików nieorganicznych</h3>
+
+          <h2 data-i18n="join.build.title">Chodź budować</h2>
           <p>
-            osób z biologicznym lub chemicznym zapleczem do <strong>analizy wyników i interpretacji modeli</strong> (analiza działania białka, jak już widzimy wyniki symulacji: „co? dlaczego?").
+            Obecnie sknwpl składa się z 5 osób, która jest rozłożona na 3 grupy:
           </p>
-          <p class="position-workflow">workflow od CADD</p>
-        </div>
-        
-        <div class="position-item">
-          <h3>SWE</h3>
+          <ul>
+            <li><strong>Infrastruktura</strong> – budowa workflow.</li>
+            <li><strong>Bioinformatyka strukturalna</strong> – badanie konformacji.</li>
+            <li><strong>Chemiinformatyka</strong> – biblioteki ligandów.</li>
+          </ul>
+
+          <h2 data-i18n="join.looking.title">Czego szukamy</h2>
           <p>
-            którzy dowiozą <strong>solidne oprogramowanie po etapie PoC z Pythonem</strong> (tworzenie kerneli do PMARLO, inne magie, żeby to działało szybko i tanio na konkretnej architekturze).
+            Szukamy ludzi którzy indywidualnie i w zespole potrafią wpłynąć na kierunek naszych badań:
           </p>
-          <p class="position-workflow">PMARLO</p>
+          <ul>
+            <li>autonomia,</li>
+            <li>grind.</li>
+          </ul>
+
+          <h2 data-i18n="join.apply.title">Aplikowanie</h2>
+          <ol>
+            <li>Dołącz do koła bioinformatyki.</li>
+            <li>Porozmawiaj z nami.</li>
+          </ol>
+
+          <div class="page-image">
+            <img src="./images/helix_macro.png" alt="Helix macro visualization" />
+          </div>
         </div>
-        
-        <div class="position-item">
-          <h3>Matematyków / fizyków / statystyków</h3>
-          <p>
-            potrzebujemy ludzi którzy zdołają <strong>uzupełnić wszystkie eksperymenty numeryczne o solidną analizę</strong>, która pokaże, że te obliczenia mają jakikolwiek sens.
-          </p>
-          <p class="position-workflow">PMARLO, Polaris Hub</p>
-        </div>
-        
-        <h2 data-i18n="join.apply.title">Aplikowanie</h2>
-        <ol>
-          <li>Jeżeli chcesz uczestniczyć w sekcji to należy dołączyć do koła bioinformatyki i powiedzieć mi jak chcesz pomóc w robieniu tego co wydaje się dla ciebie interesujące w naszej sekcji.</li>
-          <li>Później porozmawiasz z jednym z liderów naszej sekcji na temat jak możesz się wdrożyć, pomóc lub robić.</li>
-        </ol>
-        
-        <p>
-          Jeżeli wszystko pójdzie dobrze to będziemy robić ciekawe rzeczy.
-        </p>
-        
-        <h2 data-i18n="join.faq.title">FAQ</h2>
-        <div class="faq-item">
-          <p class="faq-question" data-i18n="join.faq.q1">Jakieś komputery do obliczeń?</p>
-          <p class="faq-answer" data-i18n="join.faq.a1">Nie</p>
-        </div>
-        <div class="faq-item">
-          <p class="faq-question" data-i18n="join.faq.q2">Gdzieś miejsce na infrastrukturę do stworzenia tego pipeline'u?</p>
-          <p class="faq-answer" data-i18n="join.faq.a2">Nie</p>
-        </div>
-        <div class="faq-item">
-          <p class="faq-question" data-i18n="join.faq.q3">Jakiekolwiek licencje czy pozwolenia?</p>
-          <p class="faq-answer" data-i18n="join.faq.a3">Nie</p>
-        </div>
-        </div>
-        <div class="page-image">
-          <img src="./images/helix_macro.png" alt="Helix macro visualization" />
-          <img src="./images/blurred.png" alt="Blurred microscopy" />
-        </div>
-      </div>
     </section>
+
   </main>
   <footer class="site-footer">
     <div class="footer-content">
       <div class="footer-section">
         <h3 data-i18n="footer.dream.title">Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.</h3>
         <p data-i18n="footer.dream.text">
-          Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania przetrwają etap kliniczny.        </p>
+          Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie
+          piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania
+          przetrwają etap kliniczny. </p>
       </div>
       <div class="footer-section">
         <h3 data-i18n="footer.contact.title">Kontakt i adresy</h3>
         <p>
-          <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium na GitHubie</a><br>
+          <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium na
+            GitHubie</a><br>
           <a href="mailto:sknwpl@proton.me" data-i18n="footer.contact.email">Kontakt</a><br>
           <span data-i18n="footer.contact.email.text">Email: sknwpl(at)proton(dot)me</span>
         </p>
@@ -397,51 +251,52 @@
   <script type="module" src="./main.js"></script>
   <script>
     // Accordion functionality - inline to ensure it loads
-    document.addEventListener("DOMContentLoaded", function() {
+    document.addEventListener("DOMContentLoaded", function () {
       const accordionHeaders = document.querySelectorAll(".accordion-header");
       console.log("Accordion headers found:", accordionHeaders.length);
-      
-      accordionHeaders.forEach(function(header) {
+
+      accordionHeaders.forEach(function (header) {
         // Make sure it starts closed
         header.setAttribute("aria-expanded", "false");
-        
-        header.addEventListener("click", function(e) {
+
+        header.addEventListener("click", function (e) {
           e.preventDefault();
           const isExpanded = header.getAttribute("aria-expanded") === "true";
           console.log("Clicked, current state:", isExpanded);
-          
+
           // Close all other accordions
-          accordionHeaders.forEach(function(otherHeader) {
+          accordionHeaders.forEach(function (otherHeader) {
             if (otherHeader !== header) {
               otherHeader.setAttribute("aria-expanded", "false");
             }
           });
-          
+
           // Toggle current accordion
           header.setAttribute("aria-expanded", !isExpanded ? "true" : "false");
         });
       });
-      
+
       // Sticky navigation functionality
       const stickyNav = document.getElementById("stickyNav");
       const heroSection = document.querySelector(".hero");
-      
+
       function checkNavVisibility() {
         if (!heroSection || !stickyNav) return;
-        
+
         const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
         const scrollPosition = window.scrollY;
-        
+
         if (scrollPosition > heroBottom - 100) {
           stickyNav.classList.add("visible");
         } else {
           stickyNav.classList.remove("visible");
         }
       }
-      
+
       window.addEventListener("scroll", checkNavVisibility, { passive: true });
       checkNavVisibility(); // Check on load
     });
   </script>
 </body>
+
 </html>
