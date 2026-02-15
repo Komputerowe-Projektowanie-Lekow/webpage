@@ -50,6 +50,8 @@ const prefersReducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
 let heroVisible = false;
 let heroObserver = null;
 let activityRaf = null;
+let narrativeRippleRaf = null;
+let narrativeRippleRunning = false;
 let proteinController = null;
 let narrativeController = null;
 
@@ -259,6 +261,7 @@ function applyActivity() {
   setBodyActivity(proteinActive, narrativeActive);
   proteinController?.setActive(proteinActive);
   narrativeController?.setActive(narrativeActive);
+  setNarrativeRippleRunning(narrativeActive);
 }
 
 function computeNarrativeActive() {
@@ -267,6 +270,49 @@ function computeNarrativeActive() {
   const statusTop = statusSection.offsetTop;
   const supportTop = supportSection.offsetTop;
   return anchorY >= statusTop && anchorY < supportTop;
+}
+
+function computeNarrativeRangeProgress() {
+  if (!statusSection || !supportSection) return 0;
+  const anchorY = scrollY + innerHeight * 0.35;
+  const start = statusSection.offsetTop;
+  const end = supportSection.offsetTop;
+  const span = Math.max(1, end - start);
+  return clamp((anchorY - start) / span, 0, 1);
+}
+
+function setNarrativeRippleRunning(next) {
+  narrativeRippleRunning = Boolean(next && narrativeLayer && innerWidth > 900 && !prefersReducedMotion.matches);
+  if (!narrativeRippleRunning) {
+    if (narrativeRippleRaf !== null) {
+      cancelAnimationFrame(narrativeRippleRaf);
+      narrativeRippleRaf = null;
+    }
+    if (narrativeLayer) narrativeLayer.setAttribute("data-ripple-active", "false");
+    return;
+  }
+  if (narrativeRippleRaf === null) {
+    narrativeRippleRaf = requestAnimationFrame(tickNarrativeRipple);
+  }
+}
+
+function tickNarrativeRipple(now) {
+  narrativeRippleRaf = null;
+  if (!narrativeRippleRunning || !narrativeLayer) return;
+
+  const progress = computeNarrativeRangeProgress();
+  const t = now * 0.001;
+  const phase = t * 1.9;
+  const front = 220 + progress * 240 + Math.sin(phase * 0.82) * 20;
+  const strength = 0.36 + progress * 0.5;
+  const bleed = 8 + progress * 10;
+
+  narrativeLayer.style.setProperty("--narrative-ripple-front", `${front.toFixed(2)}px`);
+  narrativeLayer.style.setProperty("--narrative-ripple-strength", strength.toFixed(3));
+  narrativeLayer.style.setProperty("--narrative-bleed-vw", `${bleed.toFixed(3)}vw`);
+  narrativeLayer.setAttribute("data-ripple-active", "true");
+
+  narrativeRippleRaf = requestAnimationFrame(tickNarrativeRipple);
 }
 
 function setBodyActivity(proteinActive, narrativeActive) {
