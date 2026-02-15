@@ -303,13 +303,19 @@ function tickNarrativeRipple(now) {
   const progress = computeNarrativeRangeProgress();
   const t = now * 0.001;
   const phase = t * 1.9;
-  const front = 220 + progress * 240 + Math.sin(phase * 0.82) * 20;
-  const strength = 0.36 + progress * 0.5;
-  const bleed = 8 + progress * 10;
+  const layerWidth = Math.max(1, narrativeLayer.clientWidth || Math.round(innerWidth * 0.5));
+  const bleedPx = clamp(innerWidth * 0.12, 96, 240);
+  const originPx = bleedPx;
+  const rightSpanPx = Math.max(1, layerWidth - originPx);
+  const baseFrontPx = Math.max(18, rightSpanPx * 0.08);
+  const oscillationPx = Math.sin(phase * 0.82) * Math.max(10, rightSpanPx * 0.032);
+  const frontPx = clamp(baseFrontPx + progress * rightSpanPx + oscillationPx, 12, rightSpanPx);
+  const waveOpacity = clamp(0.28 + progress * 0.45, 0, 1);
 
-  narrativeLayer.style.setProperty("--narrative-ripple-front", `${front.toFixed(2)}px`);
-  narrativeLayer.style.setProperty("--narrative-ripple-strength", strength.toFixed(3));
-  narrativeLayer.style.setProperty("--narrative-bleed-vw", `${bleed.toFixed(3)}vw`);
+  narrativeLayer.style.setProperty("--narrative-bleed-px", `${bleedPx.toFixed(2)}px`);
+  narrativeLayer.style.setProperty("--narrative-wave-origin-px", `${originPx.toFixed(2)}px`);
+  narrativeLayer.style.setProperty("--narrative-wave-front-px", `${frontPx.toFixed(2)}px`);
+  narrativeLayer.style.setProperty("--narrative-wave-opacity", waveOpacity.toFixed(3));
   narrativeLayer.setAttribute("data-ripple-active", "true");
 
   narrativeRippleRaf = requestAnimationFrame(tickNarrativeRipple);

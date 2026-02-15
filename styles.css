@@ -433,12 +433,15 @@ main .page[id] {
 
 .narrative-ascii-layer {
   right: 0;
-  width: calc(50vw + var(--narrative-bleed-vw, 10vw));
+  width: calc(50vw + var(--narrative-bleed-px, 160px));
   height: 100vh;
   z-index: 15;
-  --narrative-bleed-vw: 10vw;
-  --narrative-ripple-front: 200px;
-  --narrative-ripple-strength: 0.5;
+  --narrative-bleed-px: 160px;
+  --narrative-wave-origin-px: 160px;
+  --narrative-wave-front-px: 240px;
+  --narrative-wave-opacity: 0.5;
+  --narrative-wave-scale: 0.88;
+  --narrative-wave-shift-x: 8vw;
 }
 
 body[data-protein-active="true"] .protein-ascii-layer {
@@ -467,24 +470,29 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
 
 .narrative-ascii-layer::before {
   background:
-    repeating-radial-gradient(circle at 100% 50%,
-      rgba(1, 119, 155, 0) 0 calc(var(--narrative-ripple-front, 200px) - 170px),
-      rgba(1, 119, 155, calc(0.02 + var(--narrative-ripple-strength, 0.5) * 0.08)) calc(var(--narrative-ripple-front, 200px) - 152px) calc(var(--narrative-ripple-front, 200px) - 144px),
-      rgba(1, 119, 155, 0) calc(var(--narrative-ripple-front, 200px) - 128px) calc(var(--narrative-ripple-front, 200px) - 98px)),
+    repeating-radial-gradient(circle at var(--narrative-wave-origin-px, 160px) 50%,
+      rgba(1, 119, 155, 0) 0 calc(var(--narrative-wave-front-px, 240px) - 228px),
+      rgba(1, 119, 155, calc(var(--narrative-wave-opacity, 0.5) * 0.34)) calc(var(--narrative-wave-front-px, 240px) - 214px) calc(var(--narrative-wave-front-px, 240px) - 207px),
+      rgba(1, 119, 155, 0) calc(var(--narrative-wave-front-px, 240px) - 192px) calc(var(--narrative-wave-front-px, 240px) - 170px)),
     radial-gradient(60% 80% at 11% 50%, rgba(1, 119, 155, 0.2), transparent 74%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent 48%, rgba(255, 255, 255, 0.02));
-  background-size:
-    var(--narrative-bleed-vw, 10vw) 100%,
-    100% 100%,
-    100% 100%;
-  background-position:
-    left top,
-    0 0,
-    0 0;
-  background-repeat:
-    no-repeat,
-    no-repeat,
-    no-repeat;
+  background-size: 100% 100%, 100% 100%, 100% 100%;
+  background-position: 0 0, 0 0, 0 0;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  -webkit-mask-image: linear-gradient(90deg,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 1px),
+      rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 160px) + 1px),
+      rgba(0, 0, 0, 0.72) 74%,
+      rgba(0, 0, 0, 0) 100%);
+  mask-image: linear-gradient(90deg,
+      rgba(0, 0, 0, 0) 0,
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 1px),
+      rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 160px) + 1px),
+      rgba(0, 0, 0, 0.72) 74%,
+      rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-repeat: no-repeat;
+  mask-repeat: no-repeat;
 }
 
 .protein-ascii-layer::after,
@@ -685,21 +693,21 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
 #narrative-screen,
 #narrative-screen-ghost-1,
 #narrative-screen-ghost-2 {
-  width: calc(100% + var(--narrative-bleed-vw, 10vw));
+  width: calc(100% + var(--narrative-bleed-px, 160px));
   height: 100%;
-  left: calc(-1 * var(--narrative-bleed-vw, 10vw));
+  left: calc(-1 * var(--narrative-bleed-px, 160px));
   top: 50%;
   -webkit-mask-image: linear-gradient(90deg,
       rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0.12) 14%,
-      rgba(0, 0, 0, calc(0.42 + var(--narrative-ripple-strength, 0.5) * 0.3)) 30%,
-      rgba(0, 0, 0, 0.92) 45%,
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 6px),
+      rgba(0, 0, 0, 0.56) calc(var(--narrative-wave-origin-px, 160px) + 26px),
+      rgba(0, 0, 0, 0.92) calc(var(--narrative-wave-origin-px, 160px) + 180px),
       rgba(0, 0, 0, 1) 100%);
   mask-image: linear-gradient(90deg,
       rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0.12) 14%,
-      rgba(0, 0, 0, calc(0.42 + var(--narrative-ripple-strength, 0.5) * 0.3)) 30%,
-      rgba(0, 0, 0, 0.92) 45%,
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 6px),
+      rgba(0, 0, 0, 0.56) calc(var(--narrative-wave-origin-px, 160px) + 26px),
+      rgba(0, 0, 0, 0.92) calc(var(--narrative-wave-origin-px, 160px) + 180px),
       rgba(0, 0, 0, 1) 100%);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
@@ -735,6 +743,18 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
   transform: translate(1.7%, -50%) scale(0.996);
   z-index: 0;
   animation: ambientDriftB 29s ease-in-out infinite;
+}
+
+#narrative-screen {
+  transform: translate(var(--narrative-wave-shift-x, 8vw), -50%) scale(var(--narrative-wave-scale, 0.88));
+}
+
+#narrative-screen-ghost-1 {
+  transform: translate(calc(var(--narrative-wave-shift-x, 8vw) - 1.8%), -50%) scale(0.892);
+}
+
+#narrative-screen-ghost-2 {
+  transform: translate(calc(var(--narrative-wave-shift-x, 8vw) + 1.7%), -50%) scale(0.876);
 }
 
 #protein-screen-ghost-1[data-ready="true"],
