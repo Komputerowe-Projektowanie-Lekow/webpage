@@ -9,7 +9,13 @@ const CONFIG = {
   preloadAhead: 15,
   proteinTransitionFrames: 24,
   proteinSecondManifestCandidates: ["./frames-manifest_2.json", "./frames-manifest_2.json5"],
-  proteinMorphStyle: "dither"
+  proteinMorphStyle: "dither",
+  protein2Ascii: {
+    palette: "@%#*+=-:. ",
+    normalizeLuma: true,
+    contrast: 1.35,
+    gamma: 0.86
+  }
 };
 
 const NARRATIVE_SCENES = [
@@ -24,8 +30,8 @@ const NARRATIVE_TOTAL_MS = NARRATIVE_SCENES.reduce((s, x) => s + x.durationMs, 0
 
 const body = document.body;
 const heroSection = document.getElementById("kontekst-sekcji");
+const statusSection = document.getElementById("status");
 const supportSection = document.getElementById("support");
-const footer = document.querySelector(".site-footer");
 
 const proteinLayer = document.getElementById("protein-ascii-layer");
 const narrativeLayer = document.getElementById("narrative-ascii-layer");
@@ -256,11 +262,11 @@ function applyActivity() {
 }
 
 function computeNarrativeActive() {
-  if (innerWidth <= 900 || !supportSection) return false;
+  if (innerWidth <= 900 || !statusSection || !supportSection) return false;
   const anchorY = scrollY + innerHeight * 0.35;
+  const statusTop = statusSection.offsetTop;
   const supportTop = supportSection.offsetTop;
-  const footerTop = footer ? footer.offsetTop : document.documentElement.scrollHeight;
-  return anchorY >= supportTop && anchorY < footerTop;
+  return anchorY >= statusTop && anchorY < supportTop;
 }
 
 function setBodyActivity(proteinActive, narrativeActive) {
@@ -584,12 +590,18 @@ async function loadBitmap(path) {
   return blobToImage(blob);
 }
 
-async function createBitmapEngine(manifest, layerEl) {
+async function createBitmapEngine(manifest, layerEl, asciiOptions = null) {
   const canvas = document.createElement("canvas");
   const ctx = canvas.getContext("2d", { willReadFrequently: true });
   const cache = new Map();
   const inflight = new Map();
   const state = { layerEl, cols: 0, rows: 0, key: "", frameCount: manifest.length };
+  const renderOpts = {
+    palette: (asciiOptions?.palette && asciiOptions.palette.length > 0) ? asciiOptions.palette : CONFIG.palette,
+    normalizeLuma: Boolean(asciiOptions?.normalizeLuma),
+    contrast: Number.isFinite(asciiOptions?.contrast) ? asciiOptions.contrast : 1,
+    gamma: Number.isFinite(asciiOptions?.gamma) ? asciiOptions.gamma : 1
+  };
 
   function update(force = false) {
     const width = layerEl.clientWidth || 1;
@@ -610,7 +622,7 @@ async function createBitmapEngine(manifest, layerEl) {
   function keyFor(i) { return `${i}|${state.key}`; }
   update(true);
   const firstBmp = await loadBitmap(manifest[0]);
-  const first = bmpToAscii(firstBmp, canvas, ctx, state.cols, state.rows);
+  const first = bmpToAscii(firstBmp, canvas, ctx, state.cols, state.rows, renderOpts);
   if (typeof firstBmp.close === "function") firstBmp.close();
   cache.set(keyFor(0), first);
 
@@ -621,7 +633,7 @@ async function createBitmapEngine(manifest, layerEl) {
     if (cache.has(key)) return Promise.resolve(cache.get(key));
     if (inflight.has(key)) return inflight.get(key);
     const p = loadBitmap(manifest[i]).then((bmp) => {
-      const ascii = bmpToAscii(bmp, canvas, ctx, state.cols, state.rows);
+      const ascii = bmpToAscii(bmp, canvas, ctx, state.cols, state.rows, renderOpts);
       if (typeof bmp.close === "function") bmp.close();
       cache.set(keyFor(i), ascii);
       return ascii;
@@ -645,7 +657,7 @@ async function createBitmapEngine(manifest, layerEl) {
 
 async function createProteinLoopEngine({ manifest1, manifest2, layerEl, transitionFrames, morphStyle }) {
   const engine1 = await createBitmapEngine(manifest1, layerEl);
-  const engine2 = await createBitmapEngine(manifest2, layerEl);
+  const engine2 = await createBitmapEngine(manifest2, layerEl, CONFIG.protein2Ascii);
   const n1 = engine1.frameCount;
   const n2 = engine2.frameCount;
   const x = clamp(Math.floor(transitionFrames || 1), 1, Math.min(n1, n2));
@@ -719,22 +731,39 @@ async function createProteinLoopEngine({ manifest1, manifest2, layerEl, transiti
   };
 }
 
-function bmpToAscii(bitmap, canvas, ctx, cols, rows) {
+function bmpToAscii(bitmap, canvas, ctx, cols, rows, options = null) {
+  const palette = (options?.palette && options.palette.length > 0) ? options.palette : CONFIG.palette;
+  const normalizeLuma = Boolean(options?.normalizeLuma);
+  const contrast = Number.isFinite(options?.contrast) ? options.contrast : 1;
+  const gamma = Number.isFinite(options?.gamma) ? options.gamma : 1;
+
   canvas.width = cols;
   canvas.height = rows;
   ctx.clearRect(0, 0, cols, rows);
   ctx.drawImage(bitmap, 0, 0, cols, rows);
   const data = ctx.getImageData(0, 0, cols, rows).data;
-  const palMax = CONFIG.palette.length - 1;
+  const palMax = palette.length - 1;
+  const lums = new Float32Array(cols * rows);
+  let minLum = 1;
+  let maxLum = 0;
+  for (let i = 0, p = 0; i < data.length; i += 4, p++) {
+    const lum = (0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2]) / 255;
+    lums[p] = lum;
+    if (lum < minLum) minLum = lum;
+    if (lum > maxLum) maxLum = lum;
+  }
+  const range = maxLum - minLum;
   const out = new Array(rows);
   for (let y = 0; y < rows; y++) {
     let line = "";
-    let off = y * cols * 4;
+    let off = y * cols;
     for (let x = 0; x < cols; x++) {
-      const r = data[off], g = data[off + 1], b = data[off + 2];
-      const lum = (0.299 * r + 0.587 * g + 0.114 * b) / 255;
-      line += CONFIG.palette[Math.min(palMax, Math.round(lum * palMax))];
-      off += 4;
+      let lum = lums[off];
+      if (normalizeLuma && range > 0.0001) lum = (lum - minLum) / range;
+      if (contrast !== 1) lum = clamp((lum - 0.5) * contrast + 0.5, 0, 1);
+      if (gamma !== 1) lum = Math.pow(lum, gamma);
+      line += palette[Math.min(palMax, Math.round(clamp(lum, 0, 1) * palMax))];
+      off += 1;
     }
     out[y] = line;
   }
