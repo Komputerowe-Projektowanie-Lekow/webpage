@@ -6,7 +6,10 @@ const CONFIG = {
   charPixelTarget: 6.4,
   minCols: 96,
   maxCols: 500,
-  preloadAhead: 15
+  preloadAhead: 15,
+  proteinTransitionFrames: 24,
+  proteinSecondManifestCandidates: ["./frames-manifest_2.json", "./frames-manifest_2.json5"],
+  proteinMorphStyle: "dither"
 };
 
 const NARRATIVE_SCENES = [
@@ -268,8 +271,18 @@ function setBodyActivity(proteinActive, narrativeActive) {
 
 async function initProteinEngine() {
   if (!proteinLayer) throw new Error("protein layer missing");
-  const manifest = await loadManifest();
-  if (manifest.length) return createBitmapEngine(manifest, proteinLayer);
+  const manifest1 = await loadManifest();
+  const manifest2 = await loadManifestCandidates(CONFIG.proteinSecondManifestCandidates);
+  if (manifest1.length && manifest2.length) {
+    return createProteinLoopEngine({
+      manifest1,
+      manifest2,
+      layerEl: proteinLayer,
+      transitionFrames: CONFIG.proteinTransitionFrames,
+      morphStyle: CONFIG.proteinMorphStyle
+    });
+  }
+  if (manifest1.length) return createBitmapEngine(manifest1, proteinLayer);
   const fallback = await loadFallbackFrames();
   if (!fallback) throw new Error("no protein frames available");
   return createPrecomputedEngine(fallback);
@@ -510,14 +523,39 @@ function writeText(lines, x, y, text) {
 }
 
 async function loadManifest() {
+  const data = await loadJsonArray("./frames-manifest.json");
+  return Array.isArray(data) ? data : [];
+}
+
+async function loadManifestCandidates(candidates) {
+  if (!Array.isArray(candidates)) return [];
+  for (const path of candidates) {
+    const data = await loadJsonArray(path);
+    if (Array.isArray(data) && data.length > 0) return data;
+  }
+  return [];
+}
+
+async function loadJsonArray(path) {
   try {
-    const res = await fetch(new URL("./frames-manifest.json", import.meta.url));
-    if (!res.ok) return [];
-    const data = await res.json();
-    return Array.isArray(data) ? data : [];
+    const res = await fetch(new URL(path, import.meta.url));
+    if (!res.ok) return null;
+    const text = await res.text();
+    let data = null;
+    try {
+      data = JSON.parse(text);
+    } catch (parseError) {
+      console.warn(`Failed to parse manifest: ${path}`, parseError);
+      return null;
+    }
+    if (!Array.isArray(data)) {
+      console.warn(`Manifest is not an array: ${path}`);
+      return null;
+    }
+    return data;
   } catch (error) {
-    console.error("Failed to fetch manifest:", error);
-    return [];
+    console.error(`Failed to fetch manifest: ${path}`, error);
+    return null;
   }
 }
 
@@ -605,6 +643,82 @@ async function createBitmapEngine(manifest, layerEl) {
   };
 }
 
+async function createProteinLoopEngine({ manifest1, manifest2, layerEl, transitionFrames, morphStyle }) {
+  const engine1 = await createBitmapEngine(manifest1, layerEl);
+  const engine2 = await createBitmapEngine(manifest2, layerEl);
+  const n1 = engine1.frameCount;
+  const n2 = engine2.frameCount;
+  const x = clamp(Math.floor(transitionFrames || 1), 1, Math.min(n1, n2));
+  const segA = n1;
+  const segAB = x;
+  const segB = n2;
+  const segBA = x;
+  const frameCount = segA + segAB + segB + segBA;
+  const morphCache = new Map();
+
+  function normalize(index) {
+    return ((index % frameCount) + frameCount) % frameCount;
+  }
+
+  function getMorphFrame(sourceFrame, targetFrame, progress, seed) {
+    if (morphStyle === "dither") return transmuteAsciiDither(sourceFrame, targetFrame, progress, seed);
+    return transmuteAsciiDither(sourceFrame, targetFrame, progress, seed);
+  }
+
+  function ensureFrame(index) {
+    const i = normalize(index);
+    if (i < segA) return engine1.ensureFrame(i);
+
+    if (i < segA + segAB) {
+      const j = i - segA;
+      const cacheKey = `ab|${j}`;
+      if (morphCache.has(cacheKey)) return Promise.resolve(morphCache.get(cacheKey));
+      const sourceIndex = n1 - x + j;
+      const targetIndex = j;
+      const progress = (j + 1) / x;
+      return Promise.all([engine1.ensureFrame(sourceIndex), engine2.ensureFrame(targetIndex)]).then(([source, target]) => {
+        const frame = getMorphFrame(source, target, progress, 0x1f123bb5 + j * 97);
+        morphCache.set(cacheKey, frame);
+        return frame;
+      });
+    }
+
+    if (i < segA + segAB + segB) {
+      const k = i - segA - segAB;
+      return engine2.ensureFrame(k);
+    }
+
+    const j = i - segA - segAB - segB;
+    const cacheKey = `ba|${j}`;
+    if (morphCache.has(cacheKey)) return Promise.resolve(morphCache.get(cacheKey));
+    const sourceIndex = n2 - x + j;
+    const targetIndex = j;
+    const progress = (j + 1) / x;
+    return Promise.all([engine2.ensureFrame(sourceIndex), engine1.ensureFrame(targetIndex)]).then(([source, target]) => {
+      const frame = getMorphFrame(source, target, progress, 0x9e3779b9 + j * 131);
+      morphCache.set(cacheKey, frame);
+      return frame;
+    });
+  }
+
+  return {
+    fps: engine1.fps ?? CONFIG.fps,
+    frameCount,
+    firstFrame: engine1.firstFrame,
+    getDimensions: () => engine1.getDimensions(),
+    ensureFrame,
+    preloadFrom(index) {
+      for (let k = 1; k <= CONFIG.preloadAhead; k++) ensureFrame(index + k).catch(() => { });
+    },
+    updateResolution(force = false) {
+      const c1 = engine1.updateResolution ? engine1.updateResolution(force) : false;
+      const c2 = engine2.updateResolution ? engine2.updateResolution(force) : false;
+      if (c1 || c2) morphCache.clear();
+      return c1 || c2;
+    }
+  };
+}
+
 function bmpToAscii(bitmap, canvas, ctx, cols, rows) {
   canvas.width = cols;
   canvas.height = rows;
@@ -625,6 +739,42 @@ function bmpToAscii(bitmap, canvas, ctx, cols, rows) {
     out[y] = line;
   }
   return out.join("\n");
+}
+
+function transmuteAsciiDither(sourceFrame, targetFrame, progress, seed) {
+  const p = clamp(progress, 0, 1);
+  if (p <= 0) return sourceFrame;
+  if (p >= 1) return targetFrame;
+  if (sourceFrame === targetFrame) return sourceFrame;
+
+  const src = sourceFrame.split("");
+  const dst = targetFrame.split("");
+  const shared = Math.min(src.length, dst.length);
+  const out = new Array(shared);
+
+  for (let i = 0; i < shared; i++) {
+    const a = src[i];
+    const b = dst[i];
+    if (a === "\n" || b === "\n") {
+      out[i] = b === "\n" ? "\n" : a === "\n" ? "\n" : b;
+      continue;
+    }
+    out[i] = ditherNoise01(i, seed) < p ? b : a;
+  }
+
+  if (src.length !== dst.length) {
+    const tail = p < 0.5 ? sourceFrame.slice(shared) : targetFrame.slice(shared);
+    return out.join("") + tail;
+  }
+  return out.join("");
+}
+
+function ditherNoise01(index, seed) {
+  let x = (index + 1) ^ (seed | 0);
+  x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+  x = Math.imul(x ^ (x >>> 16), 0x45d9f3b);
+  x = (x ^ (x >>> 16)) >>> 0;
+  return x / 0xffffffff;
 }
 
 function blobToImage(blob) {
