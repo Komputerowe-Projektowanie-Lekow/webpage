@@ -467,12 +467,24 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
 
 .narrative-ascii-layer::before {
   background:
-    repeating-radial-gradient(circle at calc(var(--narrative-bleed-vw, 10vw) - 1.2vw) 50%,
+    repeating-radial-gradient(circle at 100% 50%,
       rgba(1, 119, 155, 0) 0 calc(var(--narrative-ripple-front, 200px) - 170px),
       rgba(1, 119, 155, calc(0.02 + var(--narrative-ripple-strength, 0.5) * 0.08)) calc(var(--narrative-ripple-front, 200px) - 152px) calc(var(--narrative-ripple-front, 200px) - 144px),
       rgba(1, 119, 155, 0) calc(var(--narrative-ripple-front, 200px) - 128px) calc(var(--narrative-ripple-front, 200px) - 98px)),
     radial-gradient(60% 80% at 11% 50%, rgba(1, 119, 155, 0.2), transparent 74%),
     linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent 48%, rgba(255, 255, 255, 0.02));
+  background-size:
+    var(--narrative-bleed-vw, 10vw) 100%,
+    100% 100%,
+    100% 100%;
+  background-position:
+    left top,
+    0 0,
+    0 0;
+  background-repeat:
+    no-repeat,
+    no-repeat,
+    no-repeat;
 }
 
 .protein-ascii-layer::after,
