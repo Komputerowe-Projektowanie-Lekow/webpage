@@ -432,17 +432,20 @@ main .page[id] {
 }
 
 .narrative-ascii-layer {
-  right: 0;
-  width: calc(50vw + var(--narrative-bleed-px, 160px));
+  left: 0;
+  width: 100vw;
   height: 100vh;
   z-index: 15;
-  --narrative-bleed-px: 160px;
-  --narrative-wave-origin-px: 160px;
-  --narrative-wave-front-px: 240px;
-  --narrative-wave-opacity: 0.5;
-  --narrative-wave-fade-end-px: 62%;
-  --narrative-wave-scale: 0.88;
-  --narrative-wave-shift-x: 10vw;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    transparent 48%,
+    rgba(165, 210, 235, 0.25) 52%,
+    rgba(135, 195, 228, 0.38) 65%,
+    rgba(115, 188, 225, 0.45) 100%);
+  --narrative-wave-origin-px: 50vw;
+  --narrative-wave-spread-px: 120px;
+  --narrative-wave-front-px: 300px;
+  --narrative-wave-opacity: 0.06;
 }
 
 body[data-protein-active="true"] .protein-ascii-layer {
@@ -471,31 +474,25 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
 
 .narrative-ascii-layer::before {
   background:
-    repeating-radial-gradient(circle at var(--narrative-wave-origin-px, 160px) 50%,
-      rgba(1, 119, 155, 0) 0 calc(var(--narrative-wave-front-px, 240px) - 228px),
-      rgba(1, 119, 155, calc(var(--narrative-wave-opacity, 0.5) * 0.34)) calc(var(--narrative-wave-front-px, 240px) - 214px) calc(var(--narrative-wave-front-px, 240px) - 207px),
-      rgba(1, 119, 155, 0) calc(var(--narrative-wave-front-px, 240px) - 192px) calc(var(--narrative-wave-front-px, 240px) - 170px)),
-    radial-gradient(60% 80% at 11% 50%, rgba(1, 119, 155, 0.2), transparent 74%),
-    linear-gradient(90deg, rgba(255, 255, 255, 0.02), transparent 48%, rgba(255, 255, 255, 0.02));
-  background-size: 100% 100%, 100% 100%, 100% 100%;
-  background-position: 0 0, 0 0, 0 0;
-  background-repeat: no-repeat, no-repeat, no-repeat;
+    repeating-radial-gradient(circle at var(--narrative-wave-origin-px, 50vw) 50%,
+      rgba(115, 188, 225, 0) calc(var(--narrative-wave-phase, 0px)),
+      rgba(115, 188, 225, 0) calc(var(--narrative-wave-phase, 0px) + 130px),
+      rgba(115, 188, 225, var(--narrative-wave-opacity, 0.1)) calc(var(--narrative-wave-phase, 0px) + 145px),
+      rgba(115, 188, 225, var(--narrative-wave-opacity, 0.1)) calc(var(--narrative-wave-phase, 0px) + 175px),
+      rgba(115, 188, 225, 0) calc(var(--narrative-wave-phase, 0px) + 200px));
   -webkit-mask-image: linear-gradient(90deg,
-      rgba(0, 0, 0, 0) 0,
-      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 1px),
-      rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 160px) + 1px),
-      rgba(0, 0, 0, 0.34) var(--narrative-wave-fade-end-px, 62%),
-      rgba(0, 0, 0, 0) calc(var(--narrative-wave-fade-end-px, 62%) + 1px),
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 50vw) - 1px),
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 50vw) + 1px),
       rgba(0, 0, 0, 0) 100%);
   mask-image: linear-gradient(90deg,
-      rgba(0, 0, 0, 0) 0,
-      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 1px),
-      rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 160px) + 1px),
-      rgba(0, 0, 0, 0.34) var(--narrative-wave-fade-end-px, 62%),
-      rgba(0, 0, 0, 0) calc(var(--narrative-wave-fade-end-px, 62%) + 1px),
+      rgba(0, 0, 0, 1) 0%,
+      rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 50vw) - 1px),
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 50vw) + 1px),
       rgba(0, 0, 0, 0) 100%);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
+  z-index: 2;
 }
 
 .protein-ascii-layer::after,
@@ -510,6 +507,11 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
   opacity: 0.2;
   z-index: 1;
   animation: scanShift 26s linear infinite;
+}
+
+.narrative-ascii-layer::after {
+  left: 50%;
+  width: 50%;
 }
 
 .ascii-caption {
@@ -536,7 +538,7 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
 
 .narrative-ascii-layer #ascii-story-overlay {
   position: absolute;
-  left: clamp(0.8rem, 2vw, 1.5rem);
+  left: calc(50% + clamp(0.8rem, 2vw, 1.5rem));
   bottom: clamp(5.2rem, 9vh, 7rem);
   width: min(34rem, calc(50vw - 2rem));
   z-index: 7;
@@ -696,21 +698,19 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
 #narrative-screen,
 #narrative-screen-ghost-1,
 #narrative-screen-ghost-2 {
-  width: calc(100% + var(--narrative-bleed-px, 160px));
+  width: 50vw;
   height: 100%;
-  left: calc(-1 * var(--narrative-bleed-px, 160px));
+  left: 50%;
   top: 50%;
   -webkit-mask-image: linear-gradient(90deg,
       rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 6px),
-      rgba(0, 0, 0, 0.56) calc(var(--narrative-wave-origin-px, 160px) + 26px),
-      rgba(0, 0, 0, 0.92) calc(var(--narrative-wave-origin-px, 160px) + 180px),
+      rgba(0, 0, 0, 0.5) 6%,
+      rgba(0, 0, 0, 0.92) 18%,
       rgba(0, 0, 0, 1) 100%);
   mask-image: linear-gradient(90deg,
       rgba(0, 0, 0, 0) 0%,
-      rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 6px),
-      rgba(0, 0, 0, 0.56) calc(var(--narrative-wave-origin-px, 160px) + 26px),
-      rgba(0, 0, 0, 0.92) calc(var(--narrative-wave-origin-px, 160px) + 180px),
+      rgba(0, 0, 0, 0.5) 6%,
+      rgba(0, 0, 0, 0.92) 18%,
       rgba(0, 0, 0, 1) 100%);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
@@ -749,24 +749,19 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
 }
 
 #narrative-screen {
-  transform: translate(var(--narrative-wave-shift-x, 10vw), -50%) scale(var(--narrative-wave-scale, 0.88));
+  transform: translate(0, -50%) scale(0.92);
 }
 
-#narrative-screen-ghost-1 {
-  transform: translate(calc(var(--narrative-wave-shift-x, 10vw) - 1.8%), -50%) scale(0.892);
-}
-
+#narrative-screen-ghost-1,
 #narrative-screen-ghost-2 {
-  transform: translate(calc(var(--narrative-wave-shift-x, 10vw) + 1.7%), -50%) scale(0.876);
+  display: none;
 }
 
-#protein-screen-ghost-1[data-ready="true"],
-#narrative-screen-ghost-1[data-ready="true"] {
+#protein-screen-ghost-1[data-ready="true"] {
   opacity: 0.28;
 }
 
-#protein-screen-ghost-2[data-ready="true"],
-#narrative-screen-ghost-2[data-ready="true"] {
+#protein-screen-ghost-2[data-ready="true"] {
   opacity: 0.17;
 }
 

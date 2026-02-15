@@ -1,6 +1,6 @@
 const CONFIG = {
   fps: 60,
-  speed: 0.4,
+  speed: 0.6,
   palette: "/\\.|",
   lineAspect: 1.0,
   charPixelTarget: 6.4,
@@ -19,12 +19,12 @@ const CONFIG = {
 };
 
 const NARRATIVE_SCENES = [
-  { id: "scene-1", durationMs: 1600, kicker: "Scena 1/6", title: "Komorka pojedyncza", meta: "Waskie gardlo Gram-ujemnych: dobry score in-silico nie gwarantuje efektu komorkowego." },
-  { id: "scene-2", durationMs: 1700, kicker: "Scena 2/6", title: "Retencja i wejscie do komorki", meta: "Stage 2: stage2a_output.csv + stage2b_output.csv jako filtr wejscia i retencji." },
-  { id: "scene-3", durationMs: 1700, kicker: "Scena 3/6", title: "Target engagement przed struktura", meta: "stage3_for_boltz2.csv: top 200 kandydatow przed etapem strukturalnym." },
-  { id: "scene-4", durationMs: 1700, kicker: "Scena 4/6", title: "Boltz2 i KD_pred", meta: "stage4_output.csv z KD_pred buduje ranking przed MD i etapami systemowymi." },
-  { id: "scene-5", durationMs: 2100, kicker: "Scena 5/6", title: "MD i system", meta: "stage3_for_gromacs.csv (top 50) -> stage5_output.csv -> Stage 6A/6B." },
-  { id: "scene-6", durationMs: 4200, holdStartMs: 1500, kicker: "Scena 6/6", title: "Wirtualna komorka", meta: "Stan 2026-02-10: EXP3 pilot15 (top_n=10) przeszedl Stage1->Stage6 + finalize.", note: "full10 po fixie Stage6B czeka na potwierdzenie rerunu." }
+  { id: "scene-1", durationMs: 1800, kicker: "Stage 1/6", title: "Generowanie (REINVENT4)", meta: "De-novo generowanie kandydatow: losowe fragmenty skladaja sie w ciagi SMILES." },
+  { id: "scene-2", durationMs: 1700, kicker: "Stage 2/6", title: "Filtrowanie (Analiza + Retencja)", meta: "Stage 2a+2b: filtr wejscia do komorki i retencji. Setki -> dziesiatki." },
+  { id: "scene-3", durationMs: 1700, kicker: "Stage 3/6", title: "Target Engagement (Cell TE)", meta: "Docking ligand-target: top 200 kandydatow przechodzi do etapu strukturalnego." },
+  { id: "scene-4", durationMs: 1700, kicker: "Stage 4/6", title: "Struktura (Boltz2)", meta: "Predykcja struktury bialka i KD_pred. Ranking przed MD." },
+  { id: "scene-5", durationMs: 2100, kicker: "Stage 5/6", title: "Dynamika (GROMACS MD)", meta: "Symulacja dynamiki molekularnej: top 50 kandydatow w pelnym ukladzie wodnym." },
+  { id: "scene-6", durationMs: 4200, holdStartMs: 1500, kicker: "Stage 6/6", title: "Siec metaboliczna (iML1515)", meta: "Stage 6A/6B: integracja z modelem metabolicznym E. coli. FBA + essentiality.", note: "Wirtualna komorka: od kandydata do efektu systemowego." }
 ];
 const NARRATIVE_TOTAL_MS = NARRATIVE_SCENES.reduce((s, x) => s + x.durationMs, 0);
 
@@ -52,6 +52,7 @@ let heroObserver = null;
 let activityRaf = null;
 let narrativeRippleRaf = null;
 let narrativeRippleRunning = false;
+let maxNarrativeProgress = 0;
 let proteinController = null;
 let narrativeController = null;
 
@@ -302,22 +303,22 @@ function tickNarrativeRipple(now) {
 
   const progress = computeNarrativeRangeProgress();
   const t = now * 0.001;
-  const phase = t * 1.9;
-  const layerWidth = Math.max(1, narrativeLayer.clientWidth || Math.round(innerWidth * 0.5));
-  const bleedPx = clamp(innerWidth * 0.12, 96, 240);
-  const originPx = bleedPx;
-  const rightSpanPx = Math.max(1, layerWidth - originPx);
-  const baseFrontPx = Math.max(18, rightSpanPx * 0.08);
-  const oscillationPx = Math.sin(phase * 0.82) * Math.max(10, rightSpanPx * 0.032);
-  const frontPx = clamp(baseFrontPx + progress * rightSpanPx + oscillationPx, 12, rightSpanPx);
-  const waveOpacity = clamp(0.28 + progress * 0.45, 0, 1);
-  const fadeEndPx = clamp(originPx + rightSpanPx * 0.58, originPx + 120, layerWidth);
+  const halfWidth = Math.max(1, Math.floor(innerWidth * 0.5));
 
-  narrativeLayer.style.setProperty("--narrative-bleed-px", `${bleedPx.toFixed(2)}px`);
+  // Wave origin at center, rings emanate outward like water ripples
+  const originPx = halfWidth;
+
+  // Phase cycles 0→200px seamlessly — wider rings, more spacing
+  const ringSpacing = 200; // px between rings
+  const speed = 15; // px/s outward
+  const phase = (t * speed) % ringSpacing;
+
+  // Subtle but visible wave opacity
+  const waveOpacity = clamp(0.08 + progress * 0.06, 0.07, 0.16);
+
   narrativeLayer.style.setProperty("--narrative-wave-origin-px", `${originPx.toFixed(2)}px`);
-  narrativeLayer.style.setProperty("--narrative-wave-front-px", `${frontPx.toFixed(2)}px`);
-  narrativeLayer.style.setProperty("--narrative-wave-opacity", waveOpacity.toFixed(3));
-  narrativeLayer.style.setProperty("--narrative-wave-fade-end-px", `${fadeEndPx.toFixed(2)}px`);
+  narrativeLayer.style.setProperty("--narrative-wave-phase", `${phase.toFixed(2)}px`);
+  narrativeLayer.style.setProperty("--narrative-wave-opacity", waveOpacity.toFixed(4));
   narrativeLayer.setAttribute("data-ripple-active", "true");
 
   narrativeRippleRaf = requestAnimationFrame(tickNarrativeRipple);
@@ -373,7 +374,7 @@ function setNarrativeOverlay(sceneState) {
 }
 
 function createNarrativeEngine(layerEl) {
-  const fps = 24;
+  const fps = 48;
   const frameCount = Math.max(1, Math.round((NARRATIVE_TOTAL_MS / 1000) * fps));
   const dims = { cols: 0, rows: 0, mobile: false, key: "" };
 
@@ -454,80 +455,374 @@ function renderNarrativeFrame(scene, dims, t) {
   const cols = dims.cols;
   const rows = dims.rows;
   const lines = Array.from({ length: rows }, () => Array(cols).fill(" "));
+  // Subtle background noise — sparser than before
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
-      const s = Math.sin(x * 0.12 + y * 0.09 + t * 0.001) + Math.cos(x * 0.03 - y * 0.11 + t * 0.0008);
-      if (s > 1.94) lines[y][x] = ".";
+      const s = Math.sin(x * 0.14 + y * 0.08 + t * 0.0006) + Math.cos(x * 0.025 - y * 0.12 + t * 0.0005);
+      if (s > 1.96) lines[y][x] = ".";
     }
   }
-  const labelMap = { "scene-1": "[komorka pojedyncza]", "scene-2": "[retencja i wejscie]", "scene-3": "[target engagement]", "scene-4": "[boltz2 + KD_pred]", "scene-5": "[MD i system]", "scene-6": "[wirtualna komorka]" };
-  const compactLabelMap = { "scene-1": "[komorka]", "scene-2": "[retencja]", "scene-3": "[engagement]", "scene-4": "[S4 KD]", "scene-5": "[MD + system]", "scene-6": "[wirtualna]" };
+  const labelMap = {
+    "scene-1": "[REINVENT4 : generowanie]",
+    "scene-2": "[filtrowanie : retencja]",
+    "scene-3": "[target engagement]",
+    "scene-4": "[Boltz2 : struktura]",
+    "scene-5": "[GROMACS : dynamika MD]",
+    "scene-6": "[siec metaboliczna]"
+  };
+  const compactLabelMap = {
+    "scene-1": "[REINVENT4]",
+    "scene-2": "[filtr]",
+    "scene-3": "[docking]",
+    "scene-4": "[Boltz2]",
+    "scene-5": "[GROMACS]",
+    "scene-6": "[iML1515]"
+  };
   const label = cols < 110 ? (compactLabelMap[scene.sceneId] ?? "") : (labelMap[scene.sceneId] ?? "");
   const pipelineLine = cols < 100
-    ? "S1>S2>S3>S4>S5>6A/6B"
+    ? "GEN>FILT>DOCK>STRUCT>MD>METAB"
     : cols < 126
-      ? "S1->S2a+2b->S3(200)->S4(KD)->S5(50)->6A/6B"
-      : "REINVENT4->S2a+S2b->S3(top200)->S4(KD)->S5(top50)->6A/6B";
-  writeText(lines, Math.floor(cols * 0.06), Math.floor(rows * 0.16), label);
+      ? "REINVENT4->Filter(2a+2b)->TE(200)->Boltz2(KD)->GROMACS(50)->6A/6B"
+      : "REINVENT4->S2a+S2b(Filter)->S3(TE,top200)->S4(Boltz2,KD)->S5(GROMACS,top50)->S6(iML1515)";
+  writeText(lines, Math.floor(cols * 0.06), Math.floor(rows * 0.12), label);
   writeText(lines, Math.floor(cols * 0.06), rows - 4, pipelineLine);
-  drawSceneShape(lines, scene.sceneId, t);
+  drawSceneShape(lines, scene.sceneId, t, scene.sceneProgress);
   drawProgress(lines, scene.sceneIndex, scene.sceneProgress);
   return lines.map((r) => r.join("")).join("\n");
 }
 
-function drawSceneShape(lines, sceneId, t) {
+function drawSceneShape(lines, sceneId, t, progress) {
+  if (sceneId === "scene-1") drawGeneration(lines, t, progress);
+  else if (sceneId === "scene-2") drawFunnel(lines, t, progress);
+  else if (sceneId === "scene-3") drawDocking(lines, t, progress);
+  else if (sceneId === "scene-4") drawFolding(lines, t, progress);
+  else if (sceneId === "scene-5") drawDynamics(lines, t, progress);
+  else if (sceneId === "scene-6") drawNetwork(lines, t, progress);
+}
+
+// Scene 1 — REINVENT4: random chars coalescing into SMILES fragments
+function drawGeneration(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
   const compact = cols < 96;
-  const cx = Math.floor(cols * (compact ? 0.2 : 0.24));
+  const cx = Math.floor(cols * 0.5);
   const cy = Math.floor(rows * 0.5);
-  const pulse = Math.sin(t * 0.004) * 0.8;
-  const rx = clamp(
-    Math.floor((compact ? cols * 0.075 : cols * 0.1) + pulse),
-    compact ? 5 : 6,
-    Math.max(compact ? 7 : 9, Math.floor(cols * (compact ? 0.1 : 0.13)))
-  );
-  const ry = clamp(
-    Math.floor((compact ? rows * 0.13 : rows * 0.17) + pulse * 0.5),
-    compact ? 4 : 5,
-    Math.max(compact ? 8 : 10, Math.floor(rows * 0.22))
-  );
-  ellipse(lines, cx, cy, rx, ry, "@");
-  const gateX = clamp(Math.floor(cols * (compact ? 0.44 : 0.48)), cx + rx + 3, cols - 3);
-  if (sceneId === "scene-2" || sceneId === "scene-3") {
-    for (let y = Math.floor(rows * 0.24); y <= Math.floor(rows * 0.76); y++) lines[y][gateX] = "|";
+  const noise = "$#@!%^&*~+=<>?;:";
+  const smiles = ["C", "C", "(", "O", ")", "C", "=", "O", "N", "c", "1", "c", "c", "c", "c", "1"];
+
+  // Phase: scattered random chars converge toward center and form SMILES
+  const phase = clamp(progress, 0, 1);
+  const scatter = Math.floor((compact ? 18 : 30) * (1 - phase * 0.7));
+  const randSeed = Math.floor(t * 0.01);
+
+  // Floating random chemical chars
+  for (let i = 0; i < (compact ? 35 : 60); i++) {
+    const hash = ((i * 2654435761 + randSeed) >>> 0) % 65536;
+    const dx = ((hash % (scatter * 2 + 1)) - scatter);
+    const dy = (((hash >> 8) % (scatter * 2 + 1)) - scatter) >> 1;
+    const x = clamp(cx + dx, 1, cols - 2);
+    const y = clamp(cy + dy, 1, rows - 3);
+    const ch = noise[(hash >> 4) % noise.length];
+    if (y >= 0 && y < rows && x >= 0 && x < cols) lines[y][x] = ch;
   }
-  if (sceneId === "scene-4") {
-    const boxW = clamp(Math.floor(cols * (compact ? 0.18 : 0.22)), compact ? 10 : 14, compact ? 16 : 24);
-    const boxH = clamp(Math.floor(rows * (compact ? 0.28 : 0.4)), compact ? 7 : 10, compact ? 11 : 18);
-    const minX = Math.max(1, cx - Math.floor(boxW * 0.35));
-    const boxX = clamp(Math.floor(cols * (compact ? 0.22 : 0.18)), minX, Math.max(minX, cols - boxW - 2));
-    const boxY = clamp(Math.floor(rows * 0.24), 1, Math.max(1, rows - boxH - 2));
-    box(lines, boxX, boxY, boxW, boxH, "#");
-    writeText(lines, boxX + 2, Math.min(rows - 2, boxY + Math.max(2, Math.floor(boxH * 0.35))), compact ? "s4.csv" : "stage4_output.csv");
+
+  // SMILES string assembling in the center as progress increases
+  const visible = Math.floor(smiles.length * phase);
+  const startX = cx - Math.floor(visible / 2);
+  for (let i = 0; i < visible; i++) {
+    const x = startX + i;
+    const y = cy;
+    if (y >= 0 && y < rows && x >= 0 && x < cols) lines[y][x] = smiles[i];
   }
-  if (sceneId === "scene-5") {
-    const boxW = compact ? 8 : 12;
-    const boxH = compact ? 4 : 6;
-    const boxX = clamp(Math.floor(cols * (compact ? 0.74 : 0.7)), 1, cols - boxW - 2);
-    const topY = clamp(Math.floor(rows * 0.28), 1, Math.max(1, rows - boxH - 2));
-    const bottomY = clamp(Math.floor(rows * (compact ? 0.58 : 0.62)), topY + boxH + 1, Math.max(topY + boxH + 1, rows - boxH - 2));
-    box(lines, boxX, topY, boxW, boxH, "#");
-    box(lines, boxX, bottomY, boxW, boxH, "#");
-    writeText(lines, boxX + Math.max(2, Math.floor(boxW * 0.35)), Math.min(rows - 2, topY + Math.max(1, Math.floor(boxH * 0.5))), "6A");
-    writeText(lines, boxX + Math.max(2, Math.floor(boxW * 0.35)), Math.min(rows - 2, bottomY + Math.max(1, Math.floor(boxH * 0.5))), "6B");
+
+  // Label below the forming molecule
+  if (phase > 0.3) {
+    writeText(lines, cx - 5, cy + 3, compact ? "SMILES" : "de novo SMILES");
   }
-  if (sceneId === "scene-6") {
-    const boxW = clamp(Math.floor(cols * (compact ? 0.24 : 0.34)), compact ? 12 : 18, compact ? 18 : 34);
-    const boxH = clamp(Math.floor(rows * (compact ? 0.28 : 0.42)), compact ? 8 : 12, compact ? 14 : 28);
-    const minX = cx + rx + 6;
-    const boxX = clamp(Math.floor(cols * (compact ? 0.6 : 0.56)), minX, Math.max(minX, cols - boxW - 2));
-    const boxY = clamp(Math.floor(rows * 0.28), 1, Math.max(1, rows - boxH - 2));
-    box(lines, boxX, boxY, boxW, boxH, "#");
+}
+
+// Scene 2 — Filtering: funnel narrowing with molecules passing through
+function drawFunnel(lines, t, progress) {
+  const rows = lines.length;
+  const cols = lines[0].length;
+  const compact = cols < 96;
+  const cx = Math.floor(cols * 0.5);
+  const topY = Math.floor(rows * 0.2);
+  const botY = Math.floor(rows * 0.78);
+  const midY = Math.floor(rows * 0.52);
+
+  // Draw funnel shape — wide top, narrow bottom
+  const topHalf = compact ? 14 : 22;
+  const botHalf = compact ? 3 : 5;
+  for (let y = topY; y <= botY; y++) {
+    const frac = clamp((y - topY) / Math.max(1, botY - topY), 0, 1);
+    const half = Math.round(topHalf * (1 - frac) + botHalf * frac);
+    const lx = clamp(cx - half, 0, cols - 1);
+    const rx = clamp(cx + half, 0, cols - 1);
+    if (lx >= 0 && lx < cols) lines[y][lx] = "|";
+    if (rx >= 0 && rx < cols) lines[y][rx] = "|";
   }
-  const arrowStartX = clamp(cx + rx + 2, 1, cols - 2);
-  const arrowTargetX = clamp(Math.floor(cols * (compact ? 0.54 : 0.58)), arrowStartX + 1, cols - 2);
-  arrow(lines, arrowStartX, cy, arrowTargetX, cy, "=");
+  // Top rim
+  for (let x = cx - topHalf; x <= cx + topHalf; x++) {
+    if (x >= 0 && x < cols && topY >= 0 && topY < rows) lines[topY][x] = "_";
+  }
+
+  // Molecules entering (o) and being filtered (x) or passing (*)
+  const tick = Math.floor(t * 0.008);
+  const symbols = "oooo*ooxooo*oxo";
+  for (let i = 0; i < (compact ? 6 : 10); i++) {
+    const hash = ((i * 1597 + tick) >>> 0) % 256;
+    const yOff = (hash % Math.max(1, botY - topY - 4));
+    const py = topY + 2 + yOff;
+    const frac = clamp((py - topY) / Math.max(1, botY - topY), 0, 1);
+    const half = Math.round(topHalf * (1 - frac) + botHalf * frac) - 1;
+    const px = cx + ((hash >> 4) % Math.max(1, half * 2 + 1)) - half;
+    const ch = symbols[(i + tick) % symbols.length];
+    if (py >= 0 && py < rows && px >= 0 && px < cols) lines[py][px] = ch;
+  }
+
+  // Arrow out the bottom
+  const outY = Math.min(rows - 5, botY + 1);
+  if (outY >= 0 && outY < rows && cx >= 0 && cx < cols) lines[outY][cx] = "V";
+  writeText(lines, cx - (compact ? 3 : 6), outY + 1, compact ? "top N" : "filtered output");
+}
+
+// Scene 3 — Target Engagement: docking brackets closing on a target
+function drawDocking(lines, t, progress) {
+  const rows = lines.length;
+  const cols = lines[0].length;
+  const compact = cols < 96;
+  const cx = Math.floor(cols * 0.5);
+  const cy = Math.floor(rows * 0.48);
+
+  // Target (receptor) — small structure in center
+  const targetR = compact ? 4 : 6;
+  ellipse(lines, cx, cy, targetR, Math.max(2, Math.floor(targetR * 0.6)), "O");
+  if (cy >= 0 && cy < rows && cx >= 0 && cx < cols) lines[cy][cx] = "*";
+  writeText(lines, cx - 3, cy, "target");
+
+  // Ligand brackets approaching from left and right
+  const maxGap = compact ? 16 : 24;
+  const gap = Math.max(1, Math.floor(maxGap * (1 - progress)));
+
+  // Left ligand arm
+  const lx = cx - targetR - gap;
+  for (let dy = -2; dy <= 2; dy++) {
+    const y = cy + dy;
+    if (y >= 0 && y < rows && lx >= 0 && lx < cols) lines[y][lx] = ">";
+    if (y >= 0 && y < rows && lx - 1 >= 0 && lx - 1 < cols) lines[y][lx - 1] = "=";
+  }
+  writeText(lines, Math.max(0, lx - (compact ? 7 : 10)), cy - 4, compact ? "ligand" : "ligand (candidate)");
+
+  // Right reference arm
+  const rx = cx + targetR + gap;
+  for (let dy = -2; dy <= 2; dy++) {
+    const y = cy + dy;
+    if (y >= 0 && y < rows && rx >= 0 && rx < cols) lines[y][rx] = "<";
+    if (y >= 0 && y < rows && rx + 1 >= 0 && rx + 1 < cols) lines[y][rx + 1] = "=";
+  }
+
+  // Binding energy indicator
+  if (progress > 0.5) {
+    const kd = (1.0 - progress) * 10;
+    writeText(lines, cx - 6, cy + (compact ? 5 : 6), `KD ~ ${kd.toFixed(1)} nM`);
+  }
+}
+
+// Scene 4 — Boltz2: protein folding / structure prediction
+function drawFolding(lines, t, progress) {
+  const rows = lines.length;
+  const cols = lines[0].length;
+  const compact = cols < 96;
+  const cx = Math.floor(cols * 0.5);
+  const cy = Math.floor(rows * 0.46);
+
+  // Alpha helix representation (spiral-like)
+  const helixLen = compact ? 10 : 18;
+  const helixStartX = cx - Math.floor(helixLen / 2);
+  const helixY = cy - (compact ? 4 : 6);
+  const helixChars = "SsHhSsHh";
+  for (let i = 0; i < helixLen; i++) {
+    const x = helixStartX + i;
+    const yOff = Math.round(Math.sin(i * 0.8 + t * 0.003) * (compact ? 1.0 : 1.5));
+    const y = helixY + yOff;
+    if (y >= 0 && y < rows && x >= 0 && x < cols) {
+      lines[y][x] = helixChars[i % helixChars.length];
+    }
+  }
+  writeText(lines, helixStartX, helixY - 2, compact ? "helix" : "alpha-helix");
+
+  // Beta sheet (parallel arrows)
+  const sheetY = cy + (compact ? 2 : 3);
+  const sheetW = compact ? 12 : 20;
+  const sheetStartX = cx - Math.floor(sheetW / 2);
+  for (let row = 0; row < 3; row++) {
+    const y = sheetY + row * 2;
+    if (y >= rows) break;
+    const dir = row % 2 === 0;
+    for (let i = 0; i < sheetW; i++) {
+      const x = sheetStartX + i;
+      if (x >= 0 && x < cols && y >= 0 && y < rows) {
+        lines[y][x] = (i === sheetW - 1 && dir) ? ">" : (i === 0 && !dir) ? "<" : "-";
+      }
+    }
+  }
+  writeText(lines, sheetStartX, sheetY + 6, compact ? "sheet" : "beta-sheet");
+
+  // 3D-ish cube outline (structure model)
+  const cubeSize = compact ? 5 : 7;
+  const cubeX = cx + (compact ? 12 : 18);
+  const cubeY = cy - Math.floor(cubeSize / 2);
+  // Front face
+  box(lines, cubeX, cubeY, cubeSize, cubeSize, "#");
+  // Back face offset
+  const off = compact ? 2 : 3;
+  box(lines, cubeX + off, cubeY - off, cubeSize, cubeSize, "+");
+  // Connecting edges
+  for (const [dx, dy] of [[0, 0], [cubeSize - 1, 0], [0, cubeSize - 1], [cubeSize - 1, cubeSize - 1]]) {
+    const x1 = cubeX + dx, y1 = cubeY + dy;
+    const x2 = cubeX + dx + off, y2 = cubeY + dy - off;
+    const mx = Math.round((x1 + x2) / 2), my = Math.round((y1 + y2) / 2);
+    if (my >= 0 && my < rows && mx >= 0 && mx < cols) lines[my][mx] = "/";
+  }
+  writeText(lines, cubeX - 1, cubeY + cubeSize + 1, compact ? "Boltz2" : "Boltz2 model");
+}
+
+// Scene 5 — GROMACS: molecular dynamics vibration
+function drawDynamics(lines, t, progress) {
+  const rows = lines.length;
+  const cols = lines[0].length;
+  const compact = cols < 96;
+  const cx = Math.floor(cols * 0.5);
+  const cy = Math.floor(rows * 0.46);
+  const speed = 0.005;
+
+  // Central molecule vibrating
+  const jx = Math.round(Math.sin(t * speed * 3) * 1.5);
+  const jy = Math.round(Math.cos(t * speed * 4) * 0.8);
+  const molR = compact ? 4 : 6;
+  ellipse(lines, cx + jx, cy + jy, molR, Math.max(2, Math.floor(molR * 0.6)), "@");
+  if (cy + jy >= 0 && cy + jy < rows && cx + jx >= 0 && cx + jx < cols) lines[cy + jy][cx + jx] = "*";
+
+  // Wavy lines representing energy / heat (above and below)
+  const waveRows = compact ? 3 : 5;
+  for (let w = 0; w < waveRows; w++) {
+    const wy = cy - molR - 3 - w;
+    const wy2 = cy + molR + 3 + w;
+    const amp = 1.5 + w * 0.3;
+    const freq = 0.15 + w * 0.02;
+    const waveW = compact ? 20 : 36;
+    for (let i = 0; i < waveW; i++) {
+      const x = cx - Math.floor(waveW / 2) + i;
+      const yOff = Math.round(Math.sin(i * freq + t * speed * 2 + w) * amp);
+      const ch = "~";
+      const py1 = wy + yOff;
+      const py2 = wy2 - yOff;
+      if (py1 >= 0 && py1 < rows && x >= 0 && x < cols) lines[py1][x] = ch;
+      if (py2 >= 0 && py2 < rows && x >= 0 && x < cols) lines[py2][x] = ch;
+    }
+  }
+
+  // Temperature / energy label
+  const tempLabel = compact ? "300K MD" : "T=300K  GROMACS MD";
+  writeText(lines, cx - Math.floor(tempLabel.length / 2), cy + molR + waveRows + 5, tempLabel);
+
+  // Water molecules scattered
+  const waterCount = compact ? 8 : 16;
+  const tick = Math.floor(t * 0.006);
+  for (let i = 0; i < waterCount; i++) {
+    const hash = ((i * 48271 + tick) >>> 0) % 65536;
+    const wx = cx + ((hash % (compact ? 30 : 50)) - (compact ? 15 : 25));
+    const wy = cy + (((hash >> 8) % (compact ? 16 : 24)) - (compact ? 8 : 12));
+    if (wy >= 0 && wy < rows && wx >= 0 && wx < cols && lines[wy][wx] === " ") {
+      lines[wy][wx] = (hash >> 4) % 3 === 0 ? "o" : ".";
+    }
+  }
+}
+
+// Scene 6 — Metabolic Network: nodes and edges (iML1515)
+function drawNetwork(lines, t, progress) {
+  const rows = lines.length;
+  const cols = lines[0].length;
+  const compact = cols < 96;
+  const cx = Math.floor(cols * 0.5);
+  const cy = Math.floor(rows * 0.46);
+
+  // Network nodes
+  const nodes = compact ? [
+    { x: 0, y: 0, label: "FBA" },
+    { x: -12, y: -5, label: "glc" },
+    { x: 12, y: -5, label: "atp" },
+    { x: -12, y: 5, label: "6A" },
+    { x: 12, y: 5, label: "6B" },
+    { x: 0, y: -8, label: "pyr" },
+    { x: 0, y: 8, label: "bio" }
+  ] : [
+    { x: 0, y: 0, label: "FBA core" },
+    { x: -18, y: -6, label: "glucose" },
+    { x: 18, y: -6, label: "ATP" },
+    { x: -18, y: 6, label: "Stage 6A" },
+    { x: 18, y: 6, label: "Stage 6B" },
+    { x: -9, y: -9, label: "pyruvate" },
+    { x: 9, y: -9, label: "NADH" },
+    { x: 0, y: 10, label: "biomass" },
+    { x: -9, y: 9, label: "essntl" },
+    { x: 9, y: 9, label: "metab" }
+  ];
+
+  // Draw edges between nodes (connections)
+  const edges = compact
+    ? [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[1,5],[2,4],[3,6]]
+    : [[0,1],[0,2],[0,3],[0,4],[0,5],[0,6],[0,7],[1,5],[2,6],[3,8],[4,9],[5,6],[7,8],[7,9]];
+
+  for (const [a, b] of edges) {
+    if (a >= nodes.length || b >= nodes.length) continue;
+    const na = nodes[a], nb = nodes[b];
+    const x1 = cx + na.x, y1 = cy + na.y;
+    const x2 = cx + nb.x, y2 = cy + nb.y;
+    const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1), 1);
+    for (let i = 1; i < steps; i++) {
+      const x = Math.round(x1 + ((x2 - x1) * i) / steps);
+      const y = Math.round(y1 + ((y2 - y1) * i) / steps);
+      if (y >= 0 && y < rows && x >= 0 && x < cols && lines[y][x] === " ") {
+        lines[y][x] = "-";
+      }
+    }
+  }
+
+  // Draw nodes
+  const pulse = Math.sin(t * 0.004);
+  for (let n = 0; n < nodes.length; n++) {
+    const nd = nodes[n];
+    const nx = cx + nd.x;
+    const ny = cy + nd.y;
+    // Node circle
+    if (ny >= 0 && ny < rows && nx >= 0 && nx < cols) lines[ny][nx] = "O";
+    if (ny >= 0 && ny < rows && nx - 1 >= 0 && nx - 1 < cols) lines[ny][nx - 1] = "(";
+    if (ny >= 0 && ny < rows && nx + 1 >= 0 && nx + 1 < cols) lines[ny][nx + 1] = ")";
+    // Label
+    const lx = nx - Math.floor(nd.label.length / 2);
+    const ly = ny - 1;
+    if (ly >= 0 && ly < rows) writeText(lines, lx, ly, nd.label);
+  }
+
+  // Animated data flow dots along edges
+  const tick = Math.floor(t * 0.008);
+  for (let e = 0; e < edges.length; e++) {
+    const [a, b] = edges[e];
+    if (a >= nodes.length || b >= nodes.length) continue;
+    const na = nodes[a], nb = nodes[b];
+    const x1 = cx + na.x, y1 = cy + na.y;
+    const x2 = cx + nb.x, y2 = cy + nb.y;
+    const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1), 1);
+    const pos = ((tick + e * 7) % Math.max(1, steps));
+    const x = Math.round(x1 + ((x2 - x1) * pos) / steps);
+    const y = Math.round(y1 + ((y2 - y1) * pos) / steps);
+    if (y >= 0 && y < rows && x >= 0 && x < cols) lines[y][x] = "*";
+  }
+
+  // Network title
+  writeText(lines, cx - (compact ? 5 : 7), Math.min(rows - 3, cy + (compact ? 11 : 13)), compact ? "iML1515" : "iML1515 E.coli");
 }
 
 function drawProgress(lines, sceneIndex, sceneProgress) {
