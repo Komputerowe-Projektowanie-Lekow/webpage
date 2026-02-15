@@ -440,8 +440,9 @@ main .page[id] {
   --narrative-wave-origin-px: 160px;
   --narrative-wave-front-px: 240px;
   --narrative-wave-opacity: 0.5;
+  --narrative-wave-fade-end-px: 62%;
   --narrative-wave-scale: 0.88;
-  --narrative-wave-shift-x: 8vw;
+  --narrative-wave-shift-x: 10vw;
 }
 
 body[data-protein-active="true"] .protein-ascii-layer {
@@ -483,13 +484,15 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
       rgba(0, 0, 0, 0) 0,
       rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 1px),
       rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 160px) + 1px),
-      rgba(0, 0, 0, 0.72) 74%,
+      rgba(0, 0, 0, 0.34) var(--narrative-wave-fade-end-px, 62%),
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-fade-end-px, 62%) + 1px),
       rgba(0, 0, 0, 0) 100%);
   mask-image: linear-gradient(90deg,
       rgba(0, 0, 0, 0) 0,
       rgba(0, 0, 0, 0) calc(var(--narrative-wave-origin-px, 160px) - 1px),
       rgba(0, 0, 0, 1) calc(var(--narrative-wave-origin-px, 160px) + 1px),
-      rgba(0, 0, 0, 0.72) 74%,
+      rgba(0, 0, 0, 0.34) var(--narrative-wave-fade-end-px, 62%),
+      rgba(0, 0, 0, 0) calc(var(--narrative-wave-fade-end-px, 62%) + 1px),
       rgba(0, 0, 0, 0) 100%);
   -webkit-mask-repeat: no-repeat;
   mask-repeat: no-repeat;
@@ -746,15 +749,15 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
 }
 
 #narrative-screen {
-  transform: translate(var(--narrative-wave-shift-x, 8vw), -50%) scale(var(--narrative-wave-scale, 0.88));
+  transform: translate(var(--narrative-wave-shift-x, 10vw), -50%) scale(var(--narrative-wave-scale, 0.88));
 }
 
 #narrative-screen-ghost-1 {
-  transform: translate(calc(var(--narrative-wave-shift-x, 8vw) - 1.8%), -50%) scale(0.892);
+  transform: translate(calc(var(--narrative-wave-shift-x, 10vw) - 1.8%), -50%) scale(0.892);
 }
 
 #narrative-screen-ghost-2 {
-  transform: translate(calc(var(--narrative-wave-shift-x, 8vw) + 1.7%), -50%) scale(0.876);
+  transform: translate(calc(var(--narrative-wave-shift-x, 10vw) + 1.7%), -50%) scale(0.876);
 }
 
 #protein-screen-ghost-1[data-ready="true"],

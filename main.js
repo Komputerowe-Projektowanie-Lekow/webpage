@@ -311,11 +311,13 @@ function tickNarrativeRipple(now) {
   const oscillationPx = Math.sin(phase * 0.82) * Math.max(10, rightSpanPx * 0.032);
   const frontPx = clamp(baseFrontPx + progress * rightSpanPx + oscillationPx, 12, rightSpanPx);
   const waveOpacity = clamp(0.28 + progress * 0.45, 0, 1);
+  const fadeEndPx = clamp(originPx + rightSpanPx * 0.58, originPx + 120, layerWidth);
 
   narrativeLayer.style.setProperty("--narrative-bleed-px", `${bleedPx.toFixed(2)}px`);
   narrativeLayer.style.setProperty("--narrative-wave-origin-px", `${originPx.toFixed(2)}px`);
   narrativeLayer.style.setProperty("--narrative-wave-front-px", `${frontPx.toFixed(2)}px`);
   narrativeLayer.style.setProperty("--narrative-wave-opacity", waveOpacity.toFixed(3));
+  narrativeLayer.style.setProperty("--narrative-wave-fade-end-px", `${fadeEndPx.toFixed(2)}px`);
   narrativeLayer.setAttribute("data-ripple-active", "true");
 
   narrativeRippleRaf = requestAnimationFrame(tickNarrativeRipple);
