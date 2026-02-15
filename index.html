@@ -11,15 +11,10 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-  <link rel="stylesheet" href="./styles.css?v=7" />
+  <link rel="stylesheet" href="./styles.css?v=8" />
 </head>
 
 <body>
-  <div class="language-switcher">
-    <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
-    <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
-  </div>
-
   <div id="protein-ascii-layer" class="ascii-layer protein-ascii-layer">
     <pre id="protein-screen-ghost-1" class="ascii-screen ascii-screen-ghost" data-ready="false" aria-hidden="true"></pre>
     <pre id="protein-screen-ghost-2" class="ascii-screen ascii-screen-ghost" data-ready="false" aria-hidden="true"></pre>
@@ -46,12 +41,26 @@
 
   <nav class="sticky-nav" id="stickyNav">
     <div class="nav-content">
-      <a href="#kontekst-sekcji" class="nav-link" data-i18n="micro.nav.start">Start</a>
-      <a href="#pipeline" class="nav-link" data-i18n="micro.pipeline.title">Pipeline</a>
-      <a href="#status" class="nav-link" data-i18n="nav.status">Status</a>
-      <a href="#dolacz" class="nav-link" data-i18n="nav.join">Dołącz</a>
-      <a href="#support" class="nav-link" data-i18n="nav.support">Wsparcie</a>
-      <a href="aqp4.html" class="nav-link project-switch" data-i18n="micro.nav.aqp4">Archiwum: AQP4</a>
+      <div class="nav-brand-cell">
+        <a href="#kontekst-sekcji" class="nav-brand-link" aria-label="SKNWPL start">
+          <span class="nav-brand-badge" aria-hidden="true"></span>
+          <span class="nav-brand-text">SKNWPL</span>
+        </a>
+      </div>
+      <div class="nav-links-row">
+        <a href="#kontekst-sekcji" class="nav-link" data-i18n="micro.nav.start">Start</a>
+        <a href="#pipeline" class="nav-link" data-i18n="micro.pipeline.title">Pipeline</a>
+        <a href="#status" class="nav-link" data-i18n="nav.status">Status</a>
+        <a href="#dolacz" class="nav-link" data-i18n="nav.join">Dołącz</a>
+        <a href="#support" class="nav-link" data-i18n="nav.support">Wsparcie</a>
+        <a href="aqp4.html" class="nav-link project-switch" data-i18n="micro.nav.aqp4">Archiwum: AQP4</a>
+      </div>
+      <div class="nav-utility-cell">
+        <div class="language-switcher">
+          <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
+          <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
+        </div>
+      </div>
     </div>
   </nav>
 
@@ -416,34 +425,34 @@
   </main>
 
   <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-section">
+    <div class="footer-panels">
+      <section class="footer-panel footer-panel--mission">
         <h3 data-i18n="footer.dream.title">Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.</h3>
         <p data-i18n="footer.dream.text">
           Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie
           piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania
           przetrwają etap kliniczny.
         </p>
-      </div>
-      <div class="footer-section">
+      </section>
+      <section class="footer-panel footer-panel--contact">
         <h3 data-i18n="footer.contact.title">Kontakt i adresy</h3>
-        <p>
+        <p class="footer-contact-lines">
           <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium
             na GitHubie</a><br>
           <a href="mailto:sknwpl@proton.me" data-i18n="footer.contact.email">Kontakt</a><br>
           <span data-i18n="footer.contact.email.text">Email: sknwpl(at)proton(dot)me</span>
         </p>
-      </div>
-      <div class="footer-section">
+      </section>
+      <section class="footer-panel footer-panel--partners">
         <h3 data-i18n="footer.partners.title">Partnerzy / wsparcie</h3>
         <p data-i18n-html="footer.partners.text">
           Otwarte zaproszenie do współpracy (sprzęt, granty, konsultacje).<br>
           Jeżeli chcesz się odezwać z pytaniem, jakąś współpracą naukową itp. - skontaktuj się z nami.
         </p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p data-i18n="footer.bottom">Dołącz do nas i podziel się swoimi umiejętnościami.</p>
+      </section>
+      <section class="footer-panel footer-panel--join">
+        <p data-i18n="footer.bottom">Dołącz do nas i podziel się swoimi umiejętnościami.</p>
+      </section>
     </div>
   </footer>
 
@@ -472,6 +481,51 @@
 
       const stickyNav = document.getElementById("stickyNav");
       const heroSection = document.querySelector(".hero");
+      const navLinks = Array.from(document.querySelectorAll(".nav-link[href^=\"#\"]"));
+      const trackedSections = navLinks
+        .map((link) => {
+          const targetId = link.getAttribute("href").slice(1);
+          return {
+            id: targetId,
+            link: link,
+            section: document.getElementById(targetId)
+          };
+        })
+        .filter((entry) => entry.section);
+
+      function setActiveNavLink(activeId) {
+        navLinks.forEach((link) => {
+          const isActive = link.getAttribute("href") === "#" + activeId;
+          link.classList.toggle("is-active", isActive);
+          if (isActive) {
+            link.setAttribute("aria-current", "page");
+          } else {
+            link.removeAttribute("aria-current");
+          }
+        });
+      }
+
+      function updateActiveNavLink() {
+        if (!trackedSections.length) return;
+
+        const navHeight = stickyNav ? stickyNav.offsetHeight : 0;
+        const threshold = navHeight + 36;
+        let activeSectionId = trackedSections[0].id;
+
+        trackedSections.forEach((entry) => {
+          const rectTop = entry.section.getBoundingClientRect().top;
+          if (rectTop <= threshold) {
+            activeSectionId = entry.id;
+          }
+        });
+
+        const nearPageBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 2;
+        if (nearPageBottom) {
+          activeSectionId = trackedSections[trackedSections.length - 1].id;
+        }
+
+        setActiveNavLink(activeSectionId);
+      }
 
       function checkNavVisibility() {
         if (!heroSection || !stickyNav) return;
@@ -486,7 +540,14 @@
         }
       }
 
-      window.addEventListener("scroll", checkNavVisibility, { passive: true });
+      function handleScroll() {
+        checkNavVisibility();
+        updateActiveNavLink();
+      }
+
+      window.addEventListener("scroll", handleScroll, { passive: true });
+      window.addEventListener("resize", updateActiveNavLink, { passive: true });
+      updateActiveNavLink();
       checkNavVisibility();
     });
   </script>
