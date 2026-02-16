@@ -1,7 +1,7 @@
 :root {
   color-scheme: light;
   --bg-white: #ffffff;
-  --bg-light: #f5f5f5;
+  --bg-light: #E8F1F6;
   --text-dark: #1a1a1a;
   --text-mid: #4a4a4a;
   --warning-color: #0d6687;
@@ -19,12 +19,16 @@
   --combo2-light: #B6E6FD;
 
   /* Color Combination 3 */
-  --combo3-primary: #2083AD;
-  --combo3-secondary: #7BA9CA;
+  --combo3-primary: #1B7296;
+  --combo3-secondary: #45708A;
   --combo3-tertiary: #001027;
   --combo3-light: #C3DAEC;
 
-  /* Default to combo 1 */
+  /* Structural (headings, labels, decorative borders) */
+  --heading-color: #013E5A;
+  --chrome-border: rgba(1, 119, 155, 0.32);
+
+  /* Accent (interactive: links, CTAs, active states) */
   --primary-blue: var(--combo1-primary);
   --secondary-blue: var(--combo1-secondary);
   --accent-blue: var(--combo1-light);
@@ -136,7 +140,7 @@ body {
   display: flex;
   justify-content: flex-start;
   background: var(--bg-white);
-  border-top: 2px dashed var(--primary-blue);
+  border-top: 2px dashed var(--chrome-border);
 }
 
 .page:first-child {
@@ -177,7 +181,7 @@ main .page[id] {
   width: 100%;
   height: auto;
   display: block;
-  border: 2px solid var(--primary-blue);
+  border: 2px solid var(--chrome-border);
 }
 
 #dlaczego .why-image {
@@ -200,7 +204,7 @@ main .page[id] {
   font-weight: 400;
   margin: 0 0 2rem;
   letter-spacing: 0.05em;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   text-transform: uppercase;
   line-height: 1.3;
 }
@@ -211,7 +215,7 @@ main .page[id] {
   font-weight: 400;
   margin: 2.5rem 0 1.5rem;
   letter-spacing: 0.03em;
-  color: var(--secondary-blue);
+  color: var(--heading-color);
   text-transform: uppercase;
 }
 
@@ -531,7 +535,7 @@ body[data-narrative-active="true"] .narrative-ascii-layer {
   font-family: inherit;
   font-size: 0.85rem;
   letter-spacing: 0.15em;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   text-transform: uppercase;
   font-weight: 400;
 }
@@ -575,14 +579,14 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
   font-size: 0.7rem;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  color: var(--secondary-blue);
+  color: var(--text-mid);
 }
 
 #ascii-story-title {
   margin: 0 0 0.35rem;
   font-size: clamp(0.95rem, 1.3vw, 1.08rem);
   letter-spacing: 0.04em;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   text-transform: uppercase;
   line-height: 1.35;
 }
@@ -765,34 +769,23 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
   opacity: 0.17;
 }
 
-/* Page Color Cycling - Combination 1 (pages 1, 4, 7...) */
-.page:nth-child(3n+1):not(.hero) {
-  --primary-blue: var(--combo1-primary);
-  --secondary-blue: var(--combo1-secondary);
-  background: var(--bg-white);
-  border-top: 2px dashed var(--combo1-primary);
+/* Color cycling removed — single consistent accent across all sections.
+   Combos 2/3 tokens retained in :root for future opt-in use. */
+
+/* 60-30-10: Secondary surface for alternating sections */
+.pages .page:nth-child(even) {
+  background: var(--bg-light);
 }
 
-/* Page Color Cycling - Combination 2 (pages 2, 5, 8...) */
-.page:nth-child(3n+2) {
-  --primary-blue: var(--combo2-primary);
-  --secondary-blue: var(--combo2-secondary);
-  background: var(--bg-white);
-  border-top: 2px dashed var(--combo2-primary);
-}
-
-/* Page Color Cycling - Combination 3 (pages 3, 6, 9...) */
-.page:nth-child(3n+3) {
-  --primary-blue: var(--combo3-primary);
-  --secondary-blue: var(--combo3-secondary);
-  background: var(--bg-white);
-  border-top: 2px dashed var(--combo3-primary);
+.pages .page:nth-child(even) .info-card,
+.pages .page:nth-child(even) .task-item {
+  background: rgba(255, 255, 255, 0.95);
 }
 
 code {
   font-family: "SF Mono", "Monaco", "Consolas", monospace;
   background: #f0f0f0;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   padding: 0.2em 0.5em;
   border: 1px solid #e0e0e0;
   border-radius: 3px;
@@ -846,7 +839,7 @@ a:not(.cta):hover {
 /* Footer panel styles */
 .site-footer {
   background: var(--bg-light);
-  border-top: 2px solid var(--primary-blue);
+  border-top: 2px solid var(--chrome-border);
   padding: clamp(2.2rem, 5vw, 4rem) clamp(1rem, 3.5vw, 2.2rem);
   position: relative;
   z-index: 30;
@@ -906,7 +899,7 @@ a:not(.cta):hover {
   font-size: 1rem;
   font-weight: 400;
   letter-spacing: 0.1em;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   text-transform: uppercase;
   margin: 0 0 1rem;
 }
@@ -939,7 +932,7 @@ a:not(.cta):hover {
   font-size: 0.83rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: var(--primary-blue);
+  color: var(--heading-color);
 }
 
 /* Language Switcher */
@@ -1061,9 +1054,9 @@ a:not(.cta):hover {
 .nav-brand-badge {
   width: 14px;
   height: 14px;
-  border: 2px solid var(--primary-blue);
+  border: 2px solid var(--heading-color);
   border-radius: 2px;
-  box-shadow: inset 0 0 0 2px rgba(1, 119, 155, 0.14);
+  box-shadow: inset 0 0 0 2px rgba(1, 62, 90, 0.14);
 }
 
 .nav-brand-text {
@@ -1124,12 +1117,12 @@ a:not(.cta):hover {
 }
 
 .nav-link.is-active {
-  color: var(--secondary-blue);
+  color: var(--primary-blue);
 }
 
 .nav-link.is-active::after {
   width: 100%;
-  background: var(--secondary-blue);
+  background: var(--primary-blue);
 }
 
 /* Projects Section Full Width */
@@ -1155,7 +1148,7 @@ a:not(.cta):hover {
 }
 
 .accordion-item {
-  border: 2px solid var(--primary-blue);
+  border: 2px solid var(--chrome-border);
   background: var(--bg-white);
   transition: all 220ms ease;
   position: relative;
@@ -1175,7 +1168,7 @@ a:not(.cta):hover {
 }
 
 .accordion-item:hover {
-  border-color: var(--secondary-blue);
+  border-color: var(--primary-blue);
   transform: translateY(-2px);
   box-shadow: 0 15px 32px rgba(1, 62, 90, 0.12);
 }
@@ -1193,13 +1186,13 @@ a:not(.cta):hover {
   font-size: 0.95rem;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   transition: all 200ms ease;
   text-align: left;
 }
 
 .accordion-header:hover {
-  color: var(--secondary-blue);
+  color: var(--primary-blue);
 }
 
 .accordion-title {
@@ -1269,9 +1262,9 @@ a:not(.cta):hover {
   font-weight: 600;
   letter-spacing: 0.05em;
   text-transform: uppercase;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   margin: 0 0 1.5rem 0;
-  border-bottom: 2px solid var(--primary-blue);
+  border-bottom: 2px solid var(--chrome-border);
   padding-bottom: 0.5rem;
 }
 
@@ -1308,15 +1301,15 @@ a:not(.cta):hover {
 .current-status {
   background: var(--bg-light);
   padding: 1rem 1.5rem;
-  border-left: 4px solid var(--primary-blue);
+  border-left: 4px solid var(--chrome-border);
   margin: 2rem 0 1rem 0 !important;
-  color: var(--primary-blue) !important;
+  color: var(--heading-color) !important;
   font-size: 0.95rem !important;
 }
 
 .status-divider {
   text-align: center;
-  color: var(--primary-blue);
+  color: var(--chrome-border);
   font-size: 1.5rem;
   margin: 2rem 0 !important;
   letter-spacing: 0.5rem;
@@ -1340,7 +1333,7 @@ a:not(.cta):hover {
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--secondary-blue);
+  color: var(--heading-color);
   margin: 0 0 1rem 0;
 }
 
@@ -1370,14 +1363,14 @@ a:not(.cta):hover {
 }
 
 .problem-item ul li strong {
-  color: var(--primary-blue);
+  color: var(--heading-color);
   font-weight: 600;
 }
 
 .project-conclusion {
   background: var(--bg-light);
   padding: 1.5rem;
-  border-left: 4px solid var(--secondary-blue);
+  border-left: 4px solid var(--chrome-border);
 }
 
 .project-conclusion h3 {
@@ -1400,7 +1393,7 @@ a:not(.cta):hover {
   flex-wrap: wrap;
   gap: 0.5rem;
   background: var(--bg-light);
-  border-left: 4px solid var(--primary-blue);
+  border-left: 4px solid var(--chrome-border);
   padding: 0.75rem 0.9rem;
   margin-top: 1rem;
 }
@@ -1409,7 +1402,7 @@ a:not(.cta):hover {
   font-size: 0.8rem;
   text-transform: uppercase;
   letter-spacing: 0.08em;
-  color: var(--secondary-blue);
+  color: var(--text-mid);
 }
 
 .step-output-value {
@@ -1425,7 +1418,7 @@ a:not(.cta):hover {
   display: inline-flex;
   align-items: center;
   padding: 0.2rem 0.55rem;
-  border: 1px solid var(--primary-blue);
+  border: 1px solid var(--chrome-border);
   font-size: 0.72rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1468,7 +1461,7 @@ a:not(.cta):hover {
   font-size: 0.95rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
-  color: var(--primary-blue);
+  color: var(--heading-color);
 }
 
 .credibility-card ul {
@@ -1481,7 +1474,7 @@ a:not(.cta):hover {
 }
 
 .target-card {
-  border-left: 4px solid var(--secondary-blue);
+  border-left: 4px solid var(--chrome-border);
 }
 
 .limitations-list {
@@ -1523,7 +1516,7 @@ a:not(.cta):hover {
 .info-card h3 {
   margin: 0 0 0.7rem;
   font-size: 0.95rem;
-  color: var(--primary-blue);
+  color: var(--heading-color);
 }
 
 .info-card p {
@@ -1542,7 +1535,7 @@ a:not(.cta):hover {
 }
 
 .task-item {
-  border-left: 4px solid var(--primary-blue);
+  border-left: 4px solid var(--chrome-border);
   background: linear-gradient(160deg, rgba(245, 245, 245, 0.95), rgba(255, 255, 255, 0.9));
   padding: 1rem;
   position: relative;
@@ -1568,7 +1561,7 @@ a:not(.cta):hover {
 .task-item h3 {
   margin: 0 0 0.6rem;
   font-size: 0.95rem;
-  color: var(--primary-blue);
+  color: var(--heading-color);
 }
 
 .task-item p {
@@ -1942,7 +1935,7 @@ a:not(.cta):hover {
 .position-item {
   margin-bottom: 2.5rem;
   padding: 1.5rem;
-  border-left: 4px solid var(--primary-blue);
+  border-left: 4px solid var(--chrome-border);
   background: var(--bg-light);
 }
 
@@ -1952,7 +1945,7 @@ a:not(.cta):hover {
   font-weight: 600;
   letter-spacing: 0.03em;
   text-transform: uppercase;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   margin: 0 0 1rem 0;
 }
 
@@ -1969,7 +1962,7 @@ a:not(.cta):hover {
 
 .position-workflow {
   font-style: italic;
-  color: var(--secondary-blue) !important;
+  color: var(--text-mid) !important;
   font-size: 0.9rem !important;
   margin-top: 1rem !important;
 }
@@ -1978,19 +1971,19 @@ a:not(.cta):hover {
 .faq-item {
   margin-bottom: 1.5rem;
   padding: 1.25rem;
-  border: 2px solid var(--primary-blue);
+  border: 2px solid var(--chrome-border);
   background: var(--bg-white);
   transition: all 200ms ease;
 }
 
 .faq-item:hover {
-  border-color: var(--secondary-blue);
+  border-color: var(--primary-blue);
   background: var(--bg-light);
 }
 
 .faq-question {
   font-weight: 600;
-  color: var(--primary-blue);
+  color: var(--heading-color);
   margin: 0 0 0.5rem 0 !important;
   font-size: 0.95rem !important;
 }
