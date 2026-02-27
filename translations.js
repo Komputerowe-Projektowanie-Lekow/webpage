@@ -233,6 +233,7 @@ export const translations = {
     "micro.hero.cta_join": "Dołącz",
     "micro.hero.cta_pipeline": "Zobacz pipeline",
     "micro.hero.cta_support": "Szukasz współpracy? Zobacz wsparcie.",
+    "micro.hero.reassurance": "Bez rejestracji. Przeglądaj swobodnie.",
 
     "micro.why.title": "Dlaczego To Ma Znaczenie",
     "micro.why.intro": "Wąskie gardła dla leków na bakterie Gram-ujemne pojawiają się między dobrym wynikiem in-silico a realnym efektem biologicznym.",
@@ -337,7 +338,8 @@ export const translations = {
     "micro.support.ask1": "Compute credits i infrastruktura HPC pod powtarzalne runy Stage 1-6.",
     "micro.support.ask2": "Dostęp do walidacji wet-lab dla wybranych kandydatów po filtrach Stage 6.",
     "micro.support.ask3": "Mentoring ekspercki: MD, FBA/COBRA i projektowanie eksperymentów.",
-    "micro.support.cta": "Skontaktuj się w sprawie współpracy"
+    "micro.support.cta": "Skontaktuj się w sprawie współpracy",
+    "micro.support.reassurance": "Twoje dane są prywatne. Bez spamu."
   },
 
   en: {
@@ -574,6 +576,7 @@ export const translations = {
     "micro.hero.cta_join": "Join",
     "micro.hero.cta_pipeline": "See pipeline",
     "micro.hero.cta_support": "Need collaboration? See support.",
+    "micro.hero.reassurance": "No sign-up needed to explore.",
 
     "micro.why.title": "Why It Matters",
     "micro.why.intro": "For Gram-negative drug design, bottlenecks appear between good in-silico ranking and real biological effect.",
@@ -678,6 +681,7 @@ export const translations = {
     "micro.support.ask1": "Compute credits and HPC infrastructure for repeatable Stage 1-6 runs.",
     "micro.support.ask2": "Wet-lab validation access for selected candidates after Stage 6 filtering.",
     "micro.support.ask3": "Expert mentoring in MD, FBA/COBRA, and experiment design.",
-    "micro.support.cta": "Contact us about collaboration"
+    "micro.support.cta": "Contact us about collaboration",
+    "micro.support.reassurance": "Your data stays private. No spam."
   }
 };

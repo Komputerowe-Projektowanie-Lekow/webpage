@@ -15,6 +15,24 @@
 </head>
 
 <body>
+  <!-- Scroll progress indicator -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Cmd+K command palette -->
+  <div class="cmdk-overlay" id="cmdkOverlay" role="dialog" aria-label="Command palette" aria-modal="true">
+    <div class="cmdk-dialog">
+      <div class="cmdk-input-wrap">
+        <input class="cmdk-input" id="cmdkInput" type="text" placeholder="Navigate, copy email, switch language…" autocomplete="off" spellcheck="false" />
+      </div>
+      <div class="cmdk-results" id="cmdkResults" role="listbox"></div>
+      <div class="cmdk-footer">
+        <span>↑↓ navigate</span>
+        <span>↵ select</span>
+        <span>esc close</span>
+      </div>
+    </div>
+  </div>
+
   <div id="protein-ascii-layer" class="ascii-layer protein-ascii-layer">
     <pre id="protein-screen-ghost-1" class="ascii-screen ascii-screen-ghost" data-ready="false"
       aria-hidden="true"></pre>
@@ -40,6 +58,7 @@
       <div id="ascii-story-actions">
         <a class="ascii-story-action join-action" href="#dolacz">Dołącz</a>
         <a class="ascii-story-action contact-action" href="mailto:sknwpl@proton.me">Kontakt</a>
+      <button class="copy-btn" data-copy="sknwpl@proton.me" data-tip="Copy email" style="font-size:0.65rem;min-height:36px;padding:0.3rem 0.5rem;">COPY</button>
       </div>
     </div>
   </div>
@@ -53,14 +72,17 @@
         </a>
       </div>
       <div class="nav-links-row">
-        <a href="#kontekst-sekcji" class="nav-link" data-i18n="micro.nav.start">Start</a>
-        <a href="#pipeline" class="nav-link" data-i18n="micro.pipeline.title">Pipeline</a>
-        <a href="#status" class="nav-link" data-i18n="nav.status">Status</a>
-        <a href="#dolacz" class="nav-link" data-i18n="nav.join">Dołącz</a>
-        <a href="#support" class="nav-link" data-i18n="nav.support">Wsparcie</a>
+        <a href="#kontekst-sekcji" class="nav-link" data-i18n="micro.nav.start" data-tip="Home">Start</a>
+        <a href="#pipeline" class="nav-link" data-i18n="micro.pipeline.title" data-tip="Pipeline stages">Pipeline</a>
+        <a href="#status" class="nav-link" data-i18n="nav.status" data-tip="Current tasks">Status</a>
+        <a href="#dolacz" class="nav-link" data-i18n="nav.join" data-tip="Join the team">Dołącz</a>
+        <a href="#support" class="nav-link" data-i18n="nav.support" data-tip="Partnership">Wsparcie</a>
         <a href="aqp4.html" class="nav-link project-switch" data-i18n="micro.nav.aqp4">Archiwum: AQP4</a>
       </div>
       <div class="nav-utility-cell">
+        <button class="cmdk-trigger" id="cmdkTrigger" aria-label="Open command palette (Ctrl+K)" data-tip="Ctrl+K">
+          <span class="cmdk-trigger-label">Ctrl+K</span>
+        </button>
         <div class="language-switcher">
           <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
           <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
@@ -88,6 +110,7 @@
         <div class="hero-cta-group">
           <a class="cta cta-primary" href="#dolacz" data-i18n="micro.hero.cta_join">Dołącz</a>
           <a class="cta cta-secondary" href="#pipeline" data-i18n="micro.hero.cta_pipeline">Zobacz pipeline</a>
+          <span class="reassurance" data-i18n="micro.hero.reassurance">No sign-up needed to explore.</span>
         </div>
         <p class="hero-tertiary">
           <a href="#support" class="hero-tertiary-link" data-i18n="micro.hero.cta_support">Szukasz współpracy? Zobacz
@@ -434,6 +457,8 @@
           </ul>
           <a class="cta support-cta" href="mailto:sknwpl@proton.me" data-i18n="micro.support.cta">Skontaktuj się w
             sprawie współpracy</a>
+          <button class="copy-btn" data-copy="sknwpl@proton.me" data-tip="Copy email">COPY EMAIL</button>
+          <p class="reassurance" data-i18n="micro.support.reassurance">Your data stays private. No spam.</p>
         </div>
       </div>
     </section>
@@ -564,6 +589,199 @@
       window.addEventListener("resize", updateActiveNavLink, { passive: true });
       updateActiveNavLink();
       checkNavVisibility();
+
+      /* ========== SCROLL PROGRESS BAR ========== */
+      const progressBar = document.getElementById("scrollProgress");
+      function updateScrollProgress() {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        if (docHeight > 0 && progressBar) {
+          progressBar.style.width = ((scrollTop / docHeight) * 100).toFixed(2) + "%";
+        }
+      }
+      window.addEventListener("scroll", updateScrollProgress, { passive: true });
+      updateScrollProgress();
+
+      /* ========== PERSISTENT SCROLL STATE ========== */
+      const SCROLL_KEY = "sknwpl_scroll_y";
+      const savedY = sessionStorage.getItem(SCROLL_KEY);
+      if (savedY !== null) {
+        requestAnimationFrame(function () {
+          window.scrollTo({ top: parseInt(savedY, 10), behavior: "instant" });
+        });
+      }
+      let scrollSaveRaf = null;
+      window.addEventListener("scroll", function () {
+        if (scrollSaveRaf) return;
+        scrollSaveRaf = requestAnimationFrame(function () {
+          sessionStorage.setItem(SCROLL_KEY, String(Math.round(window.scrollY)));
+          scrollSaveRaf = null;
+        });
+      }, { passive: true });
+
+      /* ========== COPY-TO-CLIPBOARD BUTTONS ========== */
+      document.querySelectorAll(".copy-btn[data-copy]").forEach(function (btn) {
+        btn.addEventListener("click", function (e) {
+          e.preventDefault();
+          var text = btn.getAttribute("data-copy");
+          if (!text) return;
+          navigator.clipboard.writeText(text).then(function () {
+            btn.classList.add("copied");
+            var orig = btn.textContent;
+            btn.textContent = "COPIED";
+            setTimeout(function () {
+              btn.textContent = orig;
+              btn.classList.remove("copied");
+            }, 1600);
+          }).catch(function () {
+            /* fallback: select in a textarea */
+            var ta = document.createElement("textarea");
+            ta.value = text;
+            ta.style.cssText = "position:fixed;left:-9999px;opacity:0";
+            document.body.appendChild(ta);
+            ta.select();
+            document.execCommand("copy");
+            document.body.removeChild(ta);
+            btn.classList.add("copied");
+            var origFb = btn.textContent;
+            btn.textContent = "COPIED";
+            setTimeout(function () { btn.textContent = origFb; btn.classList.remove("copied"); }, 1600);
+          });
+        });
+      });
+
+      /* ========== CMD+K COMMAND PALETTE ========== */
+      var cmdkOverlay = document.getElementById("cmdkOverlay");
+      var cmdkInput = document.getElementById("cmdkInput");
+      var cmdkResults = document.getElementById("cmdkResults");
+      var cmdkActiveIdx = -1;
+
+      var cmdkCommands = [
+        { icon: "\u2302", label: "Start", hint: "home", action: function () { location.hash = "#kontekst-sekcji"; } },
+        { icon: "\u25b6", label: "Pipeline", hint: "stages", action: function () { location.hash = "#pipeline"; } },
+        { icon: "\u2261", label: "Status", hint: "tasks", action: function () { location.hash = "#status"; } },
+        { icon: "+", label: "Do\u0142\u0105cz", hint: "join", action: function () { location.hash = "#dolacz"; } },
+        { icon: "\u2764", label: "Wsparcie", hint: "support", action: function () { location.hash = "#support"; } },
+        { icon: "\u2709", label: "Copy email", hint: "clipboard", action: function () {
+          navigator.clipboard.writeText("sknwpl@proton.me").then(function(){}).catch(function(){});
+        }},
+        { icon: "EN", label: "Switch to English", hint: "language", action: function () {
+          if (window.i18n) window.i18n.setLanguage("en");
+        }},
+        { icon: "PL", label: "Prze\u0142\u0105cz na polski", hint: "j\u0119zyk", action: function () {
+          if (window.i18n) window.i18n.setLanguage("pl");
+        }},
+        { icon: "\u21e7", label: "Scroll to top", hint: "top", action: function () { window.scrollTo({ top: 0, behavior: "smooth" }); } }
+      ];
+
+      function openCmdk() {
+        if (!cmdkOverlay) return;
+        cmdkOverlay.classList.add("open");
+        cmdkInput.value = "";
+        cmdkActiveIdx = -1;
+        renderCmdk("");
+        requestAnimationFrame(function () { cmdkInput.focus(); });
+      }
+
+      function closeCmdk() {
+        if (!cmdkOverlay) return;
+        cmdkOverlay.classList.remove("open");
+        cmdkInput.blur();
+      }
+
+      function renderCmdk(query) {
+        var q = query.toLowerCase().trim();
+        var matches = cmdkCommands.filter(function (c) {
+          if (!q) return true;
+          return c.label.toLowerCase().indexOf(q) !== -1 || c.hint.toLowerCase().indexOf(q) !== -1;
+        });
+        cmdkResults.innerHTML = "";
+        if (matches.length === 0) {
+          cmdkResults.innerHTML = '<div class="cmdk-empty">No results</div>';
+          return;
+        }
+        matches.forEach(function (cmd, idx) {
+          var el = document.createElement("button");
+          el.className = "cmdk-item" + (idx === cmdkActiveIdx ? " active" : "");
+          el.setAttribute("role", "option");
+          el.innerHTML = '<span class="cmdk-item-icon">' + cmd.icon + '</span>' +
+            '<span class="cmdk-item-label">' + cmd.label + '</span>' +
+            '<span class="cmdk-item-hint">' + cmd.hint + '</span>';
+          el.addEventListener("click", function () { cmd.action(); closeCmdk(); });
+          el.addEventListener("mouseenter", function () {
+            cmdkActiveIdx = idx;
+            highlightCmdk();
+          });
+          cmdkResults.appendChild(el);
+        });
+      }
+
+      function highlightCmdk() {
+        var items = cmdkResults.querySelectorAll(".cmdk-item");
+        items.forEach(function (el, i) {
+          el.classList.toggle("active", i === cmdkActiveIdx);
+        });
+      }
+
+      function getVisibleCmdkItems() {
+        return cmdkResults.querySelectorAll(".cmdk-item");
+      }
+
+      document.addEventListener("keydown", function (e) {
+        /* Ctrl+K or Cmd+K to open */
+        if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+          e.preventDefault();
+          if (cmdkOverlay && cmdkOverlay.classList.contains("open")) {
+            closeCmdk();
+          } else {
+            openCmdk();
+          }
+          return;
+        }
+        if (!cmdkOverlay || !cmdkOverlay.classList.contains("open")) return;
+        if (e.key === "Escape") {
+          e.preventDefault();
+          closeCmdk();
+          return;
+        }
+        var items = getVisibleCmdkItems();
+        if (e.key === "ArrowDown") {
+          e.preventDefault();
+          cmdkActiveIdx = Math.min(cmdkActiveIdx + 1, items.length - 1);
+          highlightCmdk();
+          if (items[cmdkActiveIdx]) items[cmdkActiveIdx].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "ArrowUp") {
+          e.preventDefault();
+          cmdkActiveIdx = Math.max(cmdkActiveIdx - 1, 0);
+          highlightCmdk();
+          if (items[cmdkActiveIdx]) items[cmdkActiveIdx].scrollIntoView({ block: "nearest" });
+        } else if (e.key === "Enter") {
+          e.preventDefault();
+          if (items[cmdkActiveIdx]) items[cmdkActiveIdx].click();
+        }
+      });
+
+      if (cmdkInput) {
+        cmdkInput.addEventListener("input", function () {
+          cmdkActiveIdx = 0;
+          renderCmdk(cmdkInput.value);
+        });
+      }
+
+      if (cmdkOverlay) {
+        cmdkOverlay.addEventListener("click", function (e) {
+          if (e.target === cmdkOverlay) closeCmdk();
+        });
+      }
+
+      /* ========== CMDK TRIGGER BUTTON IN NAV ========== */
+      var cmdkTriggerBtn = document.getElementById("cmdkTrigger");
+      if (cmdkTriggerBtn) {
+        cmdkTriggerBtn.addEventListener("click", function (e) {
+          e.preventDefault();
+          openCmdk();
+        });
+      }
     });
   </script>
 </body>
