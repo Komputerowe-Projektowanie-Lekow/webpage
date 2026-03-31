@@ -3,7 +3,7 @@
   --bg-white: #ffffff;
   --bg-light: #E8F1F6;
   --text-dark: #1a1a1a;
-  --text-mid: #4a4a4a;
+  --text-mid: #3a3a3a; /* Darkened for WCAG AA contrast (was #4a4a4a) */
   --warning-color: #0d6687;
 
   /* Color Combination 1 - Default/Hero */
@@ -430,6 +430,7 @@ main .page[id] {
   opacity: 0;
   visibility: hidden;
   transition: opacity 260ms ease, visibility 0s 260ms;
+  contain: layout style paint;
 }
 
 .protein-ascii-layer {
@@ -1445,6 +1446,24 @@ a:not(.cta):hover {
   background: #ffe3e0;
   border-color: #9a2f2f;
   color: #892323;
+}
+
+.status-badge.archived {
+  background: #e8e8e8;
+  border-color: #666;
+  color: #444;
+}
+
+.status-badge.poc {
+  background: #e8f4fd;
+  border-color: #2171b5;
+  color: #1a5a8f;
+}
+
+.status-badge.planning {
+  background: #f3e8fd;
+  border-color: #7b3f9e;
+  color: #5f2d7e;
 }
 
 .credibility-split {

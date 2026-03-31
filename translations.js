@@ -4,7 +4,7 @@ export const translations = {
     "meta.description": "Sekcja CADD Politechniki Poznańskiej: budujemy otwarty workflow projektowania leków (REMD, MSM, TRAM, ML) i paczkę PMARLO. Aktualnie: AQP4/Alzheimer, przygotowania do Polaris Hub. Dołącz — projekty, PR-y, wyniki.",
     "meta.title": "Sekcja Koła Naukowego Wspierania Projektów Leków",
     "meta.micro.description": "Pipeline GUB: zamknięta pętla od generowania molekuł do walidacji komórkowej i systemowej.",
-    "meta.micro.title": "Pipeline GUB - Sekcja Inżynierii Mikroorganizmów",
+    "meta.micro.title": "Pipeline GUB - Sekcja Komputerowego Projektowania Leków",
 
     // ASCII Caption
     "ascii.caption": "Dokowanie ligandu do białka",
@@ -347,7 +347,7 @@ export const translations = {
     "meta.description": "CADD Section of Poznan University of Technology: building an open drug design workflow (REMD, MSM, TRAM, ML) and the PMARLO package. Currently: AQP4/Alzheimer, preparations for Polaris Hub. Join — projects, PRs, results.",
     "meta.title": "Drug Design Support Research Group Section",
     "meta.micro.description": "GUB pipeline: closed-loop flow from molecule generation to cell and systems validation.",
-    "meta.micro.title": "GUB Pipeline - Microorganism Engineering Section",
+    "meta.micro.title": "GUB Pipeline - Computer-Aided Drug Design Section",
 
     // ASCII Caption
     "ascii.caption": "Ligand docking to protein",

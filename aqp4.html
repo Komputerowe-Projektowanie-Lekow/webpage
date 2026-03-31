@@ -11,14 +11,40 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
   <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-  <link rel="stylesheet" href="./styles.css?v=7" />
+  <link rel="stylesheet" href="./styles.css?v=8" />
 </head>
 
 <body>
-  <div class="language-switcher">
-    <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
-    <button class="lang-btn" data-lang="en" aria-label="English" title="English">GB</button>
+  <!-- Scroll progress indicator -->
+  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+  <!-- Cmd+K command palette -->
+  <div class="cmdk-overlay" id="cmdkOverlay" role="dialog" aria-label="Command palette" aria-modal="true">
+    <div class="cmdk-dialog">
+      <div class="cmdk-input-wrap">
+        <input class="cmdk-input" id="cmdkInput" type="text" placeholder="Navigate, copy email, switch language…" autocomplete="off" spellcheck="false" aria-label="Command search" />
+      </div>
+      <div class="cmdk-results" id="cmdkResults" role="listbox"></div>
+      <div class="cmdk-footer">
+        <span>↑↓ navigate</span>
+        <span>↵ select</span>
+        <span>esc close</span>
+      </div>
+    </div>
   </div>
+
+  <!-- AQP4 Narrative ASCII Animation Layer (desktop only) -->
+  <div id="aqp4-narrative-layer" class="ascii-layer aqp4-narrative-layer" data-scene="water-channel">
+    <pre id="aqp4-narrative-ghost-1" class="ascii-screen ascii-screen-ghost" aria-hidden="true"></pre>
+    <pre id="aqp4-narrative-ghost-2" class="ascii-screen ascii-screen-ghost" aria-hidden="true"></pre>
+    <pre id="aqp4-narrative-screen" class="ascii-screen ascii-screen-main" aria-hidden="true"></pre>
+    <div id="aqp4-story-overlay" class="aqp4-story-overlay" aria-live="polite">
+      <p id="aqp4-story-kicker" class="aqp4-story-kicker">AQP4</p>
+      <h2 id="aqp4-story-title" class="aqp4-story-title">Kanał wodny</h2>
+      <p id="aqp4-story-meta" class="aqp4-story-meta">Akwaporyna-4: transport wody przez błonę</p>
+    </div>
+  </div>
+
   <div class="ascii-layer">
     <pre id="screen">loading...</pre>
     <div class="ascii-caption">
@@ -27,10 +53,27 @@
   </div>
   <nav class="sticky-nav" id="stickyNav">
     <div class="nav-content">
-      <a href="#kontekst-sekcji" class="nav-link" data-i18n="nav.context">Kontekst sekcji</a>
-      <a href="#projekty" class="nav-link" data-i18n="nav.projects">Projekty</a>
-      <a href="#dolacz" class="nav-link" data-i18n="nav.join">Dołącz</a>
-      <a href="index.html" class="nav-link project-switch" data-i18n="micro.nav.home">Mikroorganizmy</a>
+      <div class="nav-brand-cell">
+        <a href="#kontekst-sekcji" class="nav-brand-link" aria-label="AQP4 start">
+          <span class="nav-brand-badge" aria-hidden="true"></span>
+          <span class="nav-brand-text">AQP4</span>
+        </a>
+      </div>
+      <div class="nav-links-row">
+        <a href="#kontekst-sekcji" class="nav-link" data-i18n="nav.context" data-tip="Section context">Kontekst sekcji</a>
+        <a href="#projekty" class="nav-link" data-i18n="nav.projects" data-tip="Current projects">Projekty</a>
+        <a href="#dolacz" class="nav-link" data-i18n="nav.join" data-tip="Join the team">Dołącz</a>
+        <a href="index.html" class="nav-link project-switch" data-i18n="micro.nav.home">Pipeline GUB</a>
+      </div>
+      <div class="nav-utility-cell">
+        <button class="cmdk-trigger" id="cmdkTrigger" aria-label="Open command palette (Ctrl+K)" data-tip="Ctrl+K">
+          <span class="cmdk-trigger-label">Ctrl+K</span>
+        </button>
+        <div class="language-switcher">
+          <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
+          <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
+        </div>
+      </div>
     </div>
   </nav>
   <main class="pages">
@@ -76,6 +119,7 @@
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
               <span class="accordion-title" data-i18n="project1.title">Workflow Computer-Aided Drug Design</span>
+              <span class="status-badge archived">archived</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
@@ -212,6 +256,7 @@
             <button class="accordion-header" aria-expanded="false">
               <span class="accordion-title" data-i18n="project2.title">Paczka Python dla konformacji białek
                 (PMARLO)</span>
+              <span class="status-badge poc">PoC</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
@@ -302,6 +347,7 @@
           <div class="accordion-item">
             <button class="accordion-header" aria-expanded="false">
               <span class="accordion-title" data-i18n="project3.title">Przygotowania do Polaris Hub</span>
+              <span class="status-badge planning">planning</span>
               <span class="accordion-icon">˅</span>
             </button>
             <div class="accordion-content">
@@ -478,85 +524,42 @@
     </section>
   </main>
   <footer class="site-footer">
-    <div class="footer-content">
-      <div class="footer-section">
+    <div class="footer-panels">
+      <section class="footer-panel footer-panel--mission">
         <h3 data-i18n="footer.dream.title">Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.</h3>
         <p data-i18n="footer.dream.text">
           Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie
           piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania
-          przetrwają etap kliniczny. </p>
-      </div>
-      <div class="footer-section">
+          przetrwają etap kliniczny.
+        </p>
+      </section>
+      <section class="footer-panel footer-panel--contact">
         <h3 data-i18n="footer.contact.title">Kontakt i adresy</h3>
-        <p>
-          <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium na
-            GitHubie</a><br>
-          <a href="mailto:sknwpl@proton.me" data-i18n="footer.contact.email">Kontakt</a><br>
+        <p class="footer-contact-lines">
+          <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium
+            na GitHubie</a><br>
+          <a href="mailto:sknwpl@proton.me" data-i18n="footer.contact.email">Kontakt</a>
+          <button class="copy-btn" data-copy="sknwpl@proton.me" data-tip="Copy email">COPY</button><br>
           <span data-i18n="footer.contact.email.text">Email: sknwpl(at)proton(dot)me</span>
         </p>
-      </div>
-      <div class="footer-section">
+      </section>
+      <section class="footer-panel footer-panel--partners">
         <h3 data-i18n="footer.partners.title">Partnerzy / wsparcie</h3>
         <p data-i18n-html="footer.partners.text">
           Otwarte zaproszenie do współpracy (sprzęt, granty, konsultacje).<br>
           Jeżeli chcesz się odezwać z pytaniem, jakąś współpracą naukową itp. - skontaktuj się z nami.
         </p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p data-i18n="footer.bottom">Dołącz do nas i podziel się swoimi umiejętnościami.</p>
+      </section>
+      <section class="footer-panel footer-panel--join">
+        <p data-i18n="footer.bottom">Dołącz do nas i podziel się swoimi umiejętnościami.</p>
+      </section>
     </div>
   </footer>
+
   <script type="module" src="./i18n.js"></script>
   <script type="module" src="./main.js"></script>
-  <script>
-    // Accordion functionality - inline to ensure it loads
-    document.addEventListener("DOMContentLoaded", function () {
-      const accordionHeaders = document.querySelectorAll(".accordion-header");
-      console.log("Accordion headers found:", accordionHeaders.length);
-
-      accordionHeaders.forEach(function (header) {
-        // Make sure it starts closed
-        header.setAttribute("aria-expanded", "false");
-
-        header.addEventListener("click", function (e) {
-          e.preventDefault();
-          const isExpanded = header.getAttribute("aria-expanded") === "true";
-          console.log("Clicked, current state:", isExpanded);
-
-          // Close all other accordions
-          accordionHeaders.forEach(function (otherHeader) {
-            if (otherHeader !== header) {
-              otherHeader.setAttribute("aria-expanded", "false");
-            }
-          });
-
-          // Toggle current accordion
-          header.setAttribute("aria-expanded", !isExpanded ? "true" : "false");
-        });
-      });
-
-      // Sticky navigation functionality
-      const stickyNav = document.getElementById("stickyNav");
-      const heroSection = document.querySelector(".hero");
-
-      function checkNavVisibility() {
-        if (!heroSection || !stickyNav) return;
-
-        const heroBottom = heroSection.offsetTop + heroSection.offsetHeight;
-        const scrollPosition = window.scrollY;
-
-        if (scrollPosition > heroBottom - 100) {
-          stickyNav.classList.add("visible");
-        } else {
-          stickyNav.classList.remove("visible");
-        }
-      }
-
-      window.addEventListener("scroll", checkNavVisibility, { passive: true });
-      checkNavVisibility(); // Check on load
-    });
-  </script>
+  <script src="./ui.js" defer></script>
+  <script src="./aqp4-narrative.js" defer></script>
 </body>
 
 </html>

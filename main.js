@@ -1,20 +1,72 @@
+/**
+ * @fileoverview ASCII animation engine for GUB Pipeline visualization.
+ * Handles protein structure animations and narrative scene rendering.
+ */
+
+/**
+ * Configuration object for animation parameters and rendering options.
+ * @type {Object}
+ */
 const CONFIG = {
+  // Animation timing
   fps: 60,
   speed: 0.6,
+  
+  // ASCII rendering
   palette: "/\\.|",
   lineAspect: 1.0,
   charPixelTarget: 6.4,
   minCols: 96,
   maxCols: 500,
+  
+  // Frame management
   preloadAhead: 15,
   proteinTransitionFrames: 24,
   proteinSecondManifestCandidates: ["./frames-manifest_2.json", "./frames-manifest_2.json5"],
   proteinMorphStyle: "dither",
+  
+  // Protein ASCII conversion options
   protein2Ascii: {
     palette: "@%#*+=-:. ",
     normalizeLuma: true,
     contrast: 1.35,
     gamma: 0.86
+  },
+  
+  // Layout breakpoints and thresholds
+  mobileBreakpoint: 900,
+  denseDesktopBreakpoint: 1500,
+  scrollAnchorRatio: 0.35,
+  heroIntersectionThreshold: 0.05,
+  
+  // Narrative engine character sizing
+  narrative: {
+    mobileCharWidth: 7.6,
+    desktopCharWidth: 7.6,
+    denseCharWidth: 6.9,
+    mobileLineHeight: 12.4,
+    desktopLineHeight: 12.2,
+    denseLineHeight: 11.4,
+    mobileCols: { min: 72, max: 122 },
+    desktopCols: { min: 74, max: 150 },
+    mobileRows: { min: 24, max: 48 },
+    desktopRows: { min: 26, max: 58 }
+  },
+  
+  // Background noise threshold for narrative frames
+  noiseThreshold: 1.96,
+  
+  // Debounce/throttle timings (ms)
+  resizeDebounceMs: 150,
+  
+  // Ripple wave settings
+  ripple: {
+    ringSpacing: 200,
+    speed: 15,
+    minOpacity: 0.07,
+    maxOpacity: 0.16,
+    baseOpacity: 0.08,
+    progressMultiplier: 0.06
   }
 };
 
@@ -52,11 +104,78 @@ let heroObserver = null;
 let activityRaf = null;
 let narrativeRippleRaf = null;
 let narrativeRippleRunning = false;
-let maxNarrativeProgress = 0;
 let proteinController = null;
 let narrativeController = null;
+let resizeTimeout = null;
+let isPageUnloading = false;
 
-bootstrap().catch((err) => console.error("ASCII bootstrap failed:", err));
+// Reusable buffer for narrative frame rendering (reduces GC pressure)
+let narrativeLineBuffer = null;
+let narrativeBufferCols = 0;
+let narrativeBufferRows = 0;
+
+// AbortController for cancellable fetch requests
+let fetchAbortController = null;
+
+// Freeze CONFIG to prevent accidental mutation
+Object.freeze(CONFIG);
+Object.freeze(CONFIG.protein2Ascii);
+Object.freeze(CONFIG.narrative);
+Object.freeze(CONFIG.narrative.mobileCols);
+Object.freeze(CONFIG.narrative.desktopCols);
+Object.freeze(CONFIG.narrative.mobileRows);
+Object.freeze(CONFIG.narrative.desktopRows);
+Object.freeze(CONFIG.ripple);
+
+// Cleanup on page unload to prevent memory leaks
+addEventListener("beforeunload", () => {
+  isPageUnloading = true;
+  if (fetchAbortController) fetchAbortController.abort();
+  cleanup();
+});
+
+bootstrap().catch((err) => {
+  console.error("ASCII bootstrap failed:", err);
+  showFallbackState();
+});
+
+/**
+ * Cleanup all running animations and observers.
+ * Called on page unload to prevent memory leaks.
+ */
+function cleanup() {
+  if (activityRaf !== null) {
+    cancelAnimationFrame(activityRaf);
+    activityRaf = null;
+  }
+  if (narrativeRippleRaf !== null) {
+    cancelAnimationFrame(narrativeRippleRaf);
+    narrativeRippleRaf = null;
+  }
+  if (resizeTimeout !== null) {
+    clearTimeout(resizeTimeout);
+    resizeTimeout = null;
+  }
+  if (heroObserver) {
+    heroObserver.disconnect();
+    heroObserver = null;
+  }
+  proteinController?.setActive(false);
+  narrativeController?.setActive(false);
+}
+
+/**
+ * Show fallback static state when animation engine fails to initialize.
+ */
+function showFallbackState() {
+  if (proteinLayer) {
+    proteinLayer.setAttribute("data-fallback", "true");
+  }
+  if (narrativeLayer) {
+    narrativeLayer.setAttribute("data-fallback", "true");
+  }
+  setBodyActivity(false, false);
+}
 
 function mkScreens(mainId, g1Id, g2Id) {
   return { main: document.getElementById(mainId), ghost1: document.getElementById(g1Id), ghost2: document.getElementById(g2Id) };
@@ -227,7 +346,7 @@ function setupHeroObserver() {
   if (!heroSection) return;
   if ("IntersectionObserver" in window) {
     heroObserver = new IntersectionObserver((entries) => {
-      heroVisible = entries.some((e) => e.isIntersecting && e.intersectionRatio > 0.05);
+      heroVisible = entries.some((e) => e.isIntersecting && e.intersectionRatio > CONFIG.heroIntersectionThreshold);
       scheduleActivityCheck();
     }, { threshold: [0, 0.05, 0.15, 0.35, 0.6] });
     heroObserver.observe(heroSection);
@@ -250,9 +369,16 @@ function scheduleActivityCheck() {
 }
 
 function onResize() {
-  proteinController?.onResize();
-  narrativeController?.onResize();
-  scheduleActivityCheck();
+  // Debounce resize handling to prevent excessive recalculations
+  if (resizeTimeout !== null) {
+    clearTimeout(resizeTimeout);
+  }
+  resizeTimeout = setTimeout(() => {
+    resizeTimeout = null;
+    proteinController?.onResize();
+    narrativeController?.onResize();
+    scheduleActivityCheck();
+  }, CONFIG.resizeDebounceMs);
 }
 
 function applyActivity() {
@@ -266,8 +392,8 @@ function applyActivity() {
 }
 
 function computeNarrativeActive() {
-  if (innerWidth <= 900 || !statusSection || !supportSection) return false;
-  const anchorY = scrollY + innerHeight * 0.35;
+  if (innerWidth <= CONFIG.mobileBreakpoint || !statusSection || !supportSection) return false;
+  const anchorY = scrollY + innerHeight * CONFIG.scrollAnchorRatio;
   const statusTop = statusSection.offsetTop;
   const supportTop = supportSection.offsetTop;
   return anchorY >= statusTop && anchorY < supportTop;
@@ -275,7 +401,7 @@ function computeNarrativeActive() {
 
 function computeNarrativeRangeProgress() {
   if (!statusSection || !supportSection) return 0;
-  const anchorY = scrollY + innerHeight * 0.35;
+  const anchorY = scrollY + innerHeight * CONFIG.scrollAnchorRatio;
   const start = statusSection.offsetTop;
   const end = supportSection.offsetTop;
   const span = Math.max(1, end - start);
@@ -283,7 +409,7 @@ function computeNarrativeRangeProgress() {
 }
 
 function setNarrativeRippleRunning(next) {
-  narrativeRippleRunning = Boolean(next && narrativeLayer && innerWidth > 900 && !prefersReducedMotion.matches);
+  narrativeRippleRunning = Boolean(next && narrativeLayer && innerWidth > CONFIG.mobileBreakpoint && !prefersReducedMotion.matches);
   if (!narrativeRippleRunning) {
     if (narrativeRippleRaf !== null) {
       cancelAnimationFrame(narrativeRippleRaf);
@@ -299,7 +425,7 @@ function setNarrativeRippleRunning(next) {
 
 function tickNarrativeRipple(now) {
   narrativeRippleRaf = null;
-  if (!narrativeRippleRunning || !narrativeLayer) return;
+  if (!narrativeRippleRunning || !narrativeLayer || isPageUnloading) return;
 
   const progress = computeNarrativeRangeProgress();
   const t = now * 0.001;
@@ -308,13 +434,12 @@ function tickNarrativeRipple(now) {
   // Wave origin at center, rings emanate outward like water ripples
   const originPx = halfWidth;
 
-  // Phase cycles 0→200px seamlessly — wider rings, more spacing
-  const ringSpacing = 200; // px between rings
-  const speed = 15; // px/s outward
+  // Phase cycles seamlessly — wider rings, more spacing
+  const { ringSpacing, speed, baseOpacity, progressMultiplier, minOpacity, maxOpacity } = CONFIG.ripple;
   const phase = (t * speed) % ringSpacing;
 
   // Subtle but visible wave opacity
-  const waveOpacity = clamp(0.08 + progress * 0.06, 0.07, 0.16);
+  const waveOpacity = clamp(baseOpacity + progress * progressMultiplier, minOpacity, maxOpacity);
 
   narrativeLayer.style.setProperty("--narrative-wave-origin-px", `${originPx.toFixed(2)}px`);
   narrativeLayer.style.setProperty("--narrative-wave-phase", `${phase.toFixed(2)}px`);
@@ -381,17 +506,18 @@ function createNarrativeEngine(layerEl) {
   function updateResolution(force = false) {
     const w = layerEl.clientWidth || innerWidth || 1;
     const h = layerEl.clientHeight || innerHeight || 1;
-    const mobile = w <= 900;
-    const denseDesktop = w >= 1500;
+    const mobile = w <= CONFIG.mobileBreakpoint;
+    const denseDesktop = w >= CONFIG.denseDesktopBreakpoint;
+    const { narrative } = CONFIG;
     const cols = clamp(
-      Math.floor(w / (mobile ? 7.6 : denseDesktop ? 6.9 : 7.6)),
-      mobile ? 72 : 74,
-      mobile ? 122 : 150
+      Math.floor(w / (mobile ? narrative.mobileCharWidth : denseDesktop ? narrative.denseCharWidth : narrative.desktopCharWidth)),
+      mobile ? narrative.mobileCols.min : narrative.desktopCols.min,
+      mobile ? narrative.mobileCols.max : narrative.desktopCols.max
     );
     const rows = clamp(
-      Math.floor(h / (mobile ? 12.4 : denseDesktop ? 11.4 : 12.2)),
-      mobile ? 24 : 26,
-      mobile ? 48 : 58
+      Math.floor(h / (mobile ? narrative.mobileLineHeight : denseDesktop ? narrative.denseLineHeight : narrative.desktopLineHeight)),
+      mobile ? narrative.mobileRows.min : narrative.desktopRows.min,
+      mobile ? narrative.mobileRows.max : narrative.desktopRows.max
     );
     const key = `${cols}x${rows}|${mobile ? "m" : "d"}`;
     const changed = force || key !== dims.key;
@@ -454,12 +580,25 @@ function getNarrativeSceneState(timeMs) {
 function renderNarrativeFrame(scene, dims, t) {
   const cols = dims.cols;
   const rows = dims.rows;
-  const lines = Array.from({ length: rows }, () => Array(cols).fill(" "));
+  
+  // Reuse buffer if dimensions match, otherwise reallocate
+  if (!narrativeLineBuffer || narrativeBufferCols !== cols || narrativeBufferRows !== rows) {
+    narrativeLineBuffer = Array.from({ length: rows }, () => Array(cols));
+    narrativeBufferCols = cols;
+    narrativeBufferRows = rows;
+  }
+  
+  // Reset existing arrays instead of creating new ones
+  const lines = narrativeLineBuffer;
+  for (let y = 0; y < rows; y++) {
+    lines[y].fill(" ");
+  }
+  
   // Subtle background noise — sparser than before
   for (let y = 0; y < rows; y++) {
     for (let x = 0; x < cols; x++) {
       const s = Math.sin(x * 0.14 + y * 0.08 + t * 0.0006) + Math.cos(x * 0.025 - y * 0.12 + t * 0.0005);
-      if (s > 1.96) lines[y][x] = ".";
+      if (s > CONFIG.noiseThreshold) lines[y][x] = ".";
     }
   }
   const labelMap = {
@@ -504,7 +643,7 @@ function drawSceneShape(lines, sceneId, t, progress) {
 function drawGeneration(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const compact = cols < 96;
+  const compact = cols < CONFIG.minCols;
   const cx = Math.floor(cols * 0.5);
   const cy = Math.floor(rows * 0.5);
   const noise = "$#@!%^&*~+=<>?;:";
@@ -523,16 +662,14 @@ function drawGeneration(lines, t, progress) {
     const x = clamp(cx + dx, 1, cols - 2);
     const y = clamp(cy + dy, 1, rows - 3);
     const ch = noise[(hash >> 4) % noise.length];
-    if (y >= 0 && y < rows && x >= 0 && x < cols) lines[y][x] = ch;
+    safeWrite(lines, x, y, ch);
   }
 
   // SMILES string assembling in the center as progress increases
   const visible = Math.floor(smiles.length * phase);
   const startX = cx - Math.floor(visible / 2);
   for (let i = 0; i < visible; i++) {
-    const x = startX + i;
-    const y = cy;
-    if (y >= 0 && y < rows && x >= 0 && x < cols) lines[y][x] = smiles[i];
+    safeWrite(lines, startX + i, cy, smiles[i]);
   }
 
   // Label below the forming molecule
@@ -545,11 +682,10 @@ function drawGeneration(lines, t, progress) {
 function drawFunnel(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const compact = cols < 96;
+  const compact = cols < CONFIG.minCols;
   const cx = Math.floor(cols * 0.5);
   const topY = Math.floor(rows * 0.2);
   const botY = Math.floor(rows * 0.78);
-  const midY = Math.floor(rows * 0.52);
 
   // Draw funnel shape — wide top, narrow bottom
   const topHalf = compact ? 14 : 22;
@@ -559,12 +695,12 @@ function drawFunnel(lines, t, progress) {
     const half = Math.round(topHalf * (1 - frac) + botHalf * frac);
     const lx = clamp(cx - half, 0, cols - 1);
     const rx = clamp(cx + half, 0, cols - 1);
-    if (lx >= 0 && lx < cols) lines[y][lx] = "|";
-    if (rx >= 0 && rx < cols) lines[y][rx] = "|";
+    safeWrite(lines, lx, y, "|");
+    safeWrite(lines, rx, y, "|");
   }
   // Top rim
   for (let x = cx - topHalf; x <= cx + topHalf; x++) {
-    if (x >= 0 && x < cols && topY >= 0 && topY < rows) lines[topY][x] = "_";
+    safeWrite(lines, x, topY, "_");
   }
 
   // Molecules entering (o) and being filtered (x) or passing (*)
@@ -578,12 +714,12 @@ function drawFunnel(lines, t, progress) {
     const half = Math.round(topHalf * (1 - frac) + botHalf * frac) - 1;
     const px = cx + ((hash >> 4) % Math.max(1, half * 2 + 1)) - half;
     const ch = symbols[(i + tick) % symbols.length];
-    if (py >= 0 && py < rows && px >= 0 && px < cols) lines[py][px] = ch;
+    safeWrite(lines, px, py, ch);
   }
 
   // Arrow out the bottom
   const outY = Math.min(rows - 5, botY + 1);
-  if (outY >= 0 && outY < rows && cx >= 0 && cx < cols) lines[outY][cx] = "V";
+  safeWrite(lines, cx, outY, "V");
   writeText(lines, cx - (compact ? 3 : 6), outY + 1, compact ? "top N" : "filtered output");
 }
 
@@ -591,14 +727,14 @@ function drawFunnel(lines, t, progress) {
 function drawDocking(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const compact = cols < 96;
+  const compact = cols < CONFIG.minCols;
   const cx = Math.floor(cols * 0.5);
   const cy = Math.floor(rows * 0.48);
 
   // Target (receptor) — small structure in center
   const targetR = compact ? 4 : 6;
   ellipse(lines, cx, cy, targetR, Math.max(2, Math.floor(targetR * 0.6)), "O");
-  if (cy >= 0 && cy < rows && cx >= 0 && cx < cols) lines[cy][cx] = "*";
+  safeWrite(lines, cx, cy, "*");
   writeText(lines, cx - 3, cy, "target");
 
   // Ligand brackets approaching from left and right
@@ -609,8 +745,8 @@ function drawDocking(lines, t, progress) {
   const lx = cx - targetR - gap;
   for (let dy = -2; dy <= 2; dy++) {
     const y = cy + dy;
-    if (y >= 0 && y < rows && lx >= 0 && lx < cols) lines[y][lx] = ">";
-    if (y >= 0 && y < rows && lx - 1 >= 0 && lx - 1 < cols) lines[y][lx - 1] = "=";
+    safeWrite(lines, lx, y, ">");
+    safeWrite(lines, lx - 1, y, "=");
   }
   writeText(lines, Math.max(0, lx - (compact ? 7 : 10)), cy - 4, compact ? "ligand" : "ligand (candidate)");
 
@@ -618,8 +754,8 @@ function drawDocking(lines, t, progress) {
   const rx = cx + targetR + gap;
   for (let dy = -2; dy <= 2; dy++) {
     const y = cy + dy;
-    if (y >= 0 && y < rows && rx >= 0 && rx < cols) lines[y][rx] = "<";
-    if (y >= 0 && y < rows && rx + 1 >= 0 && rx + 1 < cols) lines[y][rx + 1] = "=";
+    safeWrite(lines, rx, y, "<");
+    safeWrite(lines, rx + 1, y, "=");
   }
 
   // Binding energy indicator
@@ -633,7 +769,7 @@ function drawDocking(lines, t, progress) {
 function drawFolding(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const compact = cols < 96;
+  const compact = cols < CONFIG.minCols;
   const cx = Math.floor(cols * 0.5);
   const cy = Math.floor(rows * 0.46);
 
@@ -646,9 +782,7 @@ function drawFolding(lines, t, progress) {
     const x = helixStartX + i;
     const yOff = Math.round(Math.sin(i * 0.8 + t * 0.003) * (compact ? 1.0 : 1.5));
     const y = helixY + yOff;
-    if (y >= 0 && y < rows && x >= 0 && x < cols) {
-      lines[y][x] = helixChars[i % helixChars.length];
-    }
+    safeWrite(lines, x, y, helixChars[i % helixChars.length]);
   }
   writeText(lines, helixStartX, helixY - 2, compact ? "helix" : "alpha-helix");
 
@@ -662,9 +796,8 @@ function drawFolding(lines, t, progress) {
     const dir = row % 2 === 0;
     for (let i = 0; i < sheetW; i++) {
       const x = sheetStartX + i;
-      if (x >= 0 && x < cols && y >= 0 && y < rows) {
-        lines[y][x] = (i === sheetW - 1 && dir) ? ">" : (i === 0 && !dir) ? "<" : "-";
-      }
+      const ch = (i === sheetW - 1 && dir) ? ">" : (i === 0 && !dir) ? "<" : "-";
+      safeWrite(lines, x, y, ch);
     }
   }
   writeText(lines, sheetStartX, sheetY + 6, compact ? "sheet" : "beta-sheet");
@@ -683,7 +816,7 @@ function drawFolding(lines, t, progress) {
     const x1 = cubeX + dx, y1 = cubeY + dy;
     const x2 = cubeX + dx + off, y2 = cubeY + dy - off;
     const mx = Math.round((x1 + x2) / 2), my = Math.round((y1 + y2) / 2);
-    if (my >= 0 && my < rows && mx >= 0 && mx < cols) lines[my][mx] = "/";
+    safeWrite(lines, mx, my, "/");
   }
   writeText(lines, cubeX - 1, cubeY + cubeSize + 1, compact ? "Boltz2" : "Boltz2 model");
 }
@@ -692,7 +825,7 @@ function drawFolding(lines, t, progress) {
 function drawDynamics(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const compact = cols < 96;
+  const compact = cols < CONFIG.minCols;
   const cx = Math.floor(cols * 0.5);
   const cy = Math.floor(rows * 0.46);
   const speed = 0.005;
@@ -702,7 +835,7 @@ function drawDynamics(lines, t, progress) {
   const jy = Math.round(Math.cos(t * speed * 4) * 0.8);
   const molR = compact ? 4 : 6;
   ellipse(lines, cx + jx, cy + jy, molR, Math.max(2, Math.floor(molR * 0.6)), "@");
-  if (cy + jy >= 0 && cy + jy < rows && cx + jx >= 0 && cx + jx < cols) lines[cy + jy][cx + jx] = "*";
+  safeWrite(lines, cx + jx, cy + jy, "*");
 
   // Wavy lines representing energy / heat (above and below)
   const waveRows = compact ? 3 : 5;
@@ -715,11 +848,8 @@ function drawDynamics(lines, t, progress) {
     for (let i = 0; i < waveW; i++) {
       const x = cx - Math.floor(waveW / 2) + i;
       const yOff = Math.round(Math.sin(i * freq + t * speed * 2 + w) * amp);
-      const ch = "~";
-      const py1 = wy + yOff;
-      const py2 = wy2 - yOff;
-      if (py1 >= 0 && py1 < rows && x >= 0 && x < cols) lines[py1][x] = ch;
-      if (py2 >= 0 && py2 < rows && x >= 0 && x < cols) lines[py2][x] = ch;
+      safeWrite(lines, x, wy + yOff, "~");
+      safeWrite(lines, x, wy2 - yOff, "~");
     }
   }
 
@@ -734,9 +864,8 @@ function drawDynamics(lines, t, progress) {
     const hash = ((i * 48271 + tick) >>> 0) % 65536;
     const wx = cx + ((hash % (compact ? 30 : 50)) - (compact ? 15 : 25));
     const wy = cy + (((hash >> 8) % (compact ? 16 : 24)) - (compact ? 8 : 12));
-    if (wy >= 0 && wy < rows && wx >= 0 && wx < cols && lines[wy][wx] === " ") {
-      lines[wy][wx] = (hash >> 4) % 3 === 0 ? "o" : ".";
-    }
+    const ch = (hash >> 4) % 3 === 0 ? "o" : ".";
+    safeWriteIfEmpty(lines, wx, wy, ch);
   }
 }
 
@@ -744,7 +873,7 @@ function drawDynamics(lines, t, progress) {
 function drawNetwork(lines, t, progress) {
   const rows = lines.length;
   const cols = lines[0].length;
-  const compact = cols < 96;
+  const compact = cols < CONFIG.minCols;
   const cx = Math.floor(cols * 0.5);
   const cy = Math.floor(rows * 0.46);
 
@@ -784,26 +913,23 @@ function drawNetwork(lines, t, progress) {
     for (let i = 1; i < steps; i++) {
       const x = Math.round(x1 + ((x2 - x1) * i) / steps);
       const y = Math.round(y1 + ((y2 - y1) * i) / steps);
-      if (y >= 0 && y < rows && x >= 0 && x < cols && lines[y][x] === " ") {
-        lines[y][x] = "-";
-      }
+      safeWriteIfEmpty(lines, x, y, "-");
     }
   }
 
   // Draw nodes
-  const pulse = Math.sin(t * 0.004);
   for (let n = 0; n < nodes.length; n++) {
     const nd = nodes[n];
     const nx = cx + nd.x;
     const ny = cy + nd.y;
     // Node circle
-    if (ny >= 0 && ny < rows && nx >= 0 && nx < cols) lines[ny][nx] = "O";
-    if (ny >= 0 && ny < rows && nx - 1 >= 0 && nx - 1 < cols) lines[ny][nx - 1] = "(";
-    if (ny >= 0 && ny < rows && nx + 1 >= 0 && nx + 1 < cols) lines[ny][nx + 1] = ")";
+    safeWrite(lines, nx, ny, "O");
+    safeWrite(lines, nx - 1, ny, "(");
+    safeWrite(lines, nx + 1, ny, ")");
     // Label
     const lx = nx - Math.floor(nd.label.length / 2);
     const ly = ny - 1;
-    if (ly >= 0 && ly < rows) writeText(lines, lx, ly, nd.label);
+    writeText(lines, lx, ly, nd.label);
   }
 
   // Animated data flow dots along edges
@@ -818,7 +944,7 @@ function drawNetwork(lines, t, progress) {
     const pos = ((tick + e * 7) % Math.max(1, steps));
     const x = Math.round(x1 + ((x2 - x1) * pos) / steps);
     const y = Math.round(y1 + ((y2 - y1) * pos) / steps);
-    if (y >= 0 && y < rows && x >= 0 && x < cols) lines[y][x] = "*";
+    safeWrite(lines, x, y, "*");
   }
 
   // Network title
@@ -843,30 +969,52 @@ function ellipse(lines, cx, cy, rx, ry, ch) {
     const th = (Math.PI * 2 * i) / steps;
     const x = Math.round(cx + Math.cos(th) * rx);
     const y = Math.round(cy + Math.sin(th) * ry);
-    if (y >= 0 && y < lines.length && x >= 0 && x < lines[0].length) lines[y][x] = ch;
+    safeWrite(lines, x, y, ch);
   }
 }
 
 function box(lines, x, y, w, h, ch) {
   if (w < 2 || h < 2) return;
   for (let i = 0; i < w; i++) {
-    if (y >= 0 && y < lines.length && x + i >= 0 && x + i < lines[0].length) lines[y][x + i] = ch;
-    if (y + h - 1 >= 0 && y + h - 1 < lines.length && x + i >= 0 && x + i < lines[0].length) lines[y + h - 1][x + i] = ch;
+    safeWrite(lines, x + i, y, ch);
+    safeWrite(lines, x + i, y + h - 1, ch);
   }
   for (let j = 0; j < h; j++) {
-    if (x >= 0 && x < lines[0].length && y + j >= 0 && y + j < lines.length) lines[y + j][x] = ch;
-    if (x + w - 1 >= 0 && x + w - 1 < lines[0].length && y + j >= 0 && y + j < lines.length) lines[y + j][x + w - 1] = ch;
+    safeWrite(lines, x, y + j, ch);
+    safeWrite(lines, x + w - 1, y + j, ch);
   }
 }
 
-function arrow(lines, x1, y1, x2, y2, ch) {
-  const steps = Math.max(Math.abs(x2 - x1), Math.abs(y2 - y1), 1);
-  for (let i = 0; i <= steps; i++) {
-    const x = Math.round(x1 + ((x2 - x1) * i) / steps);
-    const y = Math.round(y1 + ((y2 - y1) * i) / steps);
-    if (y >= 0 && y < lines.length && x >= 0 && x < lines[0].length) lines[y][x] = ch;
+/**
+ * Safely write a character to the lines buffer with bounds checking.
+ * @param {Array<Array<string>>} lines - 2D character buffer
+ * @param {number} x - Column position
+ * @param {number} y - Row position  
+ * @param {string} ch - Character to write
+ * @returns {boolean} Whether the write succeeded
+ */
+function safeWrite(lines, x, y, ch) {
+  if (y >= 0 && y < lines.length && x >= 0 && x < lines[0].length) {
+    lines[y][x] = ch;
+    return true;
   }
-  if (y2 >= 0 && y2 < lines.length && x2 >= 0 && x2 < lines[0].length) lines[y2][x2] = x2 >= x1 ? ">" : "<";
+  return false;
+}
+
+/**
+ * Safely write a character only if the target cell is empty (space).
+ * @param {Array<Array<string>>} lines - 2D character buffer
+ * @param {number} x - Column position
+ * @param {number} y - Row position
+ * @param {string} ch - Character to write
+ * @returns {boolean} Whether the write succeeded
+ */
+function safeWriteIfEmpty(lines, x, y, ch) {
+  if (y >= 0 && y < lines.length && x >= 0 && x < lines[0].length && lines[y][x] === " ") {
+    lines[y][x] = ch;
+    return true;
+  }
+  return false;
 }
 
 function writeText(lines, x, y, text) {
@@ -892,8 +1040,12 @@ async function loadManifestCandidates(candidates) {
 }
 
 async function loadJsonArray(path) {
+  // Create a new AbortController for this fetch, store globally for cleanup
+  fetchAbortController = new AbortController();
   try {
-    const res = await fetch(new URL(path, import.meta.url));
+    const res = await fetch(new URL(path, import.meta.url), {
+      signal: fetchAbortController.signal
+    });
     if (!res.ok) return null;
     const text = await res.text();
     let data = null;
@@ -909,6 +1061,8 @@ async function loadJsonArray(path) {
     }
     return data;
   } catch (error) {
+    // Don't log abort errors (expected during page unload)
+    if (error.name === "AbortError") return null;
     console.error(`Failed to fetch manifest: ${path}`, error);
     return null;
   }
@@ -1191,6 +1345,13 @@ function createPrecomputedEngine(fallback) {
   };
 }
 
+/**
+ * Clamp a value between a minimum and maximum.
+ * @param {number} value - The value to clamp
+ * @param {number} min - Minimum bound
+ * @param {number} max - Maximum bound
+ * @returns {number} The clamped value
+ */
 function clamp(value, min, max) {
   return Math.max(min, Math.min(max, value));
 }

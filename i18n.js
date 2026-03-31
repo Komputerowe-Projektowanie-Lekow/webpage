@@ -149,17 +149,12 @@ export const i18n = new I18n();
 // Auto-initialize when DOM is ready
 if (document.readyState === 'loading') {
   document.addEventListener('DOMContentLoaded', () => {
-    console.log('i18n: Initializing...');
     i18n.init();
-    console.log('i18n: Initialized with language:', i18n.getCurrentLanguage());
   });
 } else {
-  console.log('i18n: Initializing (DOM already loaded)...');
   i18n.init();
-  console.log('i18n: Initialized with language:', i18n.getCurrentLanguage());
 }
 
-// Make i18n available globally for debugging
+// Make i18n available globally for command palette integration
 window.i18n = i18n;
-
 
