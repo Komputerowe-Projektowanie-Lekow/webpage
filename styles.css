@@ -771,6 +771,8 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
 
 /* ============ AQP4 NARRATIVE LAYER ============ */
 .aqp4-narrative-layer {
+  position: fixed;
+  top: 0;
   left: 0;
   width: 100vw;
   height: 100vh;
@@ -783,6 +785,7 @@ body[data-narrative-active="true"] .narrative-ascii-layer #ascii-story-overlay {
     rgba(115, 188, 225, 0.4) 100%);
   opacity: 1;
   visibility: visible;
+  pointer-events: none;
 }
 
 .aqp4-narrative-layer::before {
