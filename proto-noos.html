@@ -1,0 +1,346 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTO-NOOS - Shared Research - SKNWPL</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --accent: #01779B;
+    --fg: #0a2540;
+    --fg-muted: #425b78;
+    --fg-dim: #7a8da3;
+    --rule: rgba(10,37,64,0.14);
+    --paper: #f3f7fb;
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+    --serif: 'Newsreader', Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--fg); }
+  body {
+    min-height: 100vh;
+    font-family: var(--mono);
+    background-image:
+      linear-gradient(to right, rgba(1,119,155,0.10) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(1,119,155,0.10) 1px, transparent 1px);
+    background-size: 64px 64px;
+  }
+  .nav {
+    border-bottom: 1px solid var(--rule);
+    background: rgba(243,247,251,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .nav-inner {
+    max-width: 76rem;
+    margin: 0 auto;
+    padding: 0.75rem clamp(1.2rem, 3vw, 2rem);
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+  }
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .brand {
+    border: none;
+    color: var(--fg);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  main {
+    max-width: 74rem;
+    margin: 0 auto;
+    padding: clamp(4rem, 8vw, 7rem) clamp(1.2rem, 3vw, 2rem);
+  }
+  .article-head {
+    max-width: 56rem;
+  }
+  .meta {
+    display: flex;
+    gap: 0.65rem;
+    align-items: center;
+    color: var(--fg-dim);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.4rem;
+  }
+  .tag {
+    border: 1px solid var(--rule);
+    padding: 2px 7px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 4.3rem);
+    line-height: 1.04;
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    margin: 0 0 1.2rem;
+  }
+  .author {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--fg-dim);
+    font-size: 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-bottom: 3rem;
+  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    border: 1px solid var(--accent);
+    padding: 0.65rem 0.9rem;
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.72);
+  }
+  .repo-qr {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 10rem;
+    gap: 1.1rem;
+    align-items: center;
+    max-width: 44rem;
+    margin: 0 0 3rem;
+    padding: 1rem;
+    border: 1px solid var(--rule);
+    background: rgba(255,255,255,0.78);
+    box-shadow: 0 12px 30px rgba(10,37,64,0.08);
+  }
+  .repo-qr h2 {
+    margin: 0 0 0.45rem;
+    font-size: 1.35rem;
+  }
+  .repo-qr p {
+    margin: 0 0 0.75rem;
+    font-size: 13px;
+  }
+  .repo-qr img {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 0.45rem;
+    background: #fff;
+    border: 1px solid var(--rule);
+  }
+  .abstract {
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 1.4rem 0;
+    color: var(--fg-muted);
+    line-height: 1.75;
+    font-size: 15px;
+    max-width: 56rem;
+  }
+  .abstract p {
+    margin: 0 0 1rem;
+  }
+  .abstract p:last-child {
+    margin-bottom: 0;
+  }
+  .abstract h2 {
+    margin-top: 0;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    line-height: 1.15;
+    font-weight: 500;
+    margin: 2.6rem 0 0.8rem;
+  }
+  p {
+    color: var(--fg-muted);
+    line-height: 1.75;
+    font-size: 15px;
+    max-width: 56rem;
+  }
+  .poster {
+    margin-top: 3rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.4rem;
+  }
+  .poster h2 {
+    margin-top: 0;
+  }
+  .poster-frame {
+    display: block;
+    margin-top: 1rem;
+    border: 1px solid var(--rule);
+    background: #fff;
+    box-shadow: 0 18px 44px rgba(10,37,64,0.10);
+  }
+  .poster-frame img {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+  .note {
+    color: var(--fg-dim);
+    font-size: 12px;
+    margin-top: 0.8rem;
+  }
+  .workflow {
+    margin-top: 3rem;
+    border-top: 1px solid var(--rule);
+    padding-top: 1.4rem;
+  }
+  .workflow h2 {
+    margin-top: 0;
+  }
+  .workflow-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .workflow-card {
+    background: rgba(255,255,255,0.82);
+    border: 1px solid var(--rule);
+    box-shadow: 0 12px 30px rgba(10,37,64,0.08);
+  }
+  .workflow-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background: #fff;
+    border-bottom: 1px solid var(--rule);
+  }
+  .workflow-card figcaption {
+    padding: 0.8rem 0.9rem 0.9rem;
+  }
+  .workflow-card span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--accent);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .workflow-card strong {
+    display: block;
+    font-family: var(--serif);
+    color: var(--fg);
+    font-size: 1.12rem;
+    line-height: 1.18;
+    font-weight: 500;
+  }
+  @media (max-width: 760px) {
+    .repo-qr {
+      grid-template-columns: 1fr;
+      max-width: 24rem;
+    }
+    .workflow-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">SKNWPL · Pipeline GUB</a>
+      <a href="index.html">Back to site</a>
+    </div>
+  </nav>
+  <main>
+    <header class="article-head">
+      <div class="meta">
+        <time datetime="2026-05-03">03.05.2026</time>
+        <span class="tag">paper</span>
+      </div>
+      <h1>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h1>
+      <div class="author">The SKNWPL Team</div>
+      <div class="actions">
+        <a class="button" href="./posts/proto-noos-ml/PROTO-NOOS_%20Rational%20Compute%20Allocation%20in%20Antibiotic%20Discovery%20via%20Mutual%20Information%20and%20Uncertainty%20Quantification%20.pdf">Open PDF →</a>
+        <a class="button" href="./posts/proto-noos-ml/Poster%20GHOST%20PROTO-NOOS%20ML.pdf">Open poster →</a>
+        <a class="button" href="https://github.com/Komputerowe-Projektowanie-Lekow/GUB_ML" target="_blank" rel="noopener">GitHub repo →</a>
+      </div>
+    </header>
+
+    <section class="repo-qr" aria-labelledby="repoQrTitle">
+      <div>
+        <h2 id="repoQrTitle">GitHub Repository</h2>
+        <p>Scan the QR code or open the repository directly.</p>
+        <a href="https://github.com/Komputerowe-Projektowanie-Lekow/GUB_ML" target="_blank" rel="noopener">github.com/Komputerowe-Projektowanie-Lekow/GUB_ML</a>
+      </div>
+      <a href="gub-ml-github-qr.svg" aria-label="Open GitHub repository QR code">
+        <img src="gub-ml-github-qr.svg" alt="QR code for the GUB_ML GitHub repository">
+      </a>
+    </section>
+
+    <section class="abstract" aria-labelledby="abstractTitle">
+      <h2 id="abstractTitle">Abstract</h2>
+      <p>Large-scale computational screening of compounds with tools designed to predict molecules with specific properties requires substantial computational time and resources. The initial search for promising candidates and the subsequent optimization of those candidates are distinct processes and should be treated as separate stages of the drug discovery workflow.</p>
+      <p>In this context, molecular search can be framed as an optimization problem: the goal is to obtain the best possible result at the lowest feasible computational cost. By using known antibiotics against a given target, it is possible to generalize how specific compounds interact with the receptor. When additional phenotypic data are incorporated, the performance of computational tools can be compared against experimental outcomes, allowing their behaviour to be estimated and evaluated using machine learning models.</p>
+      <p>In this study, we used mutual information and uncertainty quantification methods to analyze a dataset of de novo compounds generated by our PROTO-NOOS system. PROTO-NOOS is designed to generate labels consistent with state-of-the-art computational tools and public experimental data reported in previous studies.</p>
+      <p>We performed a benchmark evaluating EoE-5 and EoE-10 models across six random seeds for each method. The aim was to assess how these approaches perform on our problem and to determine their suitability for reducing computational cost while preserving predictive quality.</p>
+      <p>Our results indicate which strategies are most appropriate for users who want to simplify expensive computational workflows by replacing selected stages with lower-cost surrogate models. In addition, we analyzed how predictions differ between single models, EoE-5, and EoE-10 ensembles, and how uncertainty relates to the training data and the diversity of the evaluated compounds.</p>
+      <p>The results suggest that random forest-based strategies are useful when the primary goal is aggressive cost reduction, even if this comes with some loss of quality. In contrast, evidential models combined with MIST-QR provide a more conservative strategy, where computational savings are achieved while maintaining stronger control over uncertainty and prediction reliability.</p>
+      <p>This work is relevant for researchers developing or using modular, open-source drug design pipelines that combine multiple computational tools. The proposed approach can help determine where mutual information and uncertainty quantification can be used to reduce computational cost during large-scale compound screening without fully abandoning the reliability of more expensive downstream methods.</p>
+    </section>
+
+    <h2>What This Work Is About</h2>
+    <p>
+      PROTO-NOOS asks a practical question for computational drug discovery: when a pipeline contains expensive downstream stages, which predictions are worth paying for, and which can be approximated by cheaper surrogate models without losing too much reliability?
+    </p>
+    <p>
+      The note treats compute as a scarce experimental resource. Mutual information is used to identify where a model can learn the most from additional labels, while uncertainty quantification helps decide when predictions are stable enough to replace or postpone expensive calculations.
+    </p>
+
+    <section class="workflow" aria-labelledby="workflowTitle">
+      <h2 id="workflowTitle">Animated Workflow</h2>
+      <p>
+        The four animations below show how PROTO-NOOS frames the search problem: trade-offs, screening depth, uncertainty, and dataset realism are treated as connected design choices rather than isolated plots.
+      </p>
+      <div class="workflow-grid">
+        <figure class="workflow-card">
+          <img src="./posts/proto-noos-ml/gif_01_pareto_build_creative.gif" alt="Animated Pareto frontier construction for compute allocation">
+          <figcaption>
+            <span>01 / Pareto</span>
+            <strong>Building the trade-off surface between cost and predictive quality.</strong>
+          </figcaption>
+        </figure>
+        <figure class="workflow-card">
+          <img src="./posts/proto-noos-ml/gif_02_screening_depth_creative.gif" alt="Animated screening depth comparison">
+          <figcaption>
+            <span>02 / Screening depth</span>
+            <strong>Comparing how far expensive evaluation needs to go before surrogates help.</strong>
+          </figcaption>
+        </figure>
+        <figure class="workflow-card">
+          <img src="./posts/proto-noos-ml/gif_03_uncertainty_story_creative.gif" alt="Animated uncertainty quantification story">
+          <figcaption>
+            <span>03 / Uncertainty</span>
+            <strong>Tracking when ensemble predictions are confident enough to guide decisions.</strong>
+          </figcaption>
+        </figure>
+        <figure class="workflow-card">
+          <img src="./posts/proto-noos-ml/gif_04_data_realism_creative.gif" alt="Animated dataset realism and molecular diversity view">
+          <figcaption>
+            <span>04 / Data realism</span>
+            <strong>Checking whether generated compounds stay close enough to useful chemical regimes.</strong>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="poster" aria-labelledby="posterTitle">
+      <h2 id="posterTitle">Poster</h2>
+      <a class="poster-frame" href="./posts/proto-noos-ml/Poster%20GHOST%20PROTO-NOOS%20ML.pdf">
+        <img src="./posts/proto-noos-ml/poster-preview.png" alt="PROTO-NOOS poster preview">
+      </a>
+      <p class="note">Click the poster preview to open the full PDF.</p>
+    </section>
+  </main>
+</body>
+</html>

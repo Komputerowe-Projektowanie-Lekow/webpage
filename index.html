@@ -1,504 +1,1543 @@
 <!doctype html>
 <html lang="pl">
-
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" data-i18n-meta="meta.micro.description"
-    content="Pipeline GUB: zamknięta pętla od generowania molekuł do walidacji komórkowej i systemowej." />
-  <title data-i18n-meta="meta.micro.title">Pipeline GUB - Sekcja Komputerowego Projektowania Leków</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="icon" type="image/png" href="./images/logo/sknwpl.png" />
-  <link rel="stylesheet" href="./styles.css?v=8" />
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SKNWPL — Pipeline GUB</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<script>
+const TWEAKS = /*EDITMODE-BEGIN*/{
+  "variant": "notebook",
+  "accent": "#01779B",
+  "density": "spacious",
+  "font": "plex",
+  "pipelineLayout": "system"
+}/*EDITMODE-END*/;
+</script>
+<style>
+  :root {
+    --accent: #01779B;
+    --accent-2: #013E5A;
+    --accent-warm: #b55a1e;
+    --navy: #0a2540;
+    --navy-deep: #071a30;
+    --ink: #0a2540;
+    --ink-2: #1d3a5f;
+    --ink-3: #5b7390;
+    --rule: rgba(10,37,64,0.14);
+    --paper: #f3f7fb;
+    --paper-soft: #e4edf7;
+    --paper-mid: #cfe0f0;
+    --grid: rgba(1,119,155,0.10);
+    --mono: 'IBM Plex Mono', 'JetBrains Mono', ui-monospace, Menlo, Consolas, monospace;
+    --serif: 'Newsreader', 'Iowan Old Style', Georgia, serif;
+    --sans: 'Inter', system-ui, sans-serif;
+
+    --font-body: var(--mono);
+    --font-display: var(--serif);
+
+    --pad: clamp(1.5rem, 3vw, 2.5rem);
+    --pad-y: clamp(3rem, 6vw, 5rem);
+    --gap: 1.25rem;
+    --lh: 1.7;
+  }
+
+  :root[data-font="jetbrains"] { --mono: 'JetBrains Mono', ui-monospace, monospace; --font-display: var(--serif); }
+  :root[data-font="plex"]      { --mono: 'IBM Plex Mono', ui-monospace, monospace; --font-display: 'Newsreader', Georgia, serif; }
+  :root[data-font="sans"]      { --font-body: var(--sans); --font-display: var(--sans); }
+
+  :root[data-density="compact"]      { --pad-y: clamp(1.8rem, 3.5vw, 2.8rem); --gap: 0.85rem; --lh: 1.55; }
+  :root[data-density="comfortable"]  { --pad-y: clamp(3rem, 6vw, 5rem); --gap: 1.25rem; --lh: 1.7; }
+  :root[data-density="spacious"]     { --pad-y: clamp(5rem, 9vw, 8rem); --gap: 1.8rem; --lh: 1.85; }
+
+  /* ─────────────  NOTEBOOK VARIANT (default)  ───────────── */
+  :root[data-variant="notebook"] {
+    --bg: var(--paper);
+    --bg-soft: var(--paper-soft);
+    --fg: var(--ink);
+    --fg-muted: var(--ink-2);
+    --fg-dim: var(--ink-3);
+    --panel: #ffffff;
+    --panel-border: rgba(10,37,64,0.16);
+    --panel-border-strong: rgba(10,37,64,0.32);
+    --nav-bg: rgba(243,247,251,0.92);
+    --code-bg: rgba(10,37,64,0.04);
+  }
+
+  /* ─────────────  TERMINAL OPS VARIANT  ───────────── */
+  :root[data-variant="terminal"] {
+    --bg: #071a30;
+    --bg-soft: #0a2540;
+    --fg: #e6ecf0;
+    --fg-muted: #a7b3bb;
+    --fg-dim: #6e7a82;
+    --panel: #141a1f;
+    --panel-border: rgba(255,255,255,0.1);
+    --panel-border-strong: rgba(255,255,255,0.22);
+    --nav-bg: rgba(13,18,22,0.88);
+    --code-bg: rgba(255,255,255,0.05);
+    --rule: rgba(255,255,255,0.12);
+    --grid: rgba(95,198,245,0.06);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin:0; padding:0; background: var(--bg); color: var(--fg); }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: var(--font-body);
+    line-height: var(--lh);
+    font-size: 15px;
+    font-weight: 400;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; transition: opacity 120ms; }
+  a:hover { opacity: 0.72; }
+
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* ── Page grid ─────────────────────────────── */
+  .page-grid {
+    display: grid;
+    grid-template-columns: [full-start] minmax(1.2rem, 1fr) [main-start] minmax(0, 72rem) [main-end] minmax(1.2rem, 1fr) [full-end];
+  }
+  .page-grid > * { grid-column: main; }
+  .page-grid > .bleed { grid-column: full; }
+
+  /* ── Scroll progress ───────────────────────── */
+  .scroll-progress {
+    position: fixed; top:0; left:0; height:2px; width:0%;
+    background: var(--accent); z-index: 9999; pointer-events: none;
+    transition: width 60ms linear;
+  }
+
+  /* ── Background grid ────────────────────────── */
+  .bg-grid {
+    position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background-image:
+      linear-gradient(to right, var(--grid) 1px, transparent 1px),
+      linear-gradient(to bottom, var(--grid) 1px, transparent 1px);
+    background-size: 64px 64px;
+    mask-image: radial-gradient(ellipse at 50% 30%, rgba(0,0,0,0.9), rgba(0,0,0,0.25) 70%, transparent 100%);
+    -webkit-mask-image: radial-gradient(ellipse at 50% 30%, rgba(0,0,0,0.9), rgba(0,0,0,0.25) 70%, transparent 100%);
+  }
+  :root[data-variant="notebook"] body::before {
+    content:''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(circle at 18% 22%, rgba(1,119,155,0.10), transparent 42%),
+      radial-gradient(circle at 82% 78%, rgba(10,37,64,0.08), transparent 46%),
+      linear-gradient(180deg, rgba(228,237,247,0.0) 0%, rgba(207,224,240,0.35) 75%, rgba(179,205,228,0.45) 100%);
+  }
+  :root[data-variant="terminal"] body::before {
+    content:''; position: fixed; inset: 0; pointer-events: none; z-index: 0;
+    background:
+      radial-gradient(circle at 20% 20%, rgba(95,198,245,0.06), transparent 40%),
+      radial-gradient(circle at 80% 80%, rgba(1,119,155,0.12), transparent 44%);
+  }
+
+  /* ── Nav ────────────────────────────────────── */
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px) saturate(140%);
+    -webkit-backdrop-filter: blur(12px) saturate(140%);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-inner {
+    max-width: 78rem; margin: 0 auto;
+    display: grid; grid-template-columns: auto 1fr auto;
+    align-items: center; gap: 1.25rem;
+    padding: 0.65rem clamp(1.2rem, 3vw, 2rem);
+  }
+  .brand {
+    display: inline-flex; gap: 0.6rem; align-items: center;
+    color: var(--fg); border: none; text-transform: uppercase;
+    letter-spacing: 0.14em; font-size: 12px; font-weight: 500;
+  }
+  .brand-mark {
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    border: 1px solid var(--panel-border-strong);
+    position: relative;
+  }
+  .brand-mark::before {
+    content: ''; position: absolute; inset: 5px;
+    background: var(--accent);
+    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  }
+  .nav-links { display: flex; gap: 0.25rem; justify-content: center; flex-wrap: wrap; }
+  .nav-link {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--fg-muted);
+    border: none;
+    padding: 0.45rem 0.7rem;
+    cursor: pointer;
+    background: none;
+    position: relative;
+    transition: color 120ms;
+  }
+  .nav-link:hover, .nav-link.active { color: var(--fg); }
+  .nav-link.active::after {
+    content: ''; position: absolute; left: 0.7rem; right: 0.7rem; bottom: 0.1rem;
+    height: 1px; background: var(--accent);
+  }
+  .nav-link .num { color: var(--fg-dim); margin-right: 0.35rem; font-weight: 400; }
+  .nav-util { display: flex; gap: 0.4rem; align-items: center; }
+  .chip {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 0.35rem 0.55rem; border: 1px solid var(--panel-border-strong);
+    color: var(--fg-muted); background: transparent; cursor: pointer;
+    transition: all 120ms;
+  }
+  .chip:hover { color: var(--fg); border-color: var(--accent); }
+  .chip.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .cmdk-trigger { display: flex; gap: 0.3rem; align-items: center; }
+  .cmdk-trigger kbd {
+    border: 1px solid var(--rule); padding: 1px 4px;
+    font-size: 9.5px; font-family: var(--mono);
+    background: var(--code-bg);
+  }
+
+  /* ── Section scaffold ───────────────────────── */
+  section.section { padding: var(--pad-y) clamp(1.2rem, 3vw, 2rem); position: relative; border-bottom: 1px solid var(--rule); }
+  section.section .wrap { max-width: 76rem; margin: 0 auto; }
+
+  .section-head {
+    display: grid; grid-template-columns: auto 1fr auto; align-items: baseline;
+    gap: 1rem; margin-bottom: 2rem;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.75rem;
+  }
+  .section-num {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--fg-dim);
+  }
+  .section-kicker {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent);
+  }
+  .section-title {
+    font-family: var(--font-display); font-weight: 400;
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    line-height: 1.1; margin: 0.3rem 0 0 0;
+    letter-spacing: -0.01em;
+  }
+  :root[data-font="sans"] .section-title { font-weight: 600; }
+
+  .lede {
+    font-family: var(--font-display); font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--fg-muted); line-height: 1.6; max-width: 58rem;
+  }
+  :root[data-variant="terminal"] .lede { font-family: var(--mono); font-size: 14.5px; letter-spacing: 0.01em; }
+
+  /* ── Hero ────────────────────────────────────── */
+  .hero {
+    padding: clamp(3.5rem, 7vw, 6rem) clamp(1.2rem, 3vw, 2rem) clamp(2.5rem, 5vw, 4rem);
+    position: relative;
+    min-height: calc(100vh - 46px);
+    overflow: hidden;
+  }
+  .hero .wrap { max-width: 76rem; margin: 0 auto; position: relative; z-index: 2; }
+  .protein-backdrop {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: min(66vw, 980px);
+    z-index: 1;
+    overflow: hidden;
+    pointer-events: none;
+    opacity: 0.46;
+    mask-image: linear-gradient(90deg, #000 0%, #000 58%, rgba(0,0,0,0.72) 73%, transparent 100%);
+    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 58%, rgba(0,0,0,0.72) 73%, transparent 100%);
+  }
+  .protein-backdrop::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+      radial-gradient(circle at 34% 40%, rgba(243,247,251,0.18), transparent 32%),
+      linear-gradient(90deg, rgba(243,247,251,0.05) 0%, rgba(243,247,251,0.16) 62%, rgba(243,247,251,0.70) 100%);
+  }
+  .protein-backdrop-screen {
+    position: absolute;
+    top: -9vh;
+    left: -9vw;
+    right: auto;
+    bottom: auto;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: clamp(5.2px, 0.44vw, 7.4px);
+    line-height: 1.02;
+    letter-spacing: 0;
+    white-space: pre;
+    overflow: hidden;
+    color: var(--accent);
+    opacity: 0;
+    width: max-content;
+    max-width: none;
+    transform: translateZ(0);
+  }
+  .protein-backdrop-screen[data-ready="true"] { opacity: 1; }
+  .protein-backdrop-screen.main {
+    text-shadow:
+      0 0 6px rgba(1,119,155,0.28),
+      0 0 18px rgba(1,119,155,0.14);
+    mix-blend-mode: multiply;
+  }
+  .protein-backdrop-screen.ghost {
+    filter: blur(2.2px);
+    opacity: 0;
+  }
+  .protein-backdrop-screen.ghost[data-ready="true"] { opacity: 0.42; }
+  .protein-backdrop-screen.g2 {
+    filter: blur(12px);
+    transform: scale(1.04);
+  }
+  .protein-backdrop-screen.g2[data-ready="true"] { opacity: 0.30; }
+  :root[data-variant="terminal"] .protein-backdrop {
+    opacity: 0.32;
+  }
+  :root[data-variant="terminal"] .protein-backdrop::after {
+    background:
+      radial-gradient(circle at 34% 40%, rgba(7,26,48,0.16), transparent 32%),
+      linear-gradient(90deg, rgba(7,26,48,0.02) 0%, rgba(7,26,48,0.12) 62%, rgba(7,26,48,0.70) 100%);
+  }
+  :root[data-variant="terminal"] .protein-backdrop-screen {
+    color: #5fc6f5;
+  }
+  .hero-meta {
+    display: flex; flex-wrap: wrap; gap: 0.8rem 2rem; align-items: center;
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg-dim);
+    margin-bottom: 1.5rem;
+  }
+  .hero-meta .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 0.4rem; animation: pulse 2.2s ease-in-out infinite; }
+  @keyframes pulse { 50% { opacity: 0.3; } }
+
+  .hero h1 {
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-size: clamp(2.2rem, 6vw, 4.5rem);
+    line-height: 1.02;
+    letter-spacing: -0.02em;
+    margin: 0 0 1.5rem 0;
+    max-width: 24ch;
+  }
+  :root[data-font="sans"] .hero h1 { font-weight: 700; }
+  .hero h1 em { font-style: italic; color: var(--accent); }
+  :root[data-variant="terminal"] .hero h1 em { color: #5fc6f5; }
+
+  .hero-lead {
+    font-size: clamp(1rem, 1.5vw, 1.2rem);
+    color: var(--fg-muted); max-width: 54ch; line-height: 1.55;
+    font-family: var(--font-display);
+  }
+  :root[data-variant="terminal"] .hero-lead { font-family: var(--mono); font-size: 15px; }
+
+  .hero-grid {
+    display: grid; grid-template-columns: 1.3fr 1fr;
+    gap: 3rem; align-items: start; margin-top: 2rem;
+  }
+  @media (max-width: 860px) { .hero-grid { grid-template-columns: 1fr; } }
+
+  .hero-facts {
+    border-top: 1px solid var(--panel-border);
+    border-bottom: 1px solid var(--panel-border);
+    padding: 1.25rem 0;
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;
+  }
+  .shared-research {
+    margin-top: 1.2rem;
+    border: 1px solid rgba(10,37,64,0.16);
+    background: rgba(255,255,255,0.94);
+    box-shadow: 0 14px 34px rgba(10,37,64,0.07);
+    padding: clamp(1.2rem, 2.2vw, 1.7rem);
+    display: grid;
+    grid-template-columns: minmax(12rem, 0.48fr) 1fr;
+    gap: clamp(1rem, 2.5vw, 2rem);
+    align-items: start;
+  }
+  .shared-research .label {
+    margin: 0 0 0.45rem;
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+  .shared-research h2 {
+    margin: 0;
+    font-family: var(--font-display);
+    font-size: clamp(1.7rem, 3vw, 2.4rem);
+    line-height: 1.05;
+    font-weight: 400;
+    color: var(--fg);
+  }
+  .shared-research .intro {
+    margin: 0.55rem 0 0;
+    max-width: 34ch;
+    font-family: var(--font-body);
+    font-size: 13px;
+    line-height: 1.55;
+    color: var(--fg-muted);
+  }
+  .research-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0;
+  }
+  .research-item {
+    display: block;
+    color: var(--fg);
+    text-decoration: none;
+    border-bottom: none;
+    border-top: 1px solid var(--panel-border);
+    padding: 0.95rem 0 0;
+    transition: opacity 120ms, transform 120ms;
+  }
+  .research-item:hover {
+    opacity: 1;
+    transform: translateX(3px);
+  }
+  .research-item h3 {
+    margin: 0.55rem 0 0.55rem;
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 1.8vw, 1.45rem);
+    line-height: 1.16;
+    letter-spacing: 0;
+    color: var(--fg);
+    font-weight: 500;
+  }
+  .research-item p {
+    margin: 0;
+    color: var(--fg-dim);
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 13px;
+    line-height: 1.45;
+  }
+  .research-meta {
+    display: flex;
+    gap: 0.6rem;
+    align-items: center;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: 0.08em;
+    color: var(--fg-dim);
+  }
+  .research-item .tag {
+    display: inline-block;
+    color: var(--fg-dim);
+    border: 1px solid var(--panel-border-strong);
+    padding: 1px 6px;
+    font-family: var(--mono);
+    font-size: 9.5px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .research-arrow {
+    display: inline-block;
+    margin-left: 0.45rem;
+    color: var(--accent);
+    font-family: var(--mono);
+    font-style: normal;
+    transition: transform 120ms;
+  }
+  .research-item:hover .research-arrow {
+    transform: translateX(3px);
+  }
+  @media (max-width: 920px) {
+    .shared-research { grid-template-columns: 1fr; }
+    .research-list { grid-template-columns: 1fr; }
+  }
+  .fact { display: flex; flex-direction: column; gap: 0.2rem; }
+  .fact-num {
+    font-family: var(--mono); font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+    color: var(--fg); font-weight: 500;
+  }
+  .fact-label {
+    font-family: var(--mono); font-size: 10.5px;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--fg-dim);
+  }
+
+  .hero-cta { display: flex; gap: 0.6rem; flex-wrap: wrap; margin: 1.5rem 0 0; }
+  .btn {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    font-family: var(--mono); font-size: 12px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 0.75rem 1.1rem;
+    border: 1px solid var(--accent); background: transparent;
+    color: var(--accent); cursor: pointer; border-bottom: 1px solid var(--accent);
+    transition: all 120ms;
+  }
+  .btn:hover { background: var(--accent); color: #fff; }
+  .btn.primary { background: var(--accent); color: #fff; }
+  .btn.primary:hover { background: var(--accent-2); border-color: var(--accent-2); }
+  .btn .arrow { font-family: var(--mono); transition: transform 120ms; }
+  .btn:hover .arrow { transform: translateX(2px); }
+
+  /* ── ASCII panel ─────────────────────────────── */
+  .ascii-panel {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    padding: 1rem;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(10,37,64,0.06);
+  }
+  :root[data-variant="terminal"] .ascii-panel {
+    box-shadow: 0 0 60px rgba(1,119,155,0.25);
+  }
+
+  /* ── Narrative animated panel ──────────── */
+  .narrative {
+    position: relative;
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    min-height: 440px;
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(10,37,64,0.08);
+    display: flex; flex-direction: column;
+  }
+  :root[data-variant="terminal"] .narrative {
+    background: linear-gradient(180deg, #071a30 0%, #0a2540 100%);
+    box-shadow: 0 0 80px rgba(1,119,155,0.22);
+  }
+  :root[data-variant="notebook"] .narrative {
+    background: linear-gradient(180deg, #ffffff 0%, #edf3fa 100%);
+  }
+  .narrative-head {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.55rem 0.9rem;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg-dim);
+    border-bottom: 1px solid var(--rule);
+    position: relative; z-index: 3;
+  }
+  .narrative-head .dots { display: flex; gap: 5px; }
+  .narrative-head .dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--panel-border-strong); }
+  .narrative-head .dots span:nth-child(1) { background: #d95757; }
+  .narrative-head .dots span:nth-child(2) { background: #e2b54a; }
+  .narrative-head .dots span:nth-child(3) { background: #4bd38a; }
+  .narrative-stage {
+    position: relative; flex: 1; overflow: hidden;
+  }
+  .narrative-screen, .narrative-ghost {
+    position: absolute; inset: 0;
+    margin: 0; padding: 0.8rem 0.8rem 5.5rem;
+    font-family: var(--mono); font-size: 10px;
+    line-height: 1.2; color: var(--accent);
+    white-space: pre; overflow: hidden; pointer-events: none;
+  }
+  :root[data-variant="terminal"] .narrative-screen,
+  :root[data-variant="terminal"] .narrative-ghost {
+    color: #5fc6f5;
+  }
+  .narrative-ghost { opacity: 0.15; filter: blur(2px); }
+  .narrative-ghost.g2 { opacity: 0.08; filter: blur(6px); transform: scale(1.02); }
+  .narrative-overlay {
+    position: absolute; left: 0; right: 0; bottom: 0;
+    padding: 0.75rem 0.9rem 0.75rem;
+    background: linear-gradient(180deg, transparent 0%, rgba(10,37,64,0.04) 40%, rgba(10,37,64,0.10) 100%);
+    z-index: 2;
+    font-family: var(--mono);
+    border-top: 1px solid var(--rule);
+    backdrop-filter: blur(2px);
+  }
+  :root[data-variant="terminal"] .narrative-overlay {
+    background: linear-gradient(180deg, transparent 0%, rgba(7,26,48,0.3) 40%, rgba(7,26,48,0.7) 100%);
+  }
+  .narrative-overlay .kicker {
+    font-size: 10px; letter-spacing: 0.18em; text-transform: uppercase;
+    color: var(--accent); margin-bottom: 0.25rem;
+  }
+  .narrative-overlay .title {
+    font-size: 14px; letter-spacing: 0.02em; color: var(--fg); font-weight: 500;
+  }
+  .narrative-overlay .meta {
+    font-size: 10.5px; color: var(--fg-dim); margin-top: 0.2rem;
+    letter-spacing: 0.04em;
+  }
+  .narrative-overlay .prog {
+    position: absolute; top: 0.9rem; right: 1rem;
+    font-size: 10px; letter-spacing: 0.14em; color: var(--fg-dim);
+  }
+  .ascii-panel-head {
+    display: flex; justify-content: space-between; align-items: center;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg-dim);
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.6rem; margin-bottom: 0.8rem;
+  }
+  .ascii-panel-head .dots { display: flex; gap: 5px; }
+  .ascii-panel-head .dots span { width: 8px; height: 8px; border-radius: 50%; background: var(--panel-border-strong); }
+  .ascii-panel-head .dots span:nth-child(1) { background: var(--accent-warm); }
+  .ascii-panel-head .dots span:nth-child(2) { background: #c4a33a; }
+  .ascii-panel-head .dots span:nth-child(3) { background: #3a9a64; }
+
+  pre.ascii {
+    margin: 0; font-family: var(--mono); font-size: 10.5px;
+    line-height: 1.2; color: var(--accent); overflow-x: auto;
+    white-space: pre;
+  }
+  :root[data-variant="terminal"] pre.ascii { color: #5fc6f5; text-shadow: 0 0 6px rgba(95,198,245,0.22); }
+  pre.ascii .hot { color: var(--accent-warm); font-weight: 700; }
+
+  /* ── Pipeline stage strip (compact preview on home) ── */
+  .stage-strip {
+    border: 1px solid var(--panel-border);
+    background: var(--panel);
+    padding: 1.4rem 1rem 1rem;
+    margin-bottom: 2rem;
+    position: relative;
+    box-shadow: 0 6px 20px rgba(10,37,64,0.05);
+  }
+  .strip-row {
+    display: grid;
+    grid-template-columns: repeat(11, auto);
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 0.4rem;
+    overflow-x: auto;
+  }
+  .strip-cell {
+    display: flex; flex-direction: column; gap: 0.2rem;
+    padding: 0.7rem 0.9rem;
+    border: 1px solid var(--panel-border);
+    background: var(--bg-soft);
+    min-width: 92px;
+    position: relative;
+    transition: all 140ms;
+    cursor: pointer;
+  }
+  .strip-cell:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(1,119,155,0.12);
+  }
+  .strip-cell .n {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.16em;
+    color: var(--fg-dim); text-transform: uppercase;
+  }
+  .strip-cell .t {
+    font-family: var(--mono); font-size: 12.5px; letter-spacing: 0.04em;
+    color: var(--fg); font-weight: 500;
+  }
+  .strip-cell .d {
+    font-family: var(--mono); font-size: 10px; color: var(--accent);
+    letter-spacing: 0.06em;
+  }
+  .strip-arr {
+    display: flex; align-items: center; justify-content: center;
+    color: var(--fg-dim); font-family: var(--mono); font-size: 14px;
+  }
+  .strip-loop {
+    margin-top: 1rem; padding-top: 0.8rem;
+    border-top: 1px dashed var(--rule);
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent-warm); text-align: center;
+  }
+  @media (max-width: 780px) {
+    .strip-row { grid-template-columns: 1fr; }
+    .strip-arr { transform: rotate(90deg); padding: 0.2rem; }
+  }
+
+  /* ── Signature protein simulation strip ── */
+  .protein-strip {
+    margin: 0;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    background: var(--panel);
+    position: relative;
+    overflow: hidden;
+  }
+  :root[data-variant="terminal"] .protein-strip {
+    background: linear-gradient(180deg, #071a30 0%, #0a2540 100%);
+  }
+  .protein-strip-inner {
+    max-width: 76rem; margin: 0 auto;
+    padding: clamp(2rem, 4vw, 3rem) clamp(1.2rem, 3vw, 2rem);
+    display: grid;
+    grid-template-columns: 22rem 1fr;
+    gap: clamp(2rem, 4vw, 3rem);
+    align-items: center;
+  }
+  @media (max-width: 880px) {
+    .protein-strip-inner { grid-template-columns: 1fr; }
+  }
+  .protein-strip .label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.18em;
+    text-transform: uppercase; color: var(--accent);
+    border-top: 2px solid var(--accent); padding-top: 0.5rem;
+    max-width: 28ch;
+  }
+  .protein-strip h3 {
+    font-family: var(--font-display); font-size: clamp(1.6rem, 3vw, 2.2rem);
+    line-height: 1.2; color: var(--fg); margin: 0.8rem 0 0.6rem;
+    font-weight: 400; letter-spacing: -0.01em;
+  }
+  .protein-strip p {
+    font-family: var(--font-body); font-size: 14px; line-height: 1.65;
+    color: var(--fg-muted); margin: 0;
+  }
+  .protein-strip .meta-line {
+    margin-top: 1rem; font-family: var(--mono); font-size: 10.5px;
+    color: var(--fg-dim); letter-spacing: 0.08em;
+    display: flex; gap: 1.2rem; flex-wrap: wrap;
+  }
+  .protein-strip .meta-line span { color: var(--fg-dim); }
+  .protein-strip .meta-line span strong { color: var(--accent); font-weight: 500; }
+
+  .protein-frame {
+    position: relative;
+    aspect-ratio: 16/8.5;
+    background:
+      radial-gradient(circle at 54% 48%, rgba(95,198,245,0.16), transparent 42%),
+      linear-gradient(180deg, #061522 0%, #0a2540 100%);
+    border: 1px solid rgba(95,198,245,0.38);
+    overflow: hidden;
+    min-height: 330px;
+    box-shadow:
+      inset 0 0 70px rgba(95,198,245,0.13),
+      0 16px 36px rgba(10,37,64,0.14);
+  }
+  :root[data-variant="terminal"] .protein-frame {
+    background:
+      radial-gradient(circle at 54% 48%, rgba(95,198,245,0.18), transparent 42%),
+      linear-gradient(180deg, #061522 0%, #0a2540 100%);
+  }
+  .protein-frame .crosshair {
+    position: absolute; inset: 0; pointer-events: none;
+  }
+  .protein-frame .crosshair::before,
+  .protein-frame .crosshair::after {
+    content: ''; position: absolute; background: rgba(95,198,245,0.16);
+  }
+  .protein-frame .crosshair::before { top: 50%; left: 0; right: 0; height: 1px; }
+  .protein-frame .crosshair::after { top: 0; bottom: 0; left: 50%; width: 1px; }
+  .protein-frame .corner {
+    position: absolute; width: 16px; height: 16px;
+    border: 1px solid var(--accent);
+  }
+  .protein-frame .corner.tl { top: 8px; left: 8px; border-right: 0; border-bottom: 0; }
+  .protein-frame .corner.tr { top: 8px; right: 8px; border-left: 0; border-bottom: 0; }
+  .protein-frame .corner.bl { bottom: 8px; left: 8px; border-right: 0; border-top: 0; }
+  .protein-frame .corner.br { bottom: 8px; right: 8px; border-left: 0; border-top: 0; }
+  .protein-ascii-screen {
+    position: absolute;
+    inset: 16px 14px 34px;
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    line-height: 1.01;
+    letter-spacing: 0;
+    white-space: pre;
+    overflow: hidden;
+    color: #c8f3ff;
+    opacity: 0;
+    transform: translateZ(0);
+    pointer-events: none;
+  }
+  .protein-ascii-screen[data-ready="true"] { opacity: 0.94; }
+  .protein-ascii-screen.main {
+    text-shadow:
+      0 0 7px rgba(95,198,245,0.48),
+      0 0 18px rgba(95,198,245,0.20);
+    mix-blend-mode: screen;
+  }
+  :root[data-variant="terminal"] .protein-ascii-screen.main {
+    color: #5fc6f5;
+    text-shadow: 0 0 8px rgba(95,198,245,0.34);
+    mix-blend-mode: screen;
+  }
+  .protein-ascii-screen.ghost {
+    color: #5fc6f5;
+    opacity: 0;
+    filter: blur(2px);
+  }
+  .protein-ascii-screen.ghost[data-ready="true"] { opacity: 0.24; }
+  .protein-ascii-screen.g2 {
+    filter: blur(7px);
+    transform: scale(1.015);
+  }
+  .protein-ascii-screen.g2[data-ready="true"] { opacity: 0.10; }
+  .protein-label {
+    position: absolute; left: 16px; top: 12px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    color: rgba(200,243,255,0.68); text-transform: uppercase;
+    z-index: 2;
+  }
+  .protein-frame .ts {
+    position: absolute; bottom: 12px; right: 16px;
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    color: rgba(200,243,255,0.68); text-transform: uppercase;
+  }
+  .protein-frame .ts span { color: #c8f3ff; }
+  .protein-frame .scrub {
+    position: absolute; bottom: 12px; left: 16px; right: 90px;
+    height: 2px; background: rgba(95,198,245,0.18);
+  }
+  .protein-frame .scrub::after {
+    content: ''; position: absolute; top: 0; left: 0;
+    width: var(--protein-progress, 0%); height: 100%; background: #5fc6f5;
+  }
+
+  /* ── Two-col content ────────────────────────── */
+  .two-col { display: grid; grid-template-columns: 1fr 1.7fr; gap: clamp(2rem, 4vw, 4rem); }
+  @media (max-width: 780px) { .two-col { grid-template-columns: 1fr; } }
+  .two-col aside {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em;
+    text-transform: uppercase; color: var(--fg-dim); padding-top: 0.4rem;
+    border-top: 2px solid var(--fg); max-width: 24ch;
+  }
+  .prose p { margin: 0 0 1rem; color: var(--fg-muted); line-height: 1.7; }
+  .prose p strong, .prose li strong { color: var(--fg); font-weight: 500; }
+  .prose ul { list-style: none; padding: 0; margin: 0 0 1.5rem; }
+  .prose ul li {
+    padding: 0.6rem 0 0.6rem 1.6rem; border-top: 1px solid var(--rule);
+    position: relative; color: var(--fg-muted);
+  }
+  .prose ul li:last-child { border-bottom: 1px solid var(--rule); }
+  .prose ul li::before {
+    content: '→'; position: absolute; left: 0; color: var(--accent);
+    font-family: var(--mono); top: 0.55rem;
+  }
+
+  /* ── Pipeline stage cards ───────────────────── */
+  .stages {
+    display: grid; gap: 0.5rem;
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (max-width: 780px) { .stages { grid-template-columns: 1fr; } }
+
+  .stage {
+    background: var(--panel);
+    border: 1px solid var(--panel-border);
+    padding: 1.2rem 1.3rem;
+    position: relative;
+    cursor: pointer;
+    transition: all 120ms;
+  }
+  .stage:hover {
+    border-color: var(--accent);
+    transform: translateY(-2px);
+    box-shadow: 0 12px 28px rgba(0,0,0,0.06);
+  }
+  .stage[data-open="true"] { border-color: var(--accent); }
+  .stage-head {
+    display: grid; grid-template-columns: auto 1fr auto;
+    gap: 0.75rem; align-items: center;
+  }
+  .stage-num {
+    font-family: var(--mono); font-weight: 500;
+    font-size: 1.3rem; color: var(--accent); min-width: 2.5ch;
+  }
+  .stage-title {
+    font-family: var(--mono); font-size: 13px;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg);
+  }
+  .stage-status {
+    font-family: var(--mono); font-size: 9.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; padding: 3px 7px;
+    border: 1px solid currentColor;
+  }
+  .stage-status.live        { color: #147a4d; }
+  .stage-status.stabilizing { color: #8a5a00; }
+  .stage-status.hardening   { color: #a53030; }
+  :root[data-variant="terminal"] .stage-status.live        { color: #4bd38a; }
+  :root[data-variant="terminal"] .stage-status.stabilizing { color: #e2b54a; }
+  :root[data-variant="terminal"] .stage-status.hardening   { color: #e87675; }
+
+  .stage-body {
+    display: none; margin-top: 1rem; padding-top: 1rem;
+    border-top: 1px dashed var(--rule);
+  }
+  .stage[data-open="true"] .stage-body { display: block; }
+  .stage-tool, .stage-out {
+    font-family: var(--mono); font-size: 11.5px;
+    color: var(--fg-muted); margin: 0.3rem 0;
+  }
+  .stage-tool .k, .stage-out .k {
+    color: var(--fg-dim); margin-right: 0.5rem; display: inline-block; min-width: 10ch;
+  }
+  .stage-desc { margin-top: 0.8rem; color: var(--fg-muted); font-size: 13.5px; line-height: 1.6; }
+
+  .special .stage-num { color: var(--accent-warm); }
+  .special { border-left: 3px solid var(--accent-warm); }
+
+  /* ── Cards grid ─────────────────────────────── */
+  .cards {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.6rem;
+  }
+  .card {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    padding: 1.2rem; transition: all 120ms; position: relative;
+    display: flex; flex-direction: column; gap: 0.5rem;
+  }
+  .card:hover { border-color: var(--accent); transform: translateY(-1px); }
+  .card-label {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--fg-dim);
+  }
+  .card h3 {
+    font-family: var(--mono); font-weight: 500; font-size: 14px;
+    letter-spacing: 0.03em; color: var(--fg); margin: 0;
+    line-height: 1.4;
+  }
+  .card p { margin: 0; color: var(--fg-muted); font-size: 13px; line-height: 1.6; }
+  .card .meta {
+    margin-top: auto; font-family: var(--mono); font-size: 10.5px;
+    color: var(--fg-dim); border-top: 1px dashed var(--rule); padding-top: 0.5rem;
+  }
+
+  /* ── Footer ────────────────────────────────── */
+  footer.site {
+    background: var(--bg-soft);
+    padding: clamp(2.5rem, 5vw, 4rem) clamp(1.2rem, 3vw, 2rem) 2rem;
+    border-top: 1px solid var(--rule);
+  }
+  footer .wrap { max-width: 76rem; margin: 0 auto; display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 2rem; }
+  @media (max-width: 780px) { footer .wrap { grid-template-columns: 1fr; } }
+  footer h4 {
+    font-family: var(--mono); font-size: 11px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--fg-dim); margin: 0 0 1rem;
+    font-weight: 500;
+  }
+  footer .mission {
+    font-family: var(--font-display); font-size: clamp(1.15rem, 1.7vw, 1.45rem);
+    color: var(--fg); line-height: 1.4; font-weight: 400; margin: 0;
+    max-width: 42ch;
+  }
+  footer .mission em { color: var(--accent); font-style: italic; }
+  footer p, footer a { font-size: 13.5px; color: var(--fg-muted); line-height: 1.7; }
+  footer a { color: var(--accent); }
+  .copy-line {
+    border-top: 1px solid var(--rule); padding-top: 1.2rem; margin-top: 2rem;
+    max-width: 76rem; margin-left: auto; margin-right: auto;
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--fg-dim);
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 1rem;
+  }
+
+  /* ── Tags ────────────────────────────────────── */
+  .tags { display: flex; gap: 0.4rem; flex-wrap: wrap; margin: 0.5rem 0; }
+  .tag {
+    font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 3px 7px;
+    border: 1px solid var(--panel-border);
+    color: var(--fg-muted);
+  }
+
+  /* ── Page switcher ──────────────────────────── */
+  .page { display: none; }
+  .page.active { display: block; }
+
+  /* ── Command palette ─────────────────────────── */
+  .cmdk-overlay {
+    position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px); display: none;
+    align-items: flex-start; justify-content: center; padding-top: 15vh;
+  }
+  .cmdk-overlay.open { display: flex; }
+  .cmdk-dialog {
+    width: min(520px, 90vw); background: var(--bg);
+    border: 1px solid var(--panel-border-strong);
+    box-shadow: 0 24px 64px rgba(0,0,0,0.3);
+  }
+  .cmdk-input {
+    width: 100%; border: none; outline: none; background: transparent;
+    font-family: var(--mono); font-size: 14px; padding: 1rem;
+    color: var(--fg); border-bottom: 1px solid var(--rule);
+  }
+  .cmdk-results { max-height: 320px; overflow: auto; }
+  .cmdk-item {
+    padding: 0.7rem 1rem; display: flex; justify-content: space-between;
+    align-items: center; cursor: pointer; font-family: var(--mono); font-size: 12.5px;
+    color: var(--fg-muted); border: none; background: transparent; width: 100%;
+    text-align: left; letter-spacing: 0.05em;
+  }
+  .cmdk-item:hover, .cmdk-item.active { background: var(--bg-soft); color: var(--fg); }
+  .cmdk-item .hint { font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); }
+
+  /* ── Tweaks panel ────────────────────────────── */
+  #tweaks-panel {
+    position: fixed; bottom: 1rem; right: 1rem; z-index: 9000;
+    background: var(--bg); border: 1px solid var(--panel-border-strong);
+    padding: 1rem; width: 280px; display: none;
+    box-shadow: 0 16px 40px rgba(0,0,0,0.2);
+    font-family: var(--mono);
+  }
+  #tweaks-panel.open { display: block; }
+  #tweaks-panel h4 {
+    font-size: 10.5px; letter-spacing: 0.14em; text-transform: uppercase;
+    color: var(--fg-dim); margin: 0 0 0.8rem; font-weight: 500;
+    border-bottom: 1px solid var(--rule); padding-bottom: 0.5rem;
+    display: flex; justify-content: space-between;
+  }
+  #tweaks-panel h4 .close { cursor: pointer; color: var(--fg-muted); }
+  .tweak-row { margin-bottom: 0.9rem; }
+  .tweak-row label {
+    display: block; font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--fg-dim); margin-bottom: 0.35rem;
+  }
+  .tweak-opts { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .tweak-opt {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.05em;
+    padding: 0.35rem 0.55rem; border: 1px solid var(--panel-border);
+    background: transparent; color: var(--fg-muted); cursor: pointer;
+    text-transform: uppercase;
+  }
+  .tweak-opt.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+  .tweak-swatches { display: flex; gap: 0.3rem; flex-wrap: wrap; }
+  .swatch {
+    width: 28px; height: 28px; border: 1px solid var(--panel-border-strong);
+    cursor: pointer; position: relative;
+  }
+  .swatch.active::after {
+    content: ''; position: absolute; inset: 3px; border: 1.5px solid #fff;
+    mix-blend-mode: difference;
+  }
+
+  /* ── Helpers ─────────────────────────────────── */
+  .rule-label {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--fg-dim);
+    border-top: 1px solid var(--panel-border); padding-top: 0.5rem;
+    margin: 1.5rem 0 0.8rem;
+  }
+
+  .tasks { display: grid; gap: 0.5rem; }
+  .task {
+    background: var(--panel); border: 1px solid var(--panel-border);
+    padding: 1rem 1.2rem; display: grid; grid-template-columns: auto 1fr auto;
+    gap: 1rem; align-items: start;
+  }
+  .task-check {
+    width: 16px; height: 16px; border: 1px solid var(--panel-border-strong);
+    margin-top: 4px; position: relative;
+  }
+  .task-check.open::after { content: ''; position: absolute; inset: 3px; background: var(--accent-warm); }
+  .task-check.progress { border-color: var(--accent); }
+  .task-check.progress::after { content: ''; position: absolute; inset: 3px; background: var(--accent); }
+  .task h3 { margin: 0 0 0.3rem; font-family: var(--mono); font-size: 13px; letter-spacing: 0.03em; color: var(--fg); font-weight: 500; }
+  .task p { margin: 0; color: var(--fg-muted); font-size: 13px; line-height: 1.55; }
+  .task .task-meta { font-family: var(--mono); font-size: 10px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--fg-dim); }
+
+  .biglink {
+    display: grid; grid-template-columns: auto 1fr auto; gap: 1rem;
+    padding: 1.2rem 1.3rem; border-top: 1px solid var(--panel-border);
+    align-items: center; cursor: pointer; transition: background 120ms;
+    text-decoration: none; color: var(--fg); border-bottom: none;
+  }
+  .biglink:last-child { border-bottom: 1px solid var(--panel-border); }
+  .biglink:hover { background: var(--bg-soft); }
+  .biglink .idx { font-family: var(--mono); font-size: 11px; color: var(--fg-dim); letter-spacing: 0.1em; }
+  .biglink h3 { margin: 0; font-family: var(--font-display); font-weight: 500; font-size: 1.1rem; color: var(--fg); }
+  :root[data-variant="terminal"] .biglink h3, :root[data-font="sans"] .biglink h3 { font-family: var(--font-body); font-weight: 500; }
+  .biglink .arrow { font-family: var(--mono); color: var(--accent); transition: transform 160ms; }
+  .biglink:hover .arrow { transform: translateX(4px); }
+
+  /* ── Footnotes ──────────────────────────────── */
+  .footnote {
+    font-family: var(--mono); font-size: 10.5px; color: var(--fg-dim);
+    letter-spacing: 0.03em; line-height: 1.55; margin-top: 1.5rem;
+    padding-left: 1rem; border-left: 1px solid var(--panel-border);
+    max-width: 60rem;
+  }
+
+  /* ── Status pills in hero ───────────────────── */
+  .pill-row { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.2rem 0 0; }
+  .pill {
+    font-family: var(--mono); font-size: 10.5px; letter-spacing: 0.1em;
+    text-transform: uppercase; padding: 4px 9px;
+    border: 1px solid var(--panel-border-strong); color: var(--fg-muted);
+  }
+  .pill .k { color: var(--accent); margin-right: 0.4rem; }
+
+  /* ── Reveal on scroll ───────────────────────── */
+  .reveal { opacity: 0; transform: translateY(12px); transition: opacity 600ms ease, transform 600ms ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  /* ── Narrow-screen nav collapse ─────────────── */
+  @media (max-width: 780px) {
+    .nav-inner { grid-template-columns: auto auto; }
+    .nav-links { grid-column: 1/-1; overflow-x: auto; padding-bottom: 0.25rem; justify-content: flex-start; }
+  }
+</style>
 </head>
-
 <body>
-  <!-- Scroll progress indicator -->
-  <div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
 
-  <!-- Cmd+K command palette -->
-  <div class="cmdk-overlay" id="cmdkOverlay" role="dialog" aria-label="Command palette" aria-modal="true">
-    <div class="cmdk-dialog">
-      <div class="cmdk-input-wrap">
-        <input class="cmdk-input" id="cmdkInput" type="text" placeholder="Navigate, copy email, switch language…" autocomplete="off" spellcheck="false" aria-label="Command search" />
-      </div>
-      <div class="cmdk-results" id="cmdkResults" role="listbox"></div>
-      <div class="cmdk-footer">
-        <span>↑↓ navigate</span>
-        <span>↵ select</span>
-        <span>esc close</span>
-      </div>
+<div class="scroll-progress" id="scrollProgress"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+
+<!-- ───────────────── NAV ───────────────── -->
+<nav class="nav">
+  <div class="nav-inner">
+    <a href="#" class="brand" data-nav="home">
+      <span class="brand-mark" aria-hidden="true"></span>
+      <span>SKNWPL · Pipeline GUB</span>
+    </a>
+    <div class="nav-links" id="navLinks">
+      <button class="nav-link active" data-nav="home"><span class="num">01</span><span data-i18n="nav.home">Start</span></button>
+      <button class="nav-link" data-nav="pipeline"><span class="num">02</span><span data-i18n="nav.pipeline">Pipeline</span></button>
+      <button class="nav-link" data-nav="status"><span class="num">03</span><span data-i18n="nav.status">Status</span></button>
+      <button class="nav-link" data-nav="join"><span class="num">04</span><span data-i18n="nav.join">Dołącz</span></button>
+      <button class="nav-link" data-nav="support"><span class="num">05</span><span data-i18n="nav.support">Wsparcie</span></button>
+    </div>
+    <div class="nav-util">
+      <button class="chip cmdk-trigger" id="cmdkTrigger">
+        <span>Search</span><kbd>Ctrl K</kbd>
+      </button>
+      <button class="chip lang-btn active" data-lang="pl">PL</button>
+      <button class="chip lang-btn" data-lang="en">EN</button>
+      <button class="chip" id="tweaksToggle" title="Tweaks">☰</button>
     </div>
   </div>
+</nav>
 
-  <div id="protein-ascii-layer" class="ascii-layer protein-ascii-layer">
-    <pre id="protein-screen-ghost-1" class="ascii-screen ascii-screen-ghost" data-ready="false"
-      aria-hidden="true"></pre>
-    <pre id="protein-screen-ghost-2" class="ascii-screen ascii-screen-ghost" data-ready="false"
-      aria-hidden="true"></pre>
-    <pre id="protein-screen" class="ascii-screen ascii-screen-main" data-ready="false" aria-hidden="true"></pre>
-    <div class="ascii-caption protein-caption">
-      <span data-i18n="micro.ascii.caption">Pipeline GUB - wizualizacja aktywności białka</span>
-    </div>
-  </div>
-  <div id="narrative-ascii-layer" class="ascii-layer narrative-ascii-layer" data-scene="scene-1"
-    data-final-hold="false">
-    <pre id="narrative-screen-ghost-1" class="ascii-screen ascii-screen-ghost" data-ready="false"
-      aria-hidden="true"></pre>
-    <pre id="narrative-screen-ghost-2" class="ascii-screen ascii-screen-ghost" data-ready="false"
-      aria-hidden="true"></pre>
-    <pre id="narrative-screen" class="ascii-screen ascii-screen-main" data-ready="false" aria-hidden="true"></pre>
-    <div id="ascii-story-overlay" aria-live="polite">
-      <p id="ascii-story-kicker">Narracja ASCII</p>
-      <h2 id="ascii-story-title">Komorka pojedyncza</h2>
-      <p id="ascii-story-meta">Przejscie od sygnalu komorkowego do modelu wirtualnej komorki.</p>
-      <p id="ascii-story-note"></p>
-      <div id="ascii-story-actions">
-        <a class="ascii-story-action join-action" href="#dolacz">Dołącz</a>
-        <a class="ascii-story-action contact-action" href="mailto:sknwpl@proton.me">Kontakt</a>
-      <button class="copy-btn" data-copy="sknwpl@proton.me" data-tip="Copy email" style="font-size:0.65rem;min-height:36px;padding:0.3rem 0.5rem;">COPY</button>
-      </div>
-    </div>
-  </div>
+<main>
 
-  <nav class="sticky-nav" id="stickyNav">
-    <div class="nav-content">
-      <div class="nav-brand-cell">
-        <a href="#kontekst-sekcji" class="nav-brand-link" aria-label="SKNWPL start">
-          <span class="nav-brand-badge" aria-hidden="true"></span>
-          <span class="nav-brand-text">SKNWPL</span>
-        </a>
+<!-- ═════════════════════════  HOME  ═════════════════════════ -->
+<section class="page active" data-page="home">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="protein-backdrop" id="proteinBackdrop" aria-hidden="true">
+      <pre class="protein-backdrop-screen ghost g2" id="proteinBackdropGhost2" data-ready="false"></pre>
+      <pre class="protein-backdrop-screen ghost" id="proteinBackdropGhost1" data-ready="false"></pre>
+      <pre class="protein-backdrop-screen main" id="proteinBackdropScreen" data-ready="false"></pre>
+    </div>
+    <div class="wrap">
+      <div class="hero-meta">
+        <span><span class="dot"></span><span data-i18n="hero.status">Pipeline active · snapshot 2026-02-10</span></span>
+        <span data-i18n="hero.org">Sekcja Komputerowego Projektowania Leków</span>
+        <span>v2026.02 / stage_runner 1.4</span>
       </div>
-      <div class="nav-links-row">
-        <a href="#kontekst-sekcji" class="nav-link" data-i18n="micro.nav.start" data-tip="Home">Start</a>
-        <a href="#pipeline" class="nav-link" data-i18n="micro.pipeline.title" data-tip="Pipeline stages">Pipeline</a>
-        <a href="#status" class="nav-link" data-i18n="nav.status" data-tip="Current tasks">Status</a>
-        <a href="#dolacz" class="nav-link" data-i18n="nav.join" data-tip="Join the team">Dołącz</a>
-        <a href="#support" class="nav-link" data-i18n="nav.support" data-tip="Partnership">Wsparcie</a>
-        <a href="aqp4.html" class="nav-link project-switch" data-i18n="micro.nav.aqp4">Archiwum: AQP4</a>
+
+      <h1 data-i18n="hero.h1">Projektowanie leków na <em>Gram-ujemne</em>, od generowania molekuł do walidacji systemowej.</h1>
+
+      <div class="hero-grid">
+        <div>
+          <p class="hero-lead" data-i18n="hero.lead">Budujemy zamkniętą pętlę od projektowania <em>de novo</em> do weryfikacji komórkowej i systemowej. Każdy etap raportuje artefakty, ograniczenia i metryki pokrycia — wyniki wracają do modeli.</p>
+
+          <div class="hero-cta">
+            <button class="btn primary" data-nav="join"><span data-i18n="cta.join">Dołącz do zespołu</span><span class="arrow">→</span></button>
+            <button class="btn" data-nav="pipeline"><span data-i18n="cta.pipeline">Zobacz pipeline</span><span class="arrow">→</span></button>
+          </div>
+
+          <div class="pill-row">
+            <span class="pill"><span class="k">6</span>stages</span>
+            <span class="pill"><span class="k">3</span>modułów</span>
+            <span class="pill"><span class="k">EXP3</span>pilot15 · top_n=10</span>
+            <span class="pill"><span class="k">true</span>pass 0.575→0.625</span>
+          </div>
+        </div>
+
+        <div class="narrative" id="pipe-narrative">
+          <div class="narrative-head">
+            <span>pipeline-gub.live · scene cycle</span>
+            <span class="dots"><span></span><span></span><span></span></span>
+          </div>
+          <div class="narrative-stage">
+            <pre class="narrative-ghost g2" id="pipe-ghost-2"></pre>
+            <pre class="narrative-ghost" id="pipe-ghost-1"></pre>
+            <pre class="narrative-screen" id="pipe-screen"></pre>
+            <div class="narrative-overlay">
+              <div class="prog" id="pipe-progress">1 / 6</div>
+              <div class="kicker" id="pipe-kicker">REINVENT4</div>
+              <div class="title" id="pipe-title">Generowanie de novo</div>
+              <div class="meta" id="pipe-meta">12,797 SMILES → 12,581 valid</div>
+            </div>
+          </div>
+        </div>
       </div>
-      <div class="nav-utility-cell">
-        <button class="cmdk-trigger" id="cmdkTrigger" aria-label="Open command palette (Ctrl+K)" data-tip="Ctrl+K">
-          <span class="cmdk-trigger-label">Ctrl+K</span>
-        </button>
-        <div class="language-switcher">
-          <button class="lang-btn" data-lang="pl" aria-label="Polski" title="Polski">PL</button>
-          <button class="lang-btn" data-lang="en" aria-label="English" title="English">EN</button>
+
+      <div class="hero-facts" style="margin-top:3rem;">
+        <div class="fact"><span class="fact-num">12,797</span><span class="fact-label" data-i18n="facts.generated">Molekuł wygenerowanych</span></div>
+        <div class="fact"><span class="fact-num">12,581</span><span class="fact-label" data-i18n="facts.valid">Valid po Stage 2a</span></div>
+        <div class="fact"><span class="fact-num">0.625</span><span class="fact-label" data-i18n="facts.pass">EXP2 surrogate pass-rate</span></div>
+      </div>
+
+      <section class="shared-research" aria-labelledby="sharedResearchTitle">
+        <div>
+          <p class="label">Shared Research</p>
+          <h2 id="sharedResearchTitle">Shared Research</h2>
+          <p class="intro">Shared science, product and engineering work from the team.</p>
+        </div>
+        <div class="research-list">
+          <a class="research-item" href="proto-noos.html" aria-label="Open PROTO-NOOS shared research note">
+            <div class="research-meta">
+              <time datetime="2026-05-03">03.05.2026</time>
+              <span class="tag">paper</span>
+            </div>
+            <h3>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h3>
+            <p>The SKNWPL Team <span class="research-arrow">→</span></p>
+          </a>
+        </div>
+      </section>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">§ 01</span>
+        <span class="section-kicker" data-i18n="why.kicker">Kontekst</span>
+        <span></span>
+      </div>
+      <div class="two-col">
+        <aside data-i18n="why.aside">Dlaczego to ma znaczenie</aside>
+        <div class="prose">
+          <h2 class="section-title" data-i18n="why.title">Wąskie gardła pojawiają się między in-silico a realnym efektem biologicznym.</h2>
+          <p data-i18n="why.p1">Celowanie w bakterie Gram-ujemne jest trudne nie dlatego, że brakuje kandydatów strukturalnych — jest ich w nadmiarze. Problem polega na tym, że ocena in-silico nie łapie efektów retencji i systemowych konsekwencji metabolicznych.</p>
+          <ul>
+            <li data-i18n="why.l1"><strong>Samo powinowactwo nie wystarczy</strong>, jeśli cząsteczka nie utrzyma się w komórce.</li>
+            <li data-i18n="why.l2"><strong>Selekcja bez kontekstu metabolicznego</strong> pomija systemowe skutki uboczne.</li>
+            <li data-i18n="why.l3"><strong>Potrzebny jest pipeline</strong>, który raportuje artefakty i ograniczenia na każdym etapie.</li>
+          </ul>
+          <p class="footnote" data-i18n="why.note">Uwaga: snapshot datowany 2026-02-10. Wszystkie metryki poniżej odnoszą się do konkretnego runu EXP3 pilot15 oraz EXP2 surrogate loop. Traktujemy je jako raport stanu inżynieryjnego, nie końcowe twierdzenia biologiczne.</p>
         </div>
       </div>
     </div>
-  </nav>
+  </section>
 
-  <main class="pages">
-    <section class="page hero" id="kontekst-sekcji">
-      <div class="page-content">
-        <div class="logo-container">
-          <img src="./images/logo/sknwpl.png" alt="SKNWPL Logo" class="site-logo" />
+  <!-- PIPELINE PREVIEW -->
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">§ 02</span>
+        <span class="section-kicker" data-i18n="pipe.kicker">Pipeline GUB</span>
+        <span></span>
+      </div>
+      <h2 class="section-title" data-i18n="pipe.title">Sześć etapów od SMILES do systemowej biologii.</h2>
+      <p class="lede" style="margin: 1rem 0 2rem; max-width:56rem;" data-i18n="pipe.intro">Zintegrowany workflow CADD do projektowania celowanego w <em>E. coli</em>: od generowania molekuł (REINVENT4), przez retencję (CellTE) i strukturę (Boltz2), po dynamikę (GROMACS) i walidację systemową (COBRApy/iML1515).</p>
+
+      <div class="stage-strip">
+        <div class="strip-row">
+          <div class="strip-cell" data-stage="1"><span class="n">01</span><span class="t">REINVENT4</span><span class="d">de novo</span></div>
+          <div class="strip-arr">→</div>
+          <div class="strip-cell" data-stage="2"><span class="n">02</span><span class="t">CellTE</span><span class="d">retencja</span></div>
+          <div class="strip-arr">→</div>
+          <div class="strip-cell" data-stage="3"><span class="n">03</span><span class="t">Boltz2</span><span class="d">struktura</span></div>
+          <div class="strip-arr">→</div>
+          <div class="strip-cell" data-stage="4"><span class="n">04</span><span class="t">KD_pred</span><span class="d">affinity</span></div>
+          <div class="strip-arr">→</div>
+          <div class="strip-cell" data-stage="5"><span class="n">05</span><span class="t">GROMACS</span><span class="d">MD</span></div>
+          <div class="strip-arr">→</div>
+          <div class="strip-cell" data-stage="6"><span class="n">06</span><span class="t">iML1515</span><span class="d">FBA/FVA</span></div>
         </div>
-        <h1 data-i18n="micro.hero.title">Pipeline GUB: projektowanie leków na bakterie Gram-ujemne</h1>
-        <p class="hero-lead" data-i18n="micro.hero.lead">
-          Budujemy zamkniętą pętlę od projektowania molekuł do weryfikacji komórkowej i systemowej, a wyniki wracają do
-          modeli.
-        </p>
-        <ul class="hero-proof-list">
-          <li data-i18n="micro.hero.proof1">Generowanie de novo (REINVENT4)</li>
-          <li data-i18n="micro.hero.proof2">Retencja i target engagement (Stage 2-3)</li>
-          <li data-i18n="micro.hero.proof3">Wpływ systemowy (Stage 6, COBRApy/iML1515)</li>
+        <div class="strip-loop">↺ ouroboros · Stage 6 → Stage 1 feedback</div>
+      </div>
+
+      <button class="btn" data-nav="pipeline"><span data-i18n="pipe.details">Pełne detale i accordion</span><span class="arrow">→</span></button>
+    </div>
+  </section>
+
+</section>
+
+<!-- ═════════════════════════  PIPELINE  ═════════════════════════ -->
+<section class="page" data-page="pipeline">
+
+  <section class="section" style="padding-top:clamp(3rem,6vw,5rem);">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">§ 02</span>
+        <span class="section-kicker">Pipeline GUB</span>
+        <span style="font-family:var(--mono); font-size:11px; color:var(--fg-dim); letter-spacing:0.1em;">2026-02-10</span>
+      </div>
+
+      <h1 class="section-title" style="font-size: clamp(2rem, 5vw, 3.5rem);" data-i18n="pipe.title2">Gram-Negative &amp; Universal Bacteria — zamknięta pętla.</h1>
+      <p class="lede" style="margin-top: 1.5rem;" data-i18n="pipe.intro2">Klikaj karty etapów żeby rozwinąć szczegóły. Każdy etap ma zdefiniowane kontrakty Pydantic, deterministyczne artefakty i status inżynieryjny (live / stabilizing / hardening).</p>
+
+      <div class="narrative" id="pipe-narrative-big" style="margin: 2rem 0 3rem; min-height: 520px;">
+        <div class="narrative-head">
+          <span>pipeline.topology · scene cycle</span>
+          <span class="dots"><span></span><span></span><span></span></span>
+        </div>
+        <div class="narrative-stage">
+          <pre class="narrative-ghost g2" id="pipe-ghost-2b"></pre>
+          <pre class="narrative-ghost" id="pipe-ghost-1b"></pre>
+          <pre class="narrative-screen" id="pipe-screen-b"></pre>
+          <div class="narrative-overlay">
+            <div class="prog" id="pipe-progress-b">1 / 6</div>
+            <div class="kicker" id="pipe-kicker-b">REINVENT4</div>
+            <div class="title" id="pipe-title-b">Generowanie de novo</div>
+            <div class="meta" id="pipe-meta-b">12,797 SMILES → 12,581 valid</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="rule-label" data-i18n="pipe.stages">Etapy pipeline'u — kliknij żeby rozwinąć</div>
+
+      <div class="stages" id="stageGrid">
+        <!-- stages injected by JS -->
+      </div>
+
+      <div class="footnote" style="margin-top:2.5rem;" data-i18n="pipe.ouroboros">
+        <strong>Pętla Ouroboros.</strong> Wyniki Stage 6 (blindspot, KD_pred, systemowe FBA/FVA) wracają jako sygnał do generowania Stage 1 i scoringu Stage 2. Działa dzisiaj jako inżynieryjna pętla eksperymentalna — <em>nie</em> traktujemy tego jako w pełni autonomiczny system produkcyjny.
+      </div>
+    </div>
+  </section>
+
+</section>
+
+<!-- ═════════════════════════  STATUS  ═════════════════════════ -->
+<section class="page" data-page="status">
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">§ 03</span>
+        <span class="section-kicker">Status</span>
+        <span style="font-family:var(--mono); font-size:11px; color:var(--fg-dim); letter-spacing:0.1em;">snapshot 2026-02-10</span>
+      </div>
+
+      <h1 class="section-title" data-i18n="status.title">Repozytoria i aktualne zadania.</h1>
+      <p class="lede" style="margin-top:1rem;" data-i18n="status.intro">Ten widok jest po to, żeby przyspieszyć onboarding: co działa, co jest w toku i gdzie można wejść z pracą.</p>
+
+      <div class="rule-label" data-i18n="status.repos">Główne moduły pipeline'u</div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-label">module / 01</div>
+          <h3 data-i18n="repo1.title">REINVENT4 + analiza + retencja</h3>
+          <p data-i18n="repo1.desc">Generowanie, filtrowanie i scoring wejścia dla Stage 3 z obsługą dużych bibliotek.</p>
+          <div class="tags"><span class="tag">python</span><span class="tag">pydantic</span><span class="tag">stage 1-2</span></div>
+          <div class="meta" data-i18n="repo1.meta">walidacje + log-driven hardening (2026-02-09)</div>
+        </div>
+        <div class="card">
+          <div class="card-label">module / 02</div>
+          <h3 data-i18n="repo2.title">CellTE + Boltz2 + GROMACS</h3>
+          <p data-i18n="repo2.desc">Etap kinetyczny i strukturalny z kontraktami CSV oraz etapami pre/post Boltz2.</p>
+          <div class="tags"><span class="tag">md</span><span class="tag">structure</span><span class="tag">stage 3-5</span></div>
+          <div class="meta" data-i18n="repo2.meta">top 200 → Boltz2, top 50 → GROMACS</div>
+        </div>
+        <div class="card">
+          <div class="card-label">module / 03</div>
+          <h3 data-i18n="repo3.title">Biologia systemowa Stage 6A/6B</h3>
+          <p data-i18n="repo3.desc">FBA/FVA, quality gates, preflight targetów i raporty blindspot.</p>
+          <div class="tags"><span class="tag">cobrapy</span><span class="tag">iML1515</span><span class="tag">stage 6</span></div>
+          <div class="meta" data-i18n="repo3.meta">EXP1: pilot 20 + full 100</div>
+        </div>
+      </div>
+
+      <div class="rule-label" data-i18n="status.tasks">Otwarte zadania na teraz</div>
+      <div class="tasks" id="tasksList"></div>
+    </div>
+  </section>
+</section>
+
+<!-- ═════════════════════════  JOIN  ═════════════════════════ -->
+<section class="page" data-page="join">
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">§ 04</span>
+        <span class="section-kicker">Dołącz</span>
+        <span></span>
+      </div>
+
+      <h1 class="section-title" data-i18n="join.title">Dołącz do zespołu GUB.</h1>
+      <p class="lede" style="margin-top:1rem; max-width:60rem;" data-i18n="join.text">Szukamy osób, które chcą budować rzetelny pipeline badawczy i regularnie domykać zadania inżynieryjne. Autonomia, systematyczne debugowanie, jasna komunikacja postępu.</p>
+
+      <div class="rule-label" data-i18n="join.roles">Obszary pracy · kliknij żeby rozwinąć</div>
+      <div class="stages" style="grid-template-columns: 1fr;">
+        <article class="stage role-card" data-role="infra">
+          <div class="stage-head">
+            <span class="stage-num">R/01</span>
+            <span class="stage-title" data-i18n="role1.title">Infrastruktura i automatyzacja</span>
+            <span class="stage-status live">open</span>
+          </div>
+          <div class="stage-body">
+            <p class="stage-tool"><span class="k">stack</span>Slurm · Python · Pydantic</p>
+            <p class="stage-out"><span class="k">focus</span>handoff, walidacje etapów, niezawodność runów</p>
+            <p class="stage-desc" data-i18n="role1.desc">Slurm, handoff, walidacje etapów i niezawodność runów. Dbamy o deterministyczny zapis artefaktów i czyste kontrakty między stage'ami.</p>
+          </div>
+        </article>
+        <article class="stage role-card" data-role="model">
+          <div class="stage-head">
+            <span class="stage-num">R/02</span>
+            <span class="stage-title" data-i18n="role2.title">Modelowanie molekularne</span>
+            <span class="stage-status stabilizing">open</span>
+          </div>
+          <div class="stage-body">
+            <p class="stage-tool"><span class="k">stack</span>REINVENT4 · Boltz2 · GROMACS</p>
+            <p class="stage-out"><span class="k">focus</span>generacja, struktura, dynamika molekularna</p>
+            <p class="stage-desc" data-i18n="role2.desc">REINVENT4, Boltz2, GROMACS, interpretacja wyników strukturalnych i ocena powinowactwa kandydatów.</p>
+          </div>
+        </article>
+        <article class="stage role-card" data-role="sysbio">
+          <div class="stage-head">
+            <span class="stage-num">R/03</span>
+            <span class="stage-title" data-i18n="role3.title">Biologia systemowa</span>
+            <span class="stage-status hardening">open</span>
+          </div>
+          <div class="stage-body">
+            <p class="stage-tool"><span class="k">stack</span>COBRApy · iML1515 · FBA/FVA</p>
+            <p class="stage-out"><span class="k">focus</span>quality gates, analiza ryzyka metabolicznego</p>
+            <p class="stage-desc" data-i18n="role3.desc">Stage 6A/6B, quality gates, analiza ryzyka metabolicznego i raportowanie blindspotów.</p>
+          </div>
+        </article>
+      </div>
+
+      <div class="rule-label" data-i18n="join.expect">Czego oczekujemy</div>
+      <div class="prose" style="max-width:60rem;">
+        <ul>
+          <li data-i18n="expect1"><strong>Autonomia i dowożenie zadań</strong> — od diagnozy do artefaktu.</li>
+          <li data-i18n="expect2"><strong>Komfort z niepewnością</strong> — systematyczne debugowanie.</li>
+          <li data-i18n="expect3"><strong>Jasna komunikacja postępu</strong> — w rytmie tygodniowym.</li>
         </ul>
-        <div class="hero-cta-group">
-          <a class="cta cta-primary" href="#dolacz" data-i18n="micro.hero.cta_join">Dołącz</a>
-          <a class="cta cta-secondary" href="#pipeline" data-i18n="micro.hero.cta_pipeline">Zobacz pipeline</a>
-          <span class="reassurance" data-i18n="micro.hero.reassurance">No sign-up needed to explore.</span>
-        </div>
-        <p class="hero-tertiary">
-          <a href="#support" class="hero-tertiary-link" data-i18n="micro.hero.cta_support">Szukasz współpracy? Zobacz
-            wsparcie.</a>
-        </p>
       </div>
-    </section>
 
-    <section class="page" id="dlaczego">
-      <div class="page-content">
-        <div class="page-text">
-          <h1 data-i18n="micro.why.title">Dlaczego To Ma Znaczenie</h1>
-          <p data-i18n="micro.why.intro">
-            Wąskie gardła dla leków na bakterie Gram-ujemne pojawiają się między dobrym wynikiem in-silico a realnym
-            efektem biologicznym.
-          </p>
-          <ul class="why-points">
-            <li data-i18n="micro.why.point1">Samo powinowactwo nie wystarczy, jeśli cząsteczka nie utrzyma się w
-              komórce.</li>
-            <li data-i18n="micro.why.point2">Selekcja bez kontekstu metabolicznego pomija systemowe skutki uboczne.</li>
-            <li data-i18n="micro.why.point3">Potrzebny jest pipeline, który raportuje artefakty i ograniczenia na każdym
-              etapie.</li>
-          </ul>
-        </div>
-        <div class="page-image why-image">
-          <img src="./images/helix_macro.png" alt="Helix macro visualization" loading="lazy" decoding="async" />
-        </div>
+      <div class="rule-label" data-i18n="join.apply">Jak aplikować</div>
+      <div class="prose" style="max-width:60rem;">
+        <ol style="padding-left:1.3rem; color:var(--fg-muted);">
+          <li style="margin-bottom:0.5rem;" data-i18n="apply1">Napisz na <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a>, w którym obszarze chcesz wejść i jaki problem chcesz przejąć.</li>
+          <li style="margin-bottom:0.5rem;" data-i18n="apply2">Po krótkiej rozmowie dostajesz zadanie startowe i plan wdrożenia.</li>
+        </ol>
+        <p class="footnote" data-i18n="apply.note">Liczy się rzetelność wykonania i iteracyjna poprawa jakości, nie formalny papier.</p>
       </div>
-    </section>
-
-    <section class="page projects-section" id="pipeline">
-      <div class="page-content">
-        <div class="page-text">
-          <h1 data-i18n="micro.pipeline.title">Pipeline GUB (Gram-Negative & Universal Bacteria)</h1>
-          <p data-i18n="micro.pipeline.intro">
-            Zintegrowany workflow CADD do projektowania celowanego w E. coli: od generowania molekuł po walidację
-            Stage 6A/6B.
-          </p>
-        </div>
-
-        <div class="projects-accordion">
-          <div class="accordion-item special-feature">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.ouroboros.title">Pętla Ouroboros</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <div class="project-intro">
-                  <p class="highlight-text" data-i18n="micro.ouroboros.subtitle">Iteracyjne uczenie pipeline'u na
-                    wynikach walidacji.</p>
-                  <p data-i18n="micro.ouroboros.desc">
-                    Aktualnie działa inżynieryjna pętla eksperymentalna i walidacyjna. Nie traktujemy jej jako w pełni
-                    autonomicznego systemu produkcyjnego.
-                  </p>
-                </div>
-                <div class="credibility-split">
-                  <div class="credibility-card">
-                    <h3 data-i18n="micro.ouroboros.live.title">Działa dziś (na dzień 2026-02-10)</h3>
-                    <ul>
-                      <li data-i18n="micro.ouroboros.live.item1">Kontrakty API (Pydantic) i stage_runner.py na etapach
-                        1-6.</li>
-                      <li data-i18n="micro.ouroboros.live.item2">EXP3 pilot15 (top_n=10): Stage1 -> Stage6 + finalize
-                        zakończone.</li>
-                      <li data-i18n="micro.ouroboros.live.item3">EXP2 surrogate loop (n=15): true pass-rate 0.575 ->
-                        0.625.</li>
-                    </ul>
-                  </div>
-                  <div class="credibility-card target-card">
-                    <h3 data-i18n="micro.ouroboros.target.title">Architektura docelowa</h3>
-                    <ul>
-                      <li data-i18n="micro.ouroboros.target.item1">Stabilny full-scale chain dla profili full10/full100.
-                      </li>
-                      <li data-i18n="micro.ouroboros.target.item2">Ujednolicenie kontraktu Stage6B (target_gene: CSV vs
-                        CLI).</li>
-                      <li data-i18n="micro.ouroboros.target.item3">Rerun rankingu na >=100 rekordach z realnym KD_pred
-                        ze Stage 4.</li>
-                    </ul>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.step1.title">1. Generowanie (REINVENT4)</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <p data-i18n="micro.step1.desc">
-                  Generowanie i postprocess bibliotek SMILES z walidacją konfiguracji i deterministycznym zapisem
-                  artefaktów Stage 1.
-                </p>
-                <div class="step-output-row">
-                  <span class="step-output-label" data-i18n="micro.step.output.label">Output (ostatni znany stan)</span>
-                  <span class="step-output-value" data-i18n="micro.step1.output">12 797 rekordów wejścia; 12 581 valid
-                    po walidacji Stage2a.</span>
-                </div>
-                <div class="step-status-row">
-                  <span class="status-badge live" data-i18n="micro.status.live">live</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.step2.title">2. Retencja i Engagement</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <p data-i18n="micro.step2.desc">
-                  Łączenie Stage 2a/2b z CellTE, aby oszacować retencję, entry score i wstępne target engagement przed
-                  strukturą Boltz2.
-                </p>
-                <div class="step-output-row">
-                  <span class="step-output-label" data-i18n="micro.step.output.label">Output (ostatni znany stan)</span>
-                  <span class="step-output-value" data-i18n="micro.step2.output">Inference retencji zweryfikowane na
-                    ~12.8k cząsteczek.</span>
-                </div>
-                <div class="step-status-row">
-                  <span class="status-badge live" data-i18n="micro.status.live">live</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.step3.title">3. Predykcja Struktur (Boltz2)</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <p data-i18n="micro.step3.desc">
-                  Etap strukturalny generuje i porządkuje kandydatów do Boltz2 oraz ranking powinowactwa na podstawie
-                  przetworzonego `summary.csv`.
-                </p>
-                <div class="step-output-row">
-                  <span class="step-output-label" data-i18n="micro.step.output.label">Output (ostatni znany stan)</span>
-                  <span class="step-output-value" data-i18n="micro.step3.output">`stage3_for_boltz2.csv`: top 200
-                    kandydatów.</span>
-                </div>
-                <div class="step-status-row">
-                  <span class="status-badge stabilizing" data-i18n="micro.status.stabilizing">stabilizing</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.step4.title">4. KD Predykcja i MD</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <p data-i18n="micro.step4.desc">
-                  Stage 4 konwertuje `affinity_log_ic50` do `KD_pred` i sortuje wyniki deterministycznie przed
-                  przekazaniem do etapów dynamicznych.
-                </p>
-                <div class="step-output-row">
-                  <span class="step-output-label" data-i18n="micro.step.output.label">Output (ostatni znany stan)</span>
-                  <span class="step-output-value" data-i18n="micro.step4.output">`stage4_output.csv` z `KD_pred`;
-                    ranking deterministyczny po hardeningu 2026-02-09.</span>
-                </div>
-                <div class="step-status-row">
-                  <span class="status-badge active-hardening" data-i18n="micro.status.active_hardening">active
-                    hardening</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.step5.title">5. Wpływ Systemowy (Stage 6)</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <p data-i18n="micro.step5.desc">
-                  Stage 5/6 weryfikuje stabilność i wpływ metaboliczny (6A/6B) z jawnymi quality gates i metrykami
-                  pokrycia.
-                </p>
-                <div class="step-output-row">
-                  <span class="step-output-label" data-i18n="micro.step.output.label">Output (ostatni znany stan)</span>
-                  <span class="step-output-value" data-i18n="micro.step5.output">`stage3_for_gromacs.csv` top 50;
-                    raporty
-                    Stage6 dla pilot 20 i full 100.</span>
-                </div>
-                <div class="step-status-row">
-                  <span class="status-badge active-hardening" data-i18n="micro.status.active_hardening">active
-                    hardening</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div class="accordion-item">
-            <button class="accordion-header" aria-expanded="false">
-              <span class="accordion-title" data-i18n="micro.limits.title">Znane ograniczenia (2026-02-10)</span>
-              <span class="accordion-icon">˅</span>
-            </button>
-            <div class="accordion-content">
-              <div class="project-details">
-                <p data-i18n="micro.limits.intro">
-                  Poniższe punkty to aktualny status inżynieryjny, a nie końcowe twierdzenia biologiczne.
-                </p>
-                <ul class="limitations-list">
-                  <li data-i18n="micro.limits.item1">EXP1 affinity-only: blindspot_rate=1.0 dla targetu b0048
-                    (N=100) w tym konkretnym setupie.</li>
-                  <li data-i18n="micro.limits.item2">EXP3 full10: był mismatch kontraktu Stage6B; fix wdrożony, rerun
-                    oczekuje potwierdzenia.</li>
-                </ul>
-                <p data-i18n="micro.limits.note">
-                  Priorytetem jest domknięcie rerunów i kontraktów, zanim uznamy pętlę za stabilną produkcyjnie.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="status">
-      <div class="page-content">
-        <div class="page-text">
-          <h1 data-i18n="micro.status_section.title">Repozytoria i Aktualne Zadania</h1>
-          <p data-i18n="micro.status_section.intro">
-            Ten widok ma przyspieszyć onboarding: co już działa, co jest w toku i gdzie można wejść z pracą.
-          </p>
-
-          <h2 data-i18n="micro.status_section.repos_title">Główne moduły pipeline</h2>
-          <div class="cards-grid">
-            <article class="info-card">
-              <h3 data-i18n="micro.repo1.title">REINVENT4 + analiza + retencja</h3>
-              <p data-i18n="micro.repo1.desc">Generowanie, filtrowanie i scoring wejścia dla Stage 3 z obsługą dużych
-                bibliotek.</p>
-              <p class="card-meta" data-i18n="micro.repo1.meta">Walidacje środowiska + hardening log-driven
-                (2026-02-09).</p>
-            </article>
-            <article class="info-card">
-              <h3 data-i18n="micro.repo2.title">CellTE + Boltz2 + GROMACS</h3>
-              <p data-i18n="micro.repo2.desc">Etap kinetyczny i strukturalny z kontraktami CSV oraz etapami pre/post
-                Boltz2.</p>
-              <p class="card-meta" data-i18n="micro.repo2.meta">Top 200 do Boltz2 i top 50 do GROMACS w aktualnym
-                przepływie.</p>
-            </article>
-            <article class="info-card">
-              <h3 data-i18n="micro.repo3.title">Biologia systemowa Stage 6A/6B</h3>
-              <p data-i18n="micro.repo3.desc">FBA/FVA, quality gates, preflight targetów i raporty blindspot.</p>
-              <p class="card-meta" data-i18n="micro.repo3.meta">EXP1: pilot 20 + full 100; metryki i ograniczenia
-                jawnie raportowane.</p>
-            </article>
-          </div>
-
-          <h2 data-i18n="micro.status_section.tasks_title">Otwarte zadania na teraz</h2>
-          <div class="tasks-list">
-            <article class="task-item">
-              <h3 data-i18n="micro.task1.title">EXP3 full10 rerun po synchronizacji</h3>
-              <p data-i18n="micro.task1.desc">Potwierdzić przejście 90_stage6b i 99_finalize oraz komplet
-                `run_manifest.json`/`report.md`.</p>
-              <p class="task-meta" data-i18n="micro.task1.meta">Status: aktywne (notes/03_experiments).</p>
-            </article>
-            <article class="task-item">
-              <h3 data-i18n="micro.task2.title">Ujednolicić kontrakt Stage6BInput</h3>
-              <p data-i18n="micro.task2.desc">Zdecydować docelowo czy `target_gene` ma być w CSV, w CLI, czy w obu
-                warstwach z twardą walidacją.</p>
-              <p class="task-meta" data-i18n="micro.task2.meta">Status: otwarte pytanie kontraktowe.</p>
-            </article>
-            <article class="task-item">
-              <h3 data-i18n="micro.task3.title">Powtórzyć EXP1 na Stage4 KD_pred >= 100</h3>
-              <p data-i18n="micro.task3.desc">Porównać blindspot_rate między selekcją `qed` i rzeczywistym rankingiem
-                `KD_pred`.</p>
-              <p class="task-meta" data-i18n="micro.task3.meta">Status: oczekuje większego zbioru Stage 4.</p>
-            </article>
-            <article class="task-item">
-              <h3 data-i18n="micro.task4.title">Ustalić produkcyjne progi quality gates</h3>
-              <p data-i18n="micro.task4.desc">Domknąć progi Stage 6A/6B (`strict-quality-gates`) i opisać je jako
-                stały standard runów.</p>
-              <p class="task-meta" data-i18n="micro.task4.meta">Status: in progress.</p>
-            </article>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="dolacz">
-      <div class="page-content">
-        <div class="page-text">
-          <h1 data-i18n="micro.join.title">Dołącz do zespołu GUB</h1>
-          <p data-i18n="micro.join.text">
-            Szukamy osób, które chcą budować rzetelny pipeline badawczy i regularnie domykać zadania inżynieryjne.
-          </p>
-
-          <h2 data-i18n="micro.join.roles.title">Obszary pracy</h2>
-          <ul>
-            <li><strong data-i18n="micro.join.role1.title">Infrastruktura i automatyzacja</strong> <span
-                data-i18n="micro.join.role1.desc">- Slurm, handoff, walidacje etapów i niezawodność runów.</span></li>
-            <li><strong data-i18n="micro.join.role2.title">Modelowanie molekularne</strong> <span
-                data-i18n="micro.join.role2.desc">- REINVENT4, Boltz2, GROMACS, interpretacja wyników
-                strukturalnych.</span></li>
-            <li><strong data-i18n="micro.join.role3.title">Biologia systemowa</strong> <span
-                data-i18n="micro.join.role3.desc">- Stage 6A/6B, quality gates, analiza ryzyka metabolicznego.</span>
-            </li>
-          </ul>
-
-          <h2 data-i18n="micro.join.expectations.title">Czego oczekujemy</h2>
-          <ul>
-            <li data-i18n="micro.join.expect1">Autonomia i dowożenie zadań od diagnozy do artefaktu.</li>
-            <li data-i18n="micro.join.expect2">Komfort z niepewnością i systematyczne debugowanie.</li>
-            <li data-i18n="micro.join.expect3">Jasna komunikacja postępu w rytmie tygodniowym.</li>
-          </ul>
-
-          <h2 data-i18n="micro.join.apply.title">Jak aplikować</h2>
-          <ol>
-            <li data-i18n="micro.join.apply.step1">Napisz, w którym obszarze chcesz wejść i jaki problem chcesz
-              przejąć.</li>
-            <li data-i18n="micro.join.apply.step2">Po krótkiej rozmowie dostajesz zadanie startowe i plan wdrożenia.
-            </li>
-          </ol>
-          <p data-i18n="micro.join.apply.note">Liczy się rzetelność wykonania i iteracyjna poprawa jakości, nie
-            formalny papier.</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="page" id="support">
-      <div class="page-content">
-        <div class="page-text">
-          <h1 data-i18n="micro.support.title">Wsparcie i partnerstwo</h1>
-          <p data-i18n="micro.support.text">
-            Jeśli chcesz przyspieszyć ten pipeline, poniżej są konkretne potrzeby operacyjne.
-          </p>
-          <ul>
-            <li data-i18n="micro.support.ask1">Compute credits i infrastruktura HPC pod powtarzalne runy Stage 1-6.</li>
-            <li data-i18n="micro.support.ask2">Dostęp do walidacji wet-lab dla wybranych kandydatów po filtrach Stage 6.
-            </li>
-            <li data-i18n="micro.support.ask3">Mentoring ekspercki: MD, FBA/COBRA i projektowanie eksperymentów.</li>
-          </ul>
-          <a class="cta support-cta" href="mailto:sknwpl@proton.me" data-i18n="micro.support.cta">Skontaktuj się w
-            sprawie współpracy</a>
-          <button class="copy-btn" data-copy="sknwpl@proton.me" data-tip="Copy email">COPY EMAIL</button>
-          <p class="reassurance" data-i18n="micro.support.reassurance">Your data stays private. No spam.</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <footer class="site-footer">
-    <div class="footer-panels">
-      <section class="footer-panel footer-panel--mission">
-        <h3 data-i18n="footer.dream.title">Projekt powstał z marzeń o obliczaniu tego, co wydaje się niemożliwe.</h3>
-        <p data-i18n="footer.dream.text">
-          Jedyne pytanie, na które szukamy odpowiedzi, brzmi: czy można zaprojektować lek bez laboratorium? To zadanie
-          piekielnie trudne, ale z pomocą metod komputerowych możemy przynajmniej zwiększyć szansę, że rozwiązania
-          przetrwają etap kliniczny.
-        </p>
-      </section>
-      <section class="footer-panel footer-panel--contact">
-        <h3 data-i18n="footer.contact.title">Kontakt i adresy</h3>
-        <p class="footer-contact-lines">
-          <a href="https://github.com/Komputerowe-Projektowanie-Lekow" data-i18n="footer.contact.github">Repozytorium
-            na GitHubie</a><br>
-          <a href="mailto:sknwpl@proton.me" data-i18n="footer.contact.email">Kontakt</a><br>
-          <span data-i18n="footer.contact.email.text">Email: sknwpl(at)proton(dot)me</span>
-        </p>
-      </section>
-      <section class="footer-panel footer-panel--partners">
-        <h3 data-i18n="footer.partners.title">Partnerzy / wsparcie</h3>
-        <p data-i18n-html="footer.partners.text">
-          Otwarte zaproszenie do współpracy (sprzęt, granty, konsultacje).<br>
-          Jeżeli chcesz się odezwać z pytaniem, jakąś współpracą naukową itp. - skontaktuj się z nami.
-        </p>
-      </section>
-      <section class="footer-panel footer-panel--join">
-        <p data-i18n="footer.bottom">Dołącz do nas i podziel się swoimi umiejętnościami.</p>
-      </section>
     </div>
-  </footer>
+  </section>
+</section>
 
-  <script type="module" src="./i18n.js"></script>
-  <script type="module" src="./main.js"></script>
-  <script src="./ui.js" defer></script>
+<!-- ═════════════════════════  SUPPORT  ═════════════════════════ -->
+<section class="page" data-page="support">
+  <section class="section">
+    <div class="wrap">
+      <div class="section-head">
+        <span class="section-num">§ 05</span>
+        <span class="section-kicker">Wsparcie</span>
+        <span></span>
+      </div>
+
+      <h1 class="section-title" data-i18n="support.title">Wsparcie i partnerstwo.</h1>
+      <p class="lede" style="margin-top:1rem; max-width:60rem;" data-i18n="support.text">Jeśli chcesz przyspieszyć ten pipeline — poniżej są konkretne potrzeby operacyjne. Prowadzimy otwarty rejestr bottlenecków; każda pozycja ma oszacowany wpływ.</p>
+
+      <div class="rule-label" data-i18n="support.asks">Konkretne potrzeby</div>
+      <div class="cards">
+        <div class="card">
+          <div class="card-label">ask / 01 · compute</div>
+          <h3 data-i18n="ask1.t">Credits + HPC dla Stage 1-6</h3>
+          <p data-i18n="ask1.d">Powtarzalne runy pełnego chain'u: 20 pilot + 100 full. Dominujący koszt to GROMACS MD i Boltz2.</p>
+          <div class="meta">impact · HIGH</div>
+        </div>
+        <div class="card">
+          <div class="card-label">ask / 02 · wet-lab</div>
+          <h3 data-i18n="ask2.t">Walidacja eksperymentalna</h3>
+          <p data-i18n="ask2.d">Dostęp do wet-lab dla wybranych kandydatów po filtrach Stage 6 — zamyka pętlę ouroboros.</p>
+          <div class="meta">impact · HIGH</div>
+        </div>
+        <div class="card">
+          <div class="card-label">ask / 03 · mentoring</div>
+          <h3 data-i18n="ask3.t">Mentoring ekspercki</h3>
+          <p data-i18n="ask3.d">MD, FBA/COBRA i projektowanie eksperymentów — konsultacje nad progami quality gates.</p>
+          <div class="meta">impact · MEDIUM</div>
+        </div>
+      </div>
+
+      <div style="margin-top:2.5rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
+        <a class="btn primary" href="mailto:sknwpl@proton.me"><span data-i18n="support.cta">Skontaktuj się</span><span class="arrow">→</span></a>
+        <button class="btn" onclick="navigator.clipboard.writeText('sknwpl@proton.me'); this.firstElementChild.textContent='skopiowano ✓'; setTimeout(()=>this.firstElementChild.textContent='sknwpl@proton.me', 1600);"><span>sknwpl@proton.me</span><span class="arrow">⎘</span></button>
+      </div>
+
+      <p class="footnote" data-i18n="support.reassure" style="margin-top:2rem;">Twoje dane pozostają prywatne. Nie wysyłamy spamu. Odpowiadamy w ciągu 3-4 dni roboczych.</p>
+    </div>
+  </section>
+</section>
+
+</main>
+
+<!-- ═════════════════════════  FOOTER  ═════════════════════════ -->
+<footer class="site">
+  <div class="wrap">
+    <div>
+      <h4 data-i18n="footer.mission">Misja</h4>
+      <p class="mission" data-i18n="footer.mission.text">Projekt powstał z marzeń o <em>obliczaniu tego</em>, co wydaje się niemożliwe. Jedyne pytanie, na które szukamy odpowiedzi — czy da się zaprojektować lek <em>bez laboratorium</em>?</p>
+    </div>
+    <div>
+      <h4 data-i18n="footer.contact">Kontakt</h4>
+      <p>
+        <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a><br>
+        <a href="https://github.com/Komputerowe-Projektowanie-Lekow" target="_blank" rel="noopener">github.com/…</a><br>
+        <span style="color:var(--fg-dim);" data-i18n="footer.address">Sekcja KPL<br>Warszawa</span>
+      </p>
+    </div>
+    <div>
+      <h4 data-i18n="footer.partners">Partnerzy</h4>
+      <p data-i18n="footer.partners.text">Otwarte zaproszenie do współpracy: sprzęt, granty, konsultacje, wspólne publikacje.</p>
+    </div>
+  </div>
+  <div class="copy-line">
+    <span>© 2026 SKNWPL · Pipeline GUB v2026.02</span>
+    <span>snapshot @ 2026-02-10</span>
+    <span>no trackers · no cookies</span>
+  </div>
+</footer>
+
+<!-- ═════════════════════════  CMDK  ═════════════════════════ -->
+<div class="cmdk-overlay" id="cmdkOverlay">
+  <div class="cmdk-dialog">
+    <input class="cmdk-input" id="cmdkInput" placeholder="Search · navigate · copy email…" autocomplete="off">
+    <div class="cmdk-results" id="cmdkResults"></div>
+  </div>
+</div>
+
+<!-- ═════════════════════════  TWEAKS PANEL  ═════════════════════════ -->
+<div id="tweaks-panel">
+  <h4>Tweaks <span class="close" onclick="document.getElementById('tweaks-panel').classList.remove('open')">✕</span></h4>
+  <div class="tweak-row">
+    <label>Variant</label>
+    <div class="tweak-opts" data-tweak="variant">
+      <button class="tweak-opt" data-val="notebook">Notebook</button>
+      <button class="tweak-opt" data-val="terminal">Terminal</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>Accent</label>
+    <div class="tweak-swatches" data-tweak="accent">
+      <div class="swatch" style="background:#01779B" data-val="#01779B"></div>
+      <div class="swatch" style="background:#b55a1e" data-val="#b55a1e"></div>
+      <div class="swatch" style="background:#3a7a50" data-val="#3a7a50"></div>
+      <div class="swatch" style="background:#7a3a7a" data-val="#7a3a7a"></div>
+      <div class="swatch" style="background:#c4a33a" data-val="#c4a33a"></div>
+      <div class="swatch" style="background:#2a2a2a" data-val="#2a2a2a"></div>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>Density</label>
+    <div class="tweak-opts" data-tweak="density">
+      <button class="tweak-opt" data-val="compact">Compact</button>
+      <button class="tweak-opt" data-val="comfortable">Comfortable</button>
+      <button class="tweak-opt" data-val="spacious">Spacious</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>Font</label>
+    <div class="tweak-opts" data-tweak="font">
+      <button class="tweak-opt" data-val="plex">Plex</button>
+      <button class="tweak-opt" data-val="jetbrains">JetBrains</button>
+      <button class="tweak-opt" data-val="sans">Sans</button>
+    </div>
+  </div>
+  <div class="tweak-row">
+    <label>Pipeline layout</label>
+    <div class="tweak-opts" data-tweak="pipelineLayout">
+      <button class="tweak-opt" data-val="system">System</button>
+      <button class="tweak-opt" data-val="horizontal">Horiz</button>
+      <button class="tweak-opt" data-val="vertical">Vert</button>
+    </div>
+  </div>
+</div>
+
+<script src="pipeline-ascii.js?v=3"></script>
+<script src="pipeline-narrative.js?v=3"></script>
+<script type="module" src="protein-ascii.js?v=3"></script>
+<script src="app.js?v=3"></script>
 </body>
-
 </html>
