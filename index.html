@@ -246,34 +246,41 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
   .hero .wrap { max-width: 76rem; margin: 0 auto; position: relative; z-index: 2; }
   .protein-backdrop {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    width: min(66vw, 980px);
+    top: clamp(5.5rem, 12vh, 8rem);
+    left: max(0px, calc((100vw - 76rem) / 2));
+    width: min(64vw, 840px);
+    height: min(66vh, 610px);
     z-index: 1;
     overflow: hidden;
     pointer-events: none;
-    opacity: 0.46;
-    mask-image: linear-gradient(90deg, #000 0%, #000 58%, rgba(0,0,0,0.72) 73%, transparent 100%);
-    -webkit-mask-image: linear-gradient(90deg, #000 0%, #000 58%, rgba(0,0,0,0.72) 73%, transparent 100%);
+    opacity: 0.48;
+    contain: layout paint style;
+    mask-image:
+      linear-gradient(90deg, transparent 0%, #000 8%, #000 68%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #000 10%, #000 82%, transparent 100%);
+    mask-composite: intersect;
+    -webkit-mask-image:
+      linear-gradient(90deg, transparent 0%, #000 8%, #000 68%, transparent 100%),
+      linear-gradient(180deg, transparent 0%, #000 10%, #000 82%, transparent 100%);
+    -webkit-mask-composite: source-in;
   }
   .protein-backdrop::after {
     content: '';
     position: absolute;
     inset: 0;
     background:
-      radial-gradient(circle at 34% 40%, rgba(243,247,251,0.18), transparent 32%),
-      linear-gradient(90deg, rgba(243,247,251,0.05) 0%, rgba(243,247,251,0.16) 62%, rgba(243,247,251,0.70) 100%);
+      radial-gradient(circle at 38% 44%, rgba(243,247,251,0.08), transparent 32%),
+      linear-gradient(90deg, rgba(243,247,251,0.02) 0%, rgba(243,247,251,0.10) 62%, rgba(243,247,251,0.64) 100%);
   }
   .protein-backdrop-screen {
     position: absolute;
-    top: -9vh;
-    left: -9vw;
+    top: 0;
+    left: 0;
     right: auto;
     bottom: auto;
     margin: 0;
     font-family: var(--mono);
-    font-size: clamp(5.2px, 0.44vw, 7.4px);
+    font-size: clamp(4.8px, 0.4vw, 6.8px);
     line-height: 1.02;
     letter-spacing: 0;
     white-space: pre;
@@ -283,34 +290,37 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     width: max-content;
     max-width: none;
     transform: translateZ(0);
+    user-select: none;
   }
   .protein-backdrop-screen[data-ready="true"] { opacity: 1; }
   .protein-backdrop-screen.main {
-    text-shadow:
-      0 0 6px rgba(1,119,155,0.28),
-      0 0 18px rgba(1,119,155,0.14);
-    mix-blend-mode: multiply;
+    text-shadow: 0 0 5px rgba(1,119,155,0.14);
   }
   .protein-backdrop-screen.ghost {
-    filter: blur(2.2px);
-    opacity: 0;
+    display: none;
   }
-  .protein-backdrop-screen.ghost[data-ready="true"] { opacity: 0.42; }
   .protein-backdrop-screen.g2 {
-    filter: blur(12px);
-    transform: scale(1.04);
+    display: none;
   }
-  .protein-backdrop-screen.g2[data-ready="true"] { opacity: 0.30; }
   :root[data-variant="terminal"] .protein-backdrop {
-    opacity: 0.32;
+    opacity: 0.36;
   }
   :root[data-variant="terminal"] .protein-backdrop::after {
     background:
-      radial-gradient(circle at 34% 40%, rgba(7,26,48,0.16), transparent 32%),
-      linear-gradient(90deg, rgba(7,26,48,0.02) 0%, rgba(7,26,48,0.12) 62%, rgba(7,26,48,0.70) 100%);
+      radial-gradient(circle at 38% 44%, rgba(7,26,48,0.12), transparent 32%),
+      linear-gradient(90deg, rgba(7,26,48,0.02) 0%, rgba(7,26,48,0.10) 62%, rgba(7,26,48,0.68) 100%);
   }
   :root[data-variant="terminal"] .protein-backdrop-screen {
     color: #5fc6f5;
+  }
+  @media (max-width: 860px) {
+    .protein-backdrop {
+      top: 5rem;
+      left: 0;
+      width: min(100vw, 620px);
+      height: 44vh;
+      opacity: 0.34;
+    }
   }
   .hero h1 {
     font-family: var(--font-display);
@@ -1535,7 +1545,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 
 <script src="pipeline-ascii.js?v=3"></script>
 <script src="pipeline-narrative.js?v=3"></script>
-<script type="module" src="protein-ascii.js?v=3"></script>
+<script type="module" src="protein-ascii.js?v=7"></script>
 <script src="app.js?v=3"></script>
 </body>
 </html>
