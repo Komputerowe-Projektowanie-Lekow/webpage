@@ -1,4 +1,4 @@
-// Custom ASCII pipeline diagram generator for SKNWPL Pipeline GUB
+// Custom ASCII pipeline diagram generator for PUT Drug Discovery PROTO-NOOS
 // Renders a proper 6-stage flow with Ouroboros feedback loop
 
 window.PipelineASCII = (() => {
@@ -85,7 +85,7 @@ window.PipelineASCII = (() => {
     const hit = (i) => i === activeIdx ? '█' : '·';
     return `
     ╔══════════════════════════════════════════════════════════════════════╗
-    ║                         PIPELINE GUB · v2026.02                      ║
+    ║                            PROTO-NOOS                              ║
     ╠══════════════════════════════════════════════════════════════════════╣
     ║                                                                      ║
     ║   ┌─ in silico ───────────────┐     ┌─ structural ─────────────────┐ ║
@@ -103,7 +103,7 @@ window.PipelineASCII = (() => {
     ║        │    feedback + retrain                                        ║
     ║        ▼                                                              ║
     ║   ┌────────────────┐                                                  ║
-    ║   │ candidates.csv │  →  stage_runner.py  →  run_manifest.json        ║
+    ║   │ candidates.csv │  →  validation   →  run_manifest.json           ║
     ║   └────────────────┘                                                  ║
     ║                                                                      ║
     ╚══════════════════════════════════════════════════════════════════════╝`;

@@ -1,89 +1,111 @@
 <!doctype html>
-<html lang="pl">
+<html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PROTO-NOOS - Shared Research - SKNWPL</title>
+<title>PROTO-NOOS - Open-Access Bioinformatics for Drug Discovery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
 <style>
   :root {
-    --accent: #01779B;
-    --fg: #0a2540;
-    --fg-muted: #425b78;
-    --fg-dim: #7a8da3;
-    --rule: rgba(10,37,64,0.14);
-    --paper: #f3f7fb;
+    --ink: #092334;
+    --muted: #4b6171;
+    --dim: #74818c;
+    --paper: #f4f7f5;
+    --surface: rgba(255,255,255,0.82);
+    --line: rgba(9,35,52,0.16);
+    --teal: #007f83;
+    --green: #567a3d;
+    --amber: #b16b28;
+    --rose: #a1485f;
+    --shadow: 0 18px 46px rgba(9,35,52,0.11);
     --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
     --serif: 'Newsreader', Georgia, serif;
   }
   * { box-sizing: border-box; }
-  html, body { margin: 0; background: var(--paper); color: var(--fg); }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
   body {
     min-height: 100vh;
     font-family: var(--mono);
     background-image:
-      linear-gradient(to right, rgba(1,119,155,0.10) 1px, transparent 1px),
-      linear-gradient(to bottom, rgba(1,119,155,0.10) 1px, transparent 1px);
-    background-size: 64px 64px;
+      linear-gradient(to right, rgba(0,127,131,0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(177,107,40,0.08) 1px, transparent 1px);
+    background-size: 68px 68px;
   }
+  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid currentColor; }
   .nav {
-    border-bottom: 1px solid var(--rule);
-    background: rgba(243,247,251,0.92);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--line);
+    background: rgba(244,247,245,0.92);
     backdrop-filter: blur(12px);
   }
   .nav-inner {
-    max-width: 76rem;
+    max-width: 78rem;
     margin: 0 auto;
-    padding: 0.75rem clamp(1.2rem, 3vw, 2rem);
+    padding: 0.75rem clamp(1.1rem, 3vw, 2rem);
     display: flex;
     justify-content: space-between;
-    gap: 1rem;
     align-items: center;
+    gap: 1rem;
   }
-  a { color: var(--accent); text-decoration: none; border-bottom: 1px solid currentColor; }
   .brand {
     border: none;
-    color: var(--fg);
+    color: var(--ink);
     font-size: 12px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
   }
   main {
-    max-width: 74rem;
+    max-width: 78rem;
     margin: 0 auto;
-    padding: clamp(4rem, 8vw, 7rem) clamp(1.2rem, 3vw, 2rem);
+    padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.1rem, 3vw, 2rem) 5rem;
   }
-  .article-head {
-    max-width: 56rem;
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 24rem);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: end;
+    margin-bottom: 3rem;
   }
   .meta {
     display: flex;
-    gap: 0.65rem;
+    flex-wrap: wrap;
+    gap: 0.55rem;
     align-items: center;
-    color: var(--fg-dim);
+    color: var(--dim);
     font-size: 12px;
     letter-spacing: 0.08em;
     text-transform: uppercase;
-    margin-bottom: 1.4rem;
+    margin-bottom: 1.25rem;
   }
   .tag {
-    border: 1px solid var(--rule);
+    border: 1px solid var(--line);
     padding: 2px 7px;
+    background: rgba(255,255,255,0.55);
   }
   h1 {
     font-family: var(--serif);
-    font-size: clamp(2.2rem, 5vw, 4.3rem);
-    line-height: 1.04;
+    font-size: clamp(2.35rem, 5.4vw, 4.7rem);
+    line-height: 1.02;
     font-weight: 500;
-    letter-spacing: -0.01em;
-    margin: 0 0 1.2rem;
+    letter-spacing: 0;
+    margin: 0 0 1.25rem;
+    max-width: 62rem;
+  }
+  .dek {
+    color: var(--muted);
+    line-height: 1.72;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    max-width: 58rem;
+    margin: 0 0 1.4rem;
   }
   .author {
     font-family: var(--serif);
     font-style: italic;
-    color: var(--fg-dim);
+    color: var(--dim);
     font-size: 1.1rem;
     margin-bottom: 1.4rem;
   }
@@ -91,156 +113,234 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.75rem;
-    margin-bottom: 3rem;
   }
   .button {
     display: inline-flex;
     align-items: center;
-    gap: 0.45rem;
-    border: 1px solid var(--accent);
+    min-height: 2.55rem;
+    border: 1px solid var(--teal);
     padding: 0.65rem 0.9rem;
+    background: rgba(255,255,255,0.78);
     font-size: 12px;
     letter-spacing: 0.1em;
     text-transform: uppercase;
-    background: rgba(255,255,255,0.72);
   }
-  .repo-qr {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) 10rem;
-    gap: 1.1rem;
-    align-items: center;
-    max-width: 44rem;
-    margin: 0 0 3rem;
+  .hero-panel {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
     padding: 1rem;
-    border: 1px solid var(--rule);
-    background: rgba(255,255,255,0.78);
-    box-shadow: 0 12px 30px rgba(10,37,64,0.08);
   }
-  .repo-qr h2 {
-    margin: 0 0 0.45rem;
-    font-size: 1.35rem;
-  }
-  .repo-qr p {
-    margin: 0 0 0.75rem;
-    font-size: 13px;
-  }
-  .repo-qr img {
+  .hero-panel img {
     display: block;
     width: 100%;
     height: auto;
-    padding: 0.45rem;
+    padding: 0.55rem;
+    border: 1px solid var(--line);
     background: #fff;
-    border: 1px solid var(--rule);
   }
-  .abstract {
-    border-top: 1px solid var(--rule);
-    border-bottom: 1px solid var(--rule);
-    padding: 1.4rem 0;
-    color: var(--fg-muted);
-    line-height: 1.75;
-    font-size: 15px;
-    max-width: 56rem;
+  .hero-panel p {
+    margin: 0.85rem 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
   }
-  .abstract p {
-    margin: 0 0 1rem;
-  }
-  .abstract p:last-child {
-    margin-bottom: 0;
-  }
-  .abstract h2 {
-    margin-top: 0;
+  .section {
+    border-top: 1px solid var(--line);
+    padding-top: 1.35rem;
+    margin-top: 3rem;
   }
   h2 {
     font-family: var(--serif);
-    font-size: 1.8rem;
-    line-height: 1.15;
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+    line-height: 1.12;
     font-weight: 500;
-    margin: 2.6rem 0 0.8rem;
+    margin: 0 0 0.9rem;
+  }
+  h3 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    line-height: 1.18;
+    font-weight: 500;
+    margin: 0 0 0.45rem;
   }
   p {
-    color: var(--fg-muted);
+    color: var(--muted);
     line-height: 1.75;
     font-size: 15px;
-    max-width: 56rem;
+    max-width: 58rem;
   }
-  .poster {
-    margin-top: 3rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 1.4rem;
+  .abstract {
+    max-width: 62rem;
+    color: var(--muted);
+    line-height: 1.78;
+    font-size: 15px;
   }
-  .poster h2 {
-    margin-top: 0;
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.35rem;
   }
-  .poster-frame {
+  .metric {
+    border-left: 3px solid var(--teal);
+    background: rgba(255,255,255,0.72);
+    padding: 0.85rem 0.9rem;
+    box-shadow: 0 10px 28px rgba(9,35,52,0.07);
+  }
+  .metric:nth-child(2) { border-color: var(--green); }
+  .metric:nth-child(3) { border-color: var(--amber); }
+  .metric:nth-child(4) { border-color: var(--rose); }
+  .metric strong {
     display: block;
-    margin-top: 1rem;
-    border: 1px solid var(--rule);
-    background: #fff;
-    box-shadow: 0 18px 44px rgba(10,37,64,0.10);
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    line-height: 1;
+    font-weight: 500;
   }
-  .poster-frame img {
+  .metric span {
     display: block;
-    width: 100%;
-    height: auto;
-  }
-  .note {
-    color: var(--fg-dim);
+    margin-top: 0.45rem;
+    color: var(--muted);
     font-size: 12px;
-    margin-top: 0.8rem;
+    line-height: 1.45;
   }
-  .workflow {
-    margin-top: 3rem;
-    border-top: 1px solid var(--rule);
-    padding-top: 1.4rem;
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.2rem;
   }
-  .workflow h2 {
-    margin-top: 0;
+  .stage {
+    min-height: 10rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    padding: 0.9rem;
   }
-  .workflow-grid {
+  .stage span {
+    display: inline-block;
+    color: var(--teal);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.55rem;
+  }
+  .stage p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.58;
+  }
+  .figure-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 1rem;
     margin-top: 1.2rem;
   }
-  .workflow-card {
-    background: rgba(255,255,255,0.82);
-    border: 1px solid var(--rule);
-    box-shadow: 0 12px 30px rgba(10,37,64,0.08);
+  .figure-card {
+    margin: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
   }
-  .workflow-card img {
+  .figure-card img {
     display: block;
     width: 100%;
     aspect-ratio: 16 / 10;
-    object-fit: cover;
+    object-fit: contain;
     background: #fff;
-    border-bottom: 1px solid var(--rule);
+    border-bottom: 1px solid var(--line);
   }
-  .workflow-card figcaption {
-    padding: 0.8rem 0.9rem 0.9rem;
+  .figure-card figcaption {
+    padding: 0.85rem 0.95rem 1rem;
   }
-  .workflow-card span {
+  .figure-card span {
     display: block;
     margin-bottom: 0.25rem;
-    color: var(--accent);
+    color: var(--amber);
     font-size: 10px;
     letter-spacing: 0.14em;
     text-transform: uppercase;
   }
-  .workflow-card strong {
-    display: block;
-    font-family: var(--serif);
-    color: var(--fg);
-    font-size: 1.12rem;
-    line-height: 1.18;
-    font-weight: 500;
+  .figure-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.58;
   }
-  @media (max-width: 760px) {
-    .repo-qr {
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(18rem, 27rem);
+    gap: clamp(1.5rem, 4vw, 3rem);
+    align-items: start;
+  }
+  .finding-list {
+    display: grid;
+    gap: 0.8rem;
+    margin-top: 1rem;
+    max-width: 58rem;
+  }
+  .finding {
+    border-left: 3px solid var(--green);
+    background: rgba(255,255,255,0.62);
+    padding: 0.8rem 0.95rem;
+  }
+  .finding:nth-child(2) { border-color: var(--teal); }
+  .finding:nth-child(3) { border-color: var(--amber); }
+  .finding:nth-child(4) { border-color: var(--rose); }
+  .finding strong {
+    display: block;
+    color: var(--ink);
+    margin-bottom: 0.2rem;
+  }
+  .finding p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.58;
+  }
+  .poster-frame {
+    display: block;
+    width: 100%;
+    min-height: 32rem;
+    border: 1px solid var(--line);
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .poster-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1rem;
+  }
+  .references {
+    columns: 2 22rem;
+    column-gap: 2rem;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.62;
+    padding-left: 1.2rem;
+    max-width: 70rem;
+  }
+  .references li { break-inside: avoid; margin-bottom: 0.75rem; }
+  @media (max-width: 900px) {
+    .hero,
+    .split,
+    .pipeline,
+    .metrics {
       grid-template-columns: 1fr;
+    }
+    .hero-panel {
       max-width: 24rem;
     }
-    .workflow-grid {
+  }
+  @media (max-width: 720px) {
+    main {
+      padding-top: 2.6rem;
+    }
+    .figure-grid {
       grid-template-columns: 1fr;
+    }
+    .poster-frame {
+      min-height: 24rem;
     }
   }
 </style>
@@ -248,98 +348,187 @@
 <body>
   <nav class="nav">
     <div class="nav-inner">
-      <a class="brand" href="index.html">SKNWPL · Pipeline GUB</a>
+      <a class="brand" href="index.html">PUT Drug Discovery - PROTO-NOOS</a>
       <a href="index.html">Back to site</a>
     </div>
   </nav>
+
   <main>
-    <header class="article-head">
-      <div class="meta">
-        <time datetime="2026-05-03">03.05.2026</time>
-        <span class="tag">paper</span>
+    <header class="hero">
+      <div>
+        <div class="meta">
+          <time datetime="2026-05-13">13.05.2026</time>
+          <span class="tag">manuscript</span>
+          <span class="tag">poster</span>
+          <span class="tag">in silico</span>
+        </div>
+        <h1>PROTO-NOOS: Orchestrating Open-Access Bioinformatics for Seamless Drug Discovery</h1>
+        <p class="dek">
+          A reproducible PROTO-NOOS pipeline for prioritising small-molecule candidates in an E. coli DHFR context by combining molecular generation, structural prediction, short-MD checks, systems biology, cell target engagement, and retrosynthetic accessibility.
+        </p>
+        <div class="author">PUT Drug Discovery</div>
+        <div class="actions">
+          <a class="button" href="./posts/proto-noos/manuskrypt_PROTO-NOOS.pdf">Open manuscript</a>
+          <a class="button" href="./posts/proto-noos/poster_place_holder.pdf">Open poster</a>
+          <a class="button" href="#figures">View figures</a>
+        </div>
       </div>
-      <h1>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h1>
-      <div class="author">The SKNWPL Team</div>
-      <div class="actions">
-        <a class="button" href="./posts/proto-noos-ml/PROTO-NOOS_%20Rational%20Compute%20Allocation%20in%20Antibiotic%20Discovery%20via%20Mutual%20Information%20and%20Uncertainty%20Quantification%20.pdf">Open PDF →</a>
-        <a class="button" href="./posts/proto-noos-ml/Poster%20GHOST%20PROTO-NOOS%20ML.pdf">Open poster →</a>
-        <a class="button" href="https://github.com/Komputerowe-Projektowanie-Lekow/GUB_ML" target="_blank" rel="noopener">GitHub repo →</a>
-      </div>
+      <aside class="hero-panel" aria-label="Page QR code">
+        <a href="proto-noos-page-qr.svg">
+          <img src="proto-noos-page-qr.svg" alt="QR code for the PROTO-NOOS page">
+        </a>
+        <p>Scan to open this shared PROTO-NOOS research page during poster sessions and manuscript discussions.</p>
+      </aside>
     </header>
 
-    <section class="repo-qr" aria-labelledby="repoQrTitle">
-      <div>
-        <h2 id="repoQrTitle">GitHub Repository</h2>
-        <p>Scan the QR code or open the repository directly.</p>
-        <a href="https://github.com/Komputerowe-Projektowanie-Lekow/GUB_ML" target="_blank" rel="noopener">github.com/Komputerowe-Projektowanie-Lekow/GUB_ML</a>
-      </div>
-      <a href="gub-ml-github-qr.svg" aria-label="Open GitHub repository QR code">
-        <img src="gub-ml-github-qr.svg" alt="QR code for the GUB_ML GitHub repository">
-      </a>
-    </section>
-
-    <section class="abstract" aria-labelledby="abstractTitle">
+    <section class="section" aria-labelledby="abstractTitle">
       <h2 id="abstractTitle">Abstract</h2>
-      <p>Large-scale computational screening of compounds with tools designed to predict molecules with specific properties requires substantial computational time and resources. The initial search for promising candidates and the subsequent optimization of those candidates are distinct processes and should be treated as separate stages of the drug discovery workflow.</p>
-      <p>In this context, molecular search can be framed as an optimization problem: the goal is to obtain the best possible result at the lowest feasible computational cost. By using known antibiotics against a given target, it is possible to generalize how specific compounds interact with the receptor. When additional phenotypic data are incorporated, the performance of computational tools can be compared against experimental outcomes, allowing their behaviour to be estimated and evaluated using machine learning models.</p>
-      <p>In this study, we used mutual information and uncertainty quantification methods to analyze a dataset of de novo compounds generated by our PROTO-NOOS system. PROTO-NOOS is designed to generate labels consistent with state-of-the-art computational tools and public experimental data reported in previous studies.</p>
-      <p>We performed a benchmark evaluating EoE-5 and EoE-10 models across six random seeds for each method. The aim was to assess how these approaches perform on our problem and to determine their suitability for reducing computational cost while preserving predictive quality.</p>
-      <p>Our results indicate which strategies are most appropriate for users who want to simplify expensive computational workflows by replacing selected stages with lower-cost surrogate models. In addition, we analyzed how predictions differ between single models, EoE-5, and EoE-10 ensembles, and how uncertainty relates to the training data and the diversity of the evaluated compounds.</p>
-      <p>The results suggest that random forest-based strategies are useful when the primary goal is aggressive cost reduction, even if this comes with some loss of quality. In contrast, evidential models combined with MIST-QR provide a more conservative strategy, where computational savings are achieved while maintaining stronger control over uncertainty and prediction reliability.</p>
-      <p>This work is relevant for researchers developing or using modular, open-source drug design pipelines that combine multiple computational tools. The proposed approach can help determine where mutual information and uncertainty quantification can be used to reduce computational cost during large-scale compound screening without fully abandoning the reliability of more expensive downstream methods.</p>
+      <p class="abstract">
+        Computational antibiotic discovery requires combining chemical generation, structural modelling, physical validation, biological interpretation, and synthetic feasibility into a reproducible workflow. This study presents the PROTO-NOOS pipeline, an in silico pipeline for prioritising small-molecule candidates in an E. coli DHFR context. The workflow used REINVENT4 for de novo molecule generation, RDKit-based physicochemical and Gram-negative entry filtering, Boltz2 for protein-ligand complex and affinity prediction, GROMACS for molecular dynamics stability checks, BioTransformer3 and COBRApy/iML1515 for metabolite and target-perturbation analysis, CellTE for ODE-based intracellular target engagement, and AiZynthFinder for retrosynthetic accessibility. The pipeline connects chemical, structural, MD, metabolic, target-level, and retrosynthetic evidence in one screening process. Its outputs should be interpreted as computational ranking features for hypothesis generation, not as confirmed antibacterial activity, because synthesis, antibacterial assays, toxicity testing, and wet-lab validation were outside the scope of this work.
+      </p>
+      <div class="metrics" aria-label="Key study metrics">
+        <div class="metric"><strong>100</strong><span>de novo candidates passed into the representative downstream run</span></div>
+        <div class="metric"><strong>27</strong><span>non-zero PROTO-NOOS ranked candidates after multi-criteria scoring</span></div>
+        <div class="metric"><strong>2.3 h</strong><span>observed runtime for the 100-compound pipeline run</span></div>
+        <div class="metric"><strong>6/10</strong><span>top-ranked candidates with solved retrosynthetic routes in the reported batch</span></div>
+      </div>
     </section>
 
-    <h2>What This Work Is About</h2>
-    <p>
-      PROTO-NOOS asks a practical question for computational drug discovery: when a pipeline contains expensive downstream stages, which predictions are worth paying for, and which can be approximated by cheaper surrogate models without losing too much reliability?
-    </p>
-    <p>
-      The note treats compute as a scarce experimental resource. Mutual information is used to identify where a model can learn the most from additional labels, while uncertainty quantification helps decide when predictions are stable enough to replace or postpone expensive calculations.
-    </p>
-
-    <section class="workflow" aria-labelledby="workflowTitle">
-      <h2 id="workflowTitle">Animated Workflow</h2>
+    <section class="section" aria-labelledby="pipelineTitle">
+      <h2 id="pipelineTitle">Pipeline Design</h2>
       <p>
-        The four animations below show how PROTO-NOOS frames the search problem: trade-offs, screening depth, uncertainty, and dataset realism are treated as connected design choices rather than isolated plots.
+        PROTO-NOOS treats early antibiotic discovery as a staged prioritisation problem. Each tool contributes a weak but inspectable signal, and the final ranking is based on agreement across chemical, structural, biophysical, cellular, and synthetic constraints rather than on a single affinity score.
       </p>
-      <div class="workflow-grid">
-        <figure class="workflow-card">
-          <img src="./posts/proto-noos-ml/gif_01_pareto_build_creative.gif" alt="Animated Pareto frontier construction for compute allocation">
+      <div class="pipeline">
+        <article class="stage">
+          <span>01 / Generation</span>
+          <h3>REINVENT4 and RDKit</h3>
+          <p>Generate SMILES, canonicalise structures, remove invalid records, and filter by Lipinski, Veber, PAINS, scaffold, similarity, and Gram-negative entry heuristics.</p>
+        </article>
+        <article class="stage">
+          <span>02 / Structure</span>
+          <h3>Boltz2 and GROMACS</h3>
+          <p>Predict protein-ligand complexes for PDB 6XG5, estimate affinity-related signals, and run short MD gates for physical plausibility.</p>
+        </article>
+        <article class="stage">
+          <span>03 / Biology</span>
+          <h3>BioTransformer and COBRApy</h3>
+          <p>Map metabolite predictions into iML1515, simulate target-level folA perturbation, and separate metabolic context from direct binding evidence.</p>
+        </article>
+        <article class="stage">
+          <span>04 / Actionability</span>
+          <h3>CellTE and AiZynthFinder</h3>
+          <p>Model intracellular target occupancy with entry, efflux, association, and dissociation terms, then screen ranked candidates for retrosynthetic feasibility.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section split" aria-labelledby="resultsTitle">
+      <div>
+        <h2 id="resultsTitle">Main Findings</h2>
+        <p>
+          The current run demonstrates workflow feasibility and exposes where the evidence is strong, weak, or contradictory. The key value is structured triage: fewer candidates move into expensive downstream PROTO-NOOS BCA, where pocket contacts, NADPH context, MM-GBSA, PLUMED metadynamics, and selected QM/DFT descriptors can be inspected in greater detail.
+        </p>
+        <div class="finding-list">
+          <div class="finding">
+            <strong>Multi-signal ranking narrows the search space.</strong>
+            <p>Of 100 generated compounds, 27 retained a non-zero PROTO-NOOS score; the rest were treated as resistant or low-priority under the current evidence model.</p>
+          </div>
+          <div class="finding">
+            <strong>CellTE adds context beyond KD.</strong>
+            <p>Post-Boltz2 rescoring combines predicted affinity with entry and efflux dynamics, allowing compounds with similar KD values to separate by Cout50 and AUCbound.</p>
+          </div>
+          <div class="finding">
+            <strong>Short MD remains a low-confidence gate.</strong>
+            <p>The 100 ps high-throughput mode is useful for flagging unstable systems, but kinetic proxies are explicitly treated as weak labels.</p>
+          </div>
+          <div class="finding">
+            <strong>Retrosynthesis changes lead priority.</strong>
+            <p>The top PROTO-NOOS-ranked molecule was not solved by AiZynthFinder in the reported batch, while several lower-ranked candidates had practical synthetic routes.</p>
+          </div>
+        </div>
+      </div>
+      <figure class="figure-card">
+        <img src="./posts/proto-noos/fig7_cell_target_engagement_scoring.png" alt="Cell target engagement scoring summary">
+        <figcaption>
+          <span>CellTE</span>
+          <h3>Cell target engagement scoring</h3>
+          <p>ODE-based intracellular target occupancy reframes affinity as one part of a cellular accumulation and binding process.</p>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="section" id="figures" aria-labelledby="figuresTitle">
+      <h2 id="figuresTitle">Figures</h2>
+      <p>
+        The figures below summarise the evidence blocks used by the manuscript: branch-level PROTO-NOOS distributions, inter-stage agreement, CellTE rescore behaviour, retrosynthetic feasibility, and final target-engagement interpretation.
+      </p>
+      <div class="figure-grid">
+        <figure class="figure-card">
+          <img src="./posts/proto-noos/fig2_cross_branch_gub_distributions.png" alt="Cross-branch PROTO-NOOS score distributions">
           <figcaption>
-            <span>01 / Pareto</span>
-            <strong>Building the trade-off surface between cost and predictive quality.</strong>
+            <span>Figure 2</span>
+            <h3>Cross-branch score distributions</h3>
+            <p>Shows how different evidence branches shape candidate prioritisation before final interpretation.</p>
           </figcaption>
         </figure>
-        <figure class="workflow-card">
-          <img src="./posts/proto-noos-ml/gif_02_screening_depth_creative.gif" alt="Animated screening depth comparison">
+        <figure class="figure-card">
+          <img src="./posts/proto-noos/fig4_interstage_spearman_heatmap.png" alt="Inter-stage Spearman correlation heatmap">
           <figcaption>
-            <span>02 / Screening depth</span>
-            <strong>Comparing how far expensive evaluation needs to go before surrogates help.</strong>
+            <span>Figure 4</span>
+            <h3>Inter-stage signal agreement</h3>
+            <p>Spearman correlations identify which pipeline stages support each other and where evidence diverges.</p>
           </figcaption>
         </figure>
-        <figure class="workflow-card">
-          <img src="./posts/proto-noos-ml/gif_03_uncertainty_story_creative.gif" alt="Animated uncertainty quantification story">
+        <figure class="figure-card">
+          <img src="./posts/proto-noos/fig4b_pre_vs_rescore_cellte.png" alt="Pre-Boltz2 versus post-Boltz2 CellTE rescore plot">
           <figcaption>
-            <span>03 / Uncertainty</span>
-            <strong>Tracking when ensemble predictions are confident enough to guide decisions.</strong>
+            <span>Figure 4b</span>
+            <h3>Pre-score versus rescore</h3>
+            <p>Compares CellTE ranking before and after Boltz2-derived KD_pred is introduced into the occupancy model.</p>
           </figcaption>
         </figure>
-        <figure class="workflow-card">
-          <img src="./posts/proto-noos-ml/gif_04_data_realism_creative.gif" alt="Animated dataset realism and molecular diversity view">
+        <figure class="figure-card">
+          <img src="./posts/proto-noos/fig6_stage8_retro_accessibility.png" alt="Stage 8 retrosynthetic accessibility plot">
           <figcaption>
-            <span>04 / Data realism</span>
-            <strong>Checking whether generated compounds stay close enough to useful chemical regimes.</strong>
+            <span>Figure 6</span>
+            <h3>Retrosynthetic accessibility</h3>
+            <p>Contrasts predicted biological priority with route solvability, route score, stock coverage, and route depth.</p>
           </figcaption>
         </figure>
       </div>
     </section>
 
-    <section class="poster" aria-labelledby="posterTitle">
-      <h2 id="posterTitle">Poster</h2>
-      <a class="poster-frame" href="./posts/proto-noos-ml/Poster%20GHOST%20PROTO-NOOS%20ML.pdf">
-        <img src="./posts/proto-noos-ml/poster-preview.png" alt="PROTO-NOOS poster preview">
-      </a>
-      <p class="note">Click the poster preview to open the full PDF.</p>
+    <section class="section" aria-labelledby="posterTitle">
+      <h2 id="posterTitle">Poster and Manuscript</h2>
+      <p>
+        The poster gives the compact visual version of the workflow, while the manuscript describes the full scientific scope, limitations, stage contracts, and interpretation rules.
+      </p>
+      <iframe class="poster-frame" src="./posts/proto-noos/poster_place_holder.pdf#toolbar=0" title="PROTO-NOOS poster PDF preview"></iframe>
+      <div class="poster-tools">
+        <a class="button" href="./posts/proto-noos/poster_place_holder.pdf">Open poster PDF</a>
+        <a class="button" href="./posts/proto-noos/manuskrypt_PROTO-NOOS.pdf">Open manuscript PDF</a>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="limitsTitle">
+      <h2 id="limitsTitle">Scope and Limits</h2>
+      <p>
+        PROTO-NOOS is an in silico prioritisation framework, not a confirmed antibiotic discovery. The current study does not include compound synthesis, MIC testing, target-engagement assays, cytotoxicity assays, toxicity validation, or wet-lab antibacterial experiments. The practical conclusion is therefore limited to workflow feasibility, hypothesis generation, and candidate triage before deeper simulation or experimental follow-up.
+      </p>
+    </section>
+
+    <section class="section" aria-labelledby="refsTitle">
+      <h2 id="refsTitle">Selected References</h2>
+      <ol class="references">
+        <li>Stokes, J. M., Yang, K., Swanson, K., et al. A deep learning approach to antibiotic discovery. <em>Cell</em>, 2020.</li>
+        <li>Abraham, M. J., Murtola, T., Schulz, R., Pall, S., Smith, J. C., Hess, B., and Lindahl, E. GROMACS: High performance molecular simulations through multi-level parallelism. <em>SoftwareX</em>, 2015.</li>
+        <li>Passaro, S., Corso, G., Wohlwend, J., et al. Boltz-2: Towards accurate and efficient binding affinity prediction. <em>bioRxiv</em>, 2025.</li>
+        <li>Djoumbou-Feunang, Y., Fiamoncini, J., Gil-de-la-Fuente, A., et al. BioTransformer: a comprehensive computational tool for small molecule metabolism prediction. <em>Journal of Cheminformatics</em>, 2019.</li>
+        <li>Loeffler, H. H., He, J., Tibo, A., et al. Reinvent 4: Modern AI-driven generative molecule design. <em>Journal of Cheminformatics</em>, 2024.</li>
+        <li>Genheden, S., Thakkar, A., Chadimova, V., et al. AiZynthFinder: a fast, robust and flexible open-source software for retrosynthetic planning. <em>Journal of Cheminformatics</em>, 2020.</li>
+        <li>Drusano, G. L. Pharmacokinetics and pharmacodynamics of antimicrobials. <em>Clinical Infectious Diseases</em>, 2007.</li>
+      </ol>
     </section>
   </main>
 </body>

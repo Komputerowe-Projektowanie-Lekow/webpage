@@ -1,0 +1,441 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTO-NOOS BCA - EcDHFR-NADPH-Ligand Dynamics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #092334;
+    --muted: #4b6171;
+    --dim: #74818c;
+    --paper: #f4f7f5;
+    --surface: rgba(255,255,255,0.82);
+    --line: rgba(9,35,52,0.16);
+    --teal: #007f83;
+    --green: #567a3d;
+    --amber: #b16b28;
+    --rose: #a1485f;
+    --shadow: 0 18px 46px rgba(9,35,52,0.11);
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+    --serif: 'Newsreader', Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+  body {
+    min-height: 100vh;
+    font-family: var(--mono);
+    background-image:
+      linear-gradient(to right, rgba(0,127,131,0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(177,107,40,0.08) 1px, transparent 1px);
+    background-size: 68px 68px;
+  }
+  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--line);
+    background: rgba(244,247,245,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .nav-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0.75rem clamp(1.1rem, 3vw, 2rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .brand {
+    border: none;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  main {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.1rem, 3vw, 2rem) 5rem;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 24rem);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+    margin-bottom: 3rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+    color: var(--dim);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+  .tag {
+    border: 1px solid var(--line);
+    padding: 2px 7px;
+    background: rgba(255,255,255,0.55);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.35rem, 5.4vw, 4.7rem);
+    line-height: 1.02;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin: 0 0 1.25rem;
+    max-width: 62rem;
+  }
+  h1.long-title {
+    font-size: clamp(2.1rem, 4.2vw, 3.55rem);
+    line-height: 1.04;
+    max-width: 58rem;
+  }
+  .dek {
+    color: var(--muted);
+    line-height: 1.72;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    max-width: 58rem;
+    margin: 0 0 1.4rem;
+  }
+  .author {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--dim);
+    font-size: 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.55rem;
+    border: 1px solid var(--teal);
+    padding: 0.65rem 0.9rem;
+    background: rgba(255,255,255,0.78);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .hero-panel {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+  }
+  .hero-panel img {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 0.55rem;
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+  .hero-panel p {
+    margin: 0.85rem 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .section {
+    border-top: 1px solid var(--line);
+    padding-top: 1.35rem;
+    margin-top: 3rem;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+    line-height: 1.12;
+    font-weight: 500;
+    margin: 0 0 0.9rem;
+  }
+  h3 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    line-height: 1.18;
+    font-weight: 500;
+    margin: 0 0 0.45rem;
+  }
+  p {
+    color: var(--muted);
+    line-height: 1.75;
+    font-size: 15px;
+    max-width: 58rem;
+  }
+  .abstract {
+    max-width: 62rem;
+    color: var(--muted);
+    line-height: 1.78;
+    font-size: 15px;
+  }
+  .metrics,
+  .pipeline {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.35rem;
+  }
+  .metric {
+    border-left: 3px solid var(--teal);
+    background: rgba(255,255,255,0.72);
+    padding: 0.85rem 0.9rem;
+    box-shadow: 0 10px 28px rgba(9,35,52,0.07);
+  }
+  .metric:nth-child(2) { border-color: var(--green); }
+  .metric:nth-child(3) { border-color: var(--amber); }
+  .metric:nth-child(4) { border-color: var(--rose); }
+  .metric strong {
+    display: block;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    line-height: 1;
+    font-weight: 500;
+  }
+  .metric span {
+    display: block;
+    margin-top: 0.45rem;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .stage {
+    min-height: 10rem;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    padding: 0.9rem;
+  }
+  .stage span {
+    display: inline-block;
+    color: var(--teal);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    margin-bottom: 0.55rem;
+  }
+  .stage p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.58;
+  }
+  .figure-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .figure-card {
+    margin: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .figure-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: contain;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .figure-card figcaption {
+    padding: 0.85rem 0.95rem 1rem;
+  }
+  .figure-card span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--amber);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .figure-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.58;
+  }
+  .poster-frame {
+    display: block;
+    width: 100%;
+    min-height: 32rem;
+    border: 1px solid var(--line);
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .poster-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 900px) {
+    .hero,
+    .pipeline,
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+    .hero-panel {
+      max-width: 24rem;
+    }
+  }
+  @media (max-width: 720px) {
+    main { padding-top: 2.6rem; }
+    .figure-grid { grid-template-columns: 1fr; }
+    .poster-frame { min-height: 24rem; }
+  }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">PUT Drug Discovery - PROTO-NOOS</a>
+      <a href="index.html">Back to site</a>
+    </div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div>
+        <div class="meta">
+          <time datetime="2026-05-13">13.05.2026</time>
+          <span class="tag">poster</span>
+          <span class="tag">protocol abstract</span>
+          <span class="tag">molecular dynamics</span>
+        </div>
+        <h1 class="long-title">Molecular Dynamics IN PROTO-NOOS: Comparative Analysis of EcDHFR-NADPH-Ligand Complex Dynamics for Selected Trimethoprim Analogues</h1>
+        <p class="dek">
+          A PROTO-NOOS biocomplex-analysis protocol for moving beyond geometric docking scores by integrating molecular dynamics, enhanced sampling, binding energetics, and local electronic-structure descriptors for EcDHFR-NADPH-ligand systems.
+        </p>
+        <div class="author">PUT Drug Discovery</div>
+        <div class="actions">
+          <a class="button" href="./posts/proto-noos-bca/poster_PROTO-NOOS-bca.pdf">Open poster</a>
+          <a class="button" href="#figures">View figures</a>
+          <a class="button" href="#abstract">Read abstract</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Page QR code">
+        <a href="./qrs/proto-noos-bca/proto-noos-bca-page-qr.svg">
+          <img src="./qrs/proto-noos-bca/proto-noos-bca-page-qr.svg" alt="QR code for the PROTO-NOOS BCA page">
+        </a>
+        <p>Scan to open this shared PROTO-NOOS BCA research page during poster sessions and protocol discussions.</p>
+      </aside>
+    </header>
+
+    <section class="section" id="abstract" aria-labelledby="abstractTitle">
+      <h2 id="abstractTitle">Abstract</h2>
+      <p class="abstract">
+        Escherichia coli dihydrofolate reductase (EcDHFR) is a validated antibacterial target whose ligand recognition cannot be adequately described by docking scores alone, a limitation shared by any protein-ligand system of comparable complexity.
+      </p>
+      <p class="abstract">
+        We present a multi-scale computational protocol designed to characterize EcDHFR-ligand complexes with physicochemical and electronic detail, while generating structured data suitable for downstream machine-learning parameterization. Classical molecular dynamics (MD) simulations assess binding-mode stability, residue-level flexibility, and dominant conformational states of the binding pocket, including its response to structurally diverse ligands. PLUMED-driven metadynamics further probes pocket conformational transitions. MM-GBSA provides comparative binding energetics across selected systems. For representative trajectory frames, CP2K is used to examine the local electronic structure of the binding region, including atomic charge distribution, charge transfer, and polarization effects, phenomena systematically neglected by classical force fields.
+      </p>
+      <p class="abstract">
+        Together, these analyses build a domain-informed dataset that links computed descriptors to experimentally known values, enabling iterative refinement of earlier-stage approximations in the pipeline. The methodology is developed for EcDHFR but is designed to generalize to homologous targets.
+      </p>
+      <p class="abstract">
+        We argue that integrating structural, energetic, and electronic descriptors is a prerequisite for meaningful in silico candidate selection beyond geometric scoring.
+      </p>
+      <div class="metrics" aria-label="Key protocol descriptors">
+        <div class="metric"><strong>MD</strong><span>binding-mode stability, pocket flexibility, and ligand-response dynamics</span></div>
+        <div class="metric"><strong>MetaD</strong><span>PLUMED-driven sampling of pocket conformational transitions</span></div>
+        <div class="metric"><strong>MM-GBSA</strong><span>comparative binding energetics across selected complexes</span></div>
+        <div class="metric"><strong>CP2K</strong><span>local electronic structure, charge transfer, and polarization descriptors</span></div>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="pipelineTitle">
+      <h2 id="pipelineTitle">Protocol Design</h2>
+      <p>
+        This page records the current poster-stage protocol. The manuscript is not attached yet, so the abstract is used as the scientific description and the poster carries the visual summary.
+      </p>
+      <div class="pipeline">
+        <article class="stage">
+          <span>01 / Complex setup</span>
+          <h3>EcDHFR-NADPH-ligand systems</h3>
+          <p>Representative trimethoprim analogues are modelled in the cofactor-bound EcDHFR pocket for comparable trajectory analysis.</p>
+        </article>
+        <article class="stage">
+          <span>02 / Classical dynamics</span>
+          <h3>MD stability checks</h3>
+          <p>Trajectory descriptors capture binding-mode persistence, residue-level flexibility, and recurring pocket states.</p>
+        </article>
+        <article class="stage">
+          <span>03 / Enhanced sampling</span>
+          <h3>PLUMED metadynamics</h3>
+          <p>Biased sampling probes conformational transitions that short unbiased simulations may under-sample.</p>
+        </article>
+        <article class="stage">
+          <span>04 / Electronic detail</span>
+          <h3>MM-GBSA and CP2K</h3>
+          <p>Energetic and electronic descriptors expose effects omitted by docking scores and classical force fields.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="section" id="figures" aria-labelledby="figuresTitle">
+      <h2 id="figuresTitle">Poster Figures</h2>
+      <p>
+        The available graphics summarise the biocomplex-analysis branch: system preparation, conformational sampling, energetic comparison, and electronic descriptors for data products that can feed later machine-learning refinement.
+      </p>
+      <div class="figure-grid">
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-bca/image 5.jpg" alt="PROTO-NOOS BCA workflow overview">
+          <figcaption>
+            <span>Workflow</span>
+            <h3>Multi-scale biocomplex analysis</h3>
+            <p>Connects structural modelling, MD, enhanced sampling, binding energetics, and electronic-structure analysis.</p>
+          </figcaption>
+        </figure>
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-bca/Group 8.jpg" alt="EcDHFR ligand-complex analysis figure">
+          <figcaption>
+            <span>Dynamics</span>
+            <h3>Pocket response and stability</h3>
+            <p>Tracks how ligand identity changes binding-pocket geometry, local flexibility, and conformational state occupancy.</p>
+          </figcaption>
+        </figure>
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-bca/image 1.jpg" alt="EcDHFR-NADPH-ligand structural analysis">
+          <figcaption>
+            <span>Structure</span>
+            <h3>Complex-level descriptors</h3>
+            <p>Uses representative conformations to organize contact, energetic, and electronic descriptors into a reusable dataset.</p>
+          </figcaption>
+        </figure>
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-bca/Group 10.jpg" alt="Electronic descriptor analysis figure">
+          <figcaption>
+            <span>Electronics</span>
+            <h3>Charge and polarization effects</h3>
+            <p>CP2K-derived local electronic descriptors capture charge redistribution absent from classical docking scores.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="posterTitle">
+      <h2 id="posterTitle">Poster</h2>
+      <p>
+        The poster is the current citable visual artifact for this branch. A manuscript link can be added here once the text exists.
+      </p>
+      <iframe class="poster-frame" src="./posts/proto-noos-bca/poster_PROTO-NOOS-bca.pdf#toolbar=0" title="PROTO-NOOS BCA poster PDF preview"></iframe>
+      <div class="poster-tools">
+        <a class="button" href="./posts/proto-noos-bca/poster_PROTO-NOOS-bca.pdf">Open poster PDF</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

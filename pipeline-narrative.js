@@ -1,4 +1,4 @@
-// Pipeline GUB narrative ASCII animation — 6 scenes, easily extensible
+// PROTO-NOOS narrative ASCII animation — 6 scenes, easily extensible
 // Renders into #pipe-screen / #pipe-ghost-1 / #pipe-ghost-2
 // Designed to be easily extended with more stages later.
 

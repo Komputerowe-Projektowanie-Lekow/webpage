@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>SKNWPL — Pipeline GUB</title>
+<title>PUT Drug Discovery - PROTO-NOOS</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -312,15 +312,6 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
   :root[data-variant="terminal"] .protein-backdrop-screen {
     color: #5fc6f5;
   }
-  .hero-meta {
-    display: flex; flex-wrap: wrap; gap: 0.8rem 2rem; align-items: center;
-    font-family: var(--mono); font-size: 11px; letter-spacing: 0.12em;
-    text-transform: uppercase; color: var(--fg-dim);
-    margin-bottom: 1.5rem;
-  }
-  .hero-meta .dot { width: 6px; height: 6px; background: var(--accent); border-radius: 50%; display: inline-block; margin-right: 0.4rem; animation: pulse 2.2s ease-in-out infinite; }
-  @keyframes pulse { 50% { opacity: 0.3; } }
-
   .hero h1 {
     font-family: var(--font-display);
     font-weight: 400;
@@ -1081,7 +1072,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
   <div class="nav-inner">
     <a href="#" class="brand" data-nav="home">
       <span class="brand-mark" aria-hidden="true"></span>
-      <span>SKNWPL · Pipeline GUB</span>
+      <span>PUT Drug Discovery - PROTO-NOOS</span>
     </a>
     <div class="nav-links" id="navLinks">
       <button class="nav-link active" data-nav="home"><span class="num">01</span><span data-i18n="nav.home">Start</span></button>
@@ -1114,12 +1105,6 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       <pre class="protein-backdrop-screen main" id="proteinBackdropScreen" data-ready="false"></pre>
     </div>
     <div class="wrap">
-      <div class="hero-meta">
-        <span><span class="dot"></span><span data-i18n="hero.status">Pipeline active · snapshot 2026-02-10</span></span>
-        <span data-i18n="hero.org">Sekcja Komputerowego Projektowania Leków</span>
-        <span>v2026.02 / stage_runner 1.4</span>
-      </div>
-
       <h1 data-i18n="hero.h1">Projektowanie leków na <em>Gram-ujemne</em>, od generowania molekuł do walidacji systemowej.</h1>
 
       <div class="hero-grid">
@@ -1141,7 +1126,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 
         <div class="narrative" id="pipe-narrative">
           <div class="narrative-head">
-            <span>pipeline-gub.live · scene cycle</span>
+            <span>proto-noos.live · scene cycle</span>
             <span class="dots"><span></span><span></span><span></span></span>
           </div>
           <div class="narrative-stage">
@@ -1171,13 +1156,29 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
           <p class="intro">Shared science, product and engineering work from the team.</p>
         </div>
         <div class="research-list">
-          <a class="research-item" href="proto-noos.html" aria-label="Open PROTO-NOOS shared research note">
+          <a class="research-item" href="proto-noos/" aria-label="Open PROTO-NOOS ML shared research note">
             <div class="research-meta">
-              <time datetime="2026-05-03">03.05.2026</time>
+              <time datetime="2026-05-08">08.05.2026</time>
               <span class="tag">paper</span>
             </div>
             <h3>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h3>
-            <p>The SKNWPL Team <span class="research-arrow">→</span></p>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
+          </a>
+          <a class="research-item" href="proto-noos_system/" aria-label="Open PROTO-NOOS shared research note">
+            <div class="research-meta">
+              <time datetime="2026-05-13">13.05.2026</time>
+              <span class="tag">paper</span>
+            </div>
+            <h3>PROTO-NOOS: Orchestrating Open-Access Bioinformatics for Seamless Drug Discovery</h3>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
+          </a>
+          <a class="research-item" href="proto-noos_bca/" aria-label="Open PROTO-NOOS BCA shared research note">
+            <div class="research-meta">
+              <time datetime="2026-05-13">13.05.2026</time>
+              <span class="tag">poster</span>
+            </div>
+            <h3>Molecular Dynamics IN PROTO-NOOS: Comparative Analysis of EcDHFR-NADPH-Ligand Complex Dynamics for Selected Trimethoprim Analogues</h3>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
           </a>
         </div>
       </section>
@@ -1202,7 +1203,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
             <li data-i18n="why.l2"><strong>Selekcja bez kontekstu metabolicznego</strong> pomija systemowe skutki uboczne.</li>
             <li data-i18n="why.l3"><strong>Potrzebny jest pipeline</strong>, który raportuje artefakty i ograniczenia na każdym etapie.</li>
           </ul>
-          <p class="footnote" data-i18n="why.note">Uwaga: snapshot datowany 2026-02-10. Wszystkie metryki poniżej odnoszą się do konkretnego runu EXP3 pilot15 oraz EXP2 surrogate loop. Traktujemy je jako raport stanu inżynieryjnego, nie końcowe twierdzenia biologiczne.</p>
+          <p class="footnote" data-i18n="why.note">Uwaga: metryki poniżej opisują aktualny stan prac inżynieryjnych, nie końcowe twierdzenia biologiczne.</p>
         </div>
       </div>
     </div>
@@ -1213,7 +1214,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">§ 02</span>
-        <span class="section-kicker" data-i18n="pipe.kicker">Pipeline GUB</span>
+        <span class="section-kicker" data-i18n="pipe.kicker">PROTO-NOOS</span>
         <span></span>
       </div>
       <h2 class="section-title" data-i18n="pipe.title">Sześć etapów od SMILES do systemowej biologii.</h2>
@@ -1249,7 +1250,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     <div class="wrap">
       <div class="section-head">
         <span class="section-num">§ 02</span>
-        <span class="section-kicker">Pipeline GUB</span>
+        <span class="section-kicker">PROTO-NOOS</span>
         <span style="font-family:var(--mono); font-size:11px; color:var(--fg-dim); letter-spacing:0.1em;">2026-02-10</span>
       </div>
 
@@ -1295,7 +1296,6 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       <div class="section-head">
         <span class="section-num">§ 03</span>
         <span class="section-kicker">Status</span>
-        <span style="font-family:var(--mono); font-size:11px; color:var(--fg-dim); letter-spacing:0.1em;">snapshot 2026-02-10</span>
       </div>
 
       <h1 class="section-title" data-i18n="status.title">Repozytoria i aktualne zadania.</h1>
@@ -1342,7 +1342,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
         <span></span>
       </div>
 
-      <h1 class="section-title" data-i18n="join.title">Dołącz do zespołu GUB.</h1>
+      <h1 class="section-title" data-i18n="join.title">Dołącz do zespołu PROTO-NOOS.</h1>
       <p class="lede" style="margin-top:1rem; max-width:60rem;" data-i18n="join.text">Szukamy osób, które chcą budować rzetelny pipeline badawczy i regularnie domykać zadania inżynieryjne. Autonomia, systematyczne debugowanie, jasna komunikacja postępu.</p>
 
       <div class="rule-label" data-i18n="join.roles">Obszary pracy · kliknij żeby rozwinąć</div>
@@ -1397,7 +1397,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       <div class="rule-label" data-i18n="join.apply">Jak aplikować</div>
       <div class="prose" style="max-width:60rem;">
         <ol style="padding-left:1.3rem; color:var(--fg-muted);">
-          <li style="margin-bottom:0.5rem;" data-i18n="apply1">Napisz na <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a>, w którym obszarze chcesz wejść i jaki problem chcesz przejąć.</li>
+          <li style="margin-bottom:0.5rem;" data-i18n="apply1">Napisz na <a href="mailto:sknwpl@proton.me">contact email</a>, w którym obszarze chcesz wejść i jaki problem chcesz przejąć.</li>
           <li style="margin-bottom:0.5rem;" data-i18n="apply2">Po krótkiej rozmowie dostajesz zadanie startowe i plan wdrożenia.</li>
         </ol>
         <p class="footnote" data-i18n="apply.note">Liczy się rzetelność wykonania i iteracyjna poprawa jakości, nie formalny papier.</p>
@@ -1443,7 +1443,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 
       <div style="margin-top:2.5rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
         <a class="btn primary" href="mailto:sknwpl@proton.me"><span data-i18n="support.cta">Skontaktuj się</span><span class="arrow">→</span></a>
-        <button class="btn" onclick="navigator.clipboard.writeText('sknwpl@proton.me'); this.firstElementChild.textContent='skopiowano ✓'; setTimeout(()=>this.firstElementChild.textContent='sknwpl@proton.me', 1600);"><span>sknwpl@proton.me</span><span class="arrow">⎘</span></button>
+        <button class="btn" onclick="navigator.clipboard.writeText('sknwpl@proton.me'); this.firstElementChild.textContent='skopiowano ✓'; setTimeout(()=>this.firstElementChild.textContent='copy email', 1600);"><span>copy email</span><span class="arrow">⎘</span></button>
       </div>
 
       <p class="footnote" data-i18n="support.reassure" style="margin-top:2rem;">Twoje dane pozostają prywatne. Nie wysyłamy spamu. Odpowiadamy w ciągu 3-4 dni roboczych.</p>
@@ -1463,7 +1463,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     <div>
       <h4 data-i18n="footer.contact">Kontakt</h4>
       <p>
-        <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a><br>
+        <a href="mailto:sknwpl@proton.me">contact email</a><br>
         <a href="https://github.com/Komputerowe-Projektowanie-Lekow" target="_blank" rel="noopener">github.com/…</a><br>
         <span style="color:var(--fg-dim);" data-i18n="footer.address">Sekcja KPL<br>Warszawa</span>
       </p>
@@ -1474,9 +1474,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     </div>
   </div>
   <div class="copy-line">
-    <span>© 2026 SKNWPL · Pipeline GUB v2026.02</span>
-    <span>snapshot @ 2026-02-10</span>
-    <span>no trackers · no cookies</span>
+    <span>© 2026 PUT Drug Discovery - PROTO-NOOS</span>
   </div>
 </footer>
 

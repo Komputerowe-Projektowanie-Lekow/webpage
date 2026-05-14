@@ -21,7 +21,7 @@ save_qr(
     "sknwpl.svg",
 )
 save_qr(
-    "https://github.com/Komputerowe-Projektowanie-Lekow/GUB_ML",
+    "https://github.com/Komputerowe-Projektowanie-Lekow/PROTO-NOOS-ML",
     "gub-ml-github-qr.svg",
 )
 save_qr(

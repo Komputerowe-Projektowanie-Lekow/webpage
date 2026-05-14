@@ -3,8 +3,8 @@ export const translations = {
     // Meta
     "meta.description": "Sekcja CADD Politechniki Poznańskiej: budujemy otwarty workflow projektowania leków (REMD, MSM, TRAM, ML) i paczkę PMARLO. Aktualnie: AQP4/Alzheimer, przygotowania do Polaris Hub. Dołącz — projekty, PR-y, wyniki.",
     "meta.title": "Sekcja Koła Naukowego Wspierania Projektów Leków",
-    "meta.micro.description": "Pipeline GUB: zamknięta pętla od generowania molekuł do walidacji komórkowej i systemowej.",
-    "meta.micro.title": "Pipeline GUB - Sekcja Komputerowego Projektowania Leków",
+    "meta.micro.description": "PROTO-NOOS: zamknięta pętla od generowania molekuł do walidacji komórkowej i systemowej.",
+    "meta.micro.title": "PROTO-NOOS - PUT Drug Discovery",
 
     // ASCII Caption
     "ascii.caption": "Dokowanie ligandu do białka",
@@ -153,7 +153,7 @@ export const translations = {
     "join.intro1": "Dołącz do nas, tworząc jednostkę badawczą tutaj na politechnice.",
     "join.intro2": "Nie prowadzimy żadnych regularnych wykładów ani wprowadzeń. Preferujemy pracę nad konkretnymi problemami badawczymi. Większość komunikacji odbywa się na Discordzie, GitHubie, Notion i Zotero.",
     "join.build.title": "Chodź budować",
-    "join.build.text1": "Obecnie sknwpl składa się z 5 osób, która jest rozłożona na 3 grupy:",
+    "join.build.text1": "Obecnie PUT Drug Discovery składa się z 5 osób, które są rozłożone na 3 grupy:",
     "join.build.group1": "Infrastruktura",
     "join.build.group1.desc": " – tutaj jest budowa rzeczy pod workflow, żeby inni nie musieli robić jakichś konfiguracji narzędzi, jeżeli my możemy to zrobić.",
     "join.build.group2": "Bioinformatyka strukturalna",
@@ -214,18 +214,18 @@ export const translations = {
     "footer.contact.title": "Kontakt i adresy",
     "footer.contact.github": "Repozytorium na GitHubie",
     "footer.contact.email": "Kontakt",
-    "footer.contact.email.text": "Email: sknwpl(at)proton(dot)me",
+    "footer.contact.email.text": "Email: contact email",
     "footer.partners.title": "Partnerzy / wsparcie",
     "footer.partners.text": "Otwarte zaproszenie do współpracy (sprzęt, granty, konsultacje).<br>Jeżeli chcesz się odezwać z pytaniem, jakąś współpracą naukową itp. - skontaktuj się z nami.",
     "footer.bottom": "Dołącz do nas i podziel się swoimi umiejętnościami.",
 
     // Microorganism Project (Index - PL)
-    "micro.ascii.caption": "Pipeline GUB - wizualizacja aktywności białka",
+    "micro.ascii.caption": "PROTO-NOOS - wizualizacja aktywności białka",
     "micro.nav.aqp4": "Archiwum: AQP4",
-    "micro.nav.home": "GUB Pipeline",
+    "micro.nav.home": "PROTO-NOOS",
     "micro.nav.start": "Start",
 
-    "micro.hero.title": "Pipeline GUB: projektowanie leków na bakterie Gram-ujemne",
+    "micro.hero.title": "PROTO-NOOS: projektowanie leków na bakterie Gram-ujemne",
     "micro.hero.lead": "Budujemy zamkniętą pętlę od projektowania molekuł do weryfikacji komórkowej i systemowej, a wyniki wracają do modeli.",
     "micro.hero.proof1": "Generowanie de novo (REINVENT4)",
     "micro.hero.proof2": "Retencja i target engagement (Stage 2-3)",
@@ -241,7 +241,7 @@ export const translations = {
     "micro.why.point2": "Selekcja bez kontekstu metabolicznego pomija systemowe skutki uboczne.",
     "micro.why.point3": "Potrzebny jest pipeline, który raportuje artefakty i ograniczenia na każdym etapie.",
 
-    "micro.pipeline.title": "Pipeline GUB (Gram-Negative & Universal Bacteria)",
+    "micro.pipeline.title": "PROTO-NOOS (Gram-Negative & Universal Bacteria)",
     "micro.pipeline.intro": "Zintegrowany workflow CADD do projektowania celowanego w E. coli: od generowania molekuł po walidację Stage 6A/6B.",
 
     "micro.step.output.label": "Output (ostatni znany stan)",
@@ -273,7 +273,7 @@ export const translations = {
     "micro.ouroboros.subtitle": "Iteracyjne uczenie pipeline'u na wynikach walidacji.",
     "micro.ouroboros.desc": "Aktualnie działa inżynieryjna pętla eksperymentalna i walidacyjna. Nie traktujemy jej jako w pełni autonomicznego systemu produkcyjnego.",
     "micro.ouroboros.live.title": "Działa dziś (na dzień 2026-02-10)",
-    "micro.ouroboros.live.item1": "Kontrakty API (Pydantic) i stage_runner.py na etapach 1-6.",
+    "micro.ouroboros.live.item1": "Kontrakty API i walidacja etapów 1-6.",
     "micro.ouroboros.live.item2": "EXP3 pilot15 (top_n=10): Stage1 -> Stage6 + finalize zakończone.",
     "micro.ouroboros.live.item3": "EXP2 surrogate loop (n=15): true pass-rate 0.575 -> 0.625.",
     "micro.ouroboros.target.title": "Architektura docelowa",
@@ -315,7 +315,7 @@ export const translations = {
     "micro.task4.desc": "Domknąć progi Stage 6A/6B (`strict-quality-gates`) i opisać je jako stały standard runów.",
     "micro.task4.meta": "Status: in progress.",
 
-    "micro.join.title": "Dołącz do zespołu GUB",
+    "micro.join.title": "Dołącz do zespołu PROTO-NOOS",
     "micro.join.text": "Szukamy osób, które chcą budować rzetelny pipeline badawczy i regularnie domykać zadania inżynieryjne.",
     "micro.join.roles.title": "Obszary pracy",
     "micro.join.role1.title": "Infrastruktura i automatyzacja",
@@ -346,8 +346,8 @@ export const translations = {
     // Meta
     "meta.description": "CADD Section of Poznan University of Technology: building an open drug design workflow (REMD, MSM, TRAM, ML) and the PMARLO package. Currently: AQP4/Alzheimer, preparations for Polaris Hub. Join — projects, PRs, results.",
     "meta.title": "Drug Design Support Research Group Section",
-    "meta.micro.description": "GUB pipeline: closed-loop flow from molecule generation to cell and systems validation.",
-    "meta.micro.title": "GUB Pipeline - Computer-Aided Drug Design Section",
+    "meta.micro.description": "PROTO-NOOS pipeline: closed-loop flow from molecule generation to cell and systems validation.",
+    "meta.micro.title": "PROTO-NOOS - PUT Drug Discovery",
 
     // ASCII Caption
     "ascii.caption": "Ligand docking to protein",
@@ -496,7 +496,7 @@ export const translations = {
     "join.intro1": "Join us in creating a research unit here at the university.",
     "join.intro2": "We don't conduct any regular lectures or introductions. We prefer working on specific research problems. Most communication takes place on Discord, GitHub, Notion and Zotero.",
     "join.build.title": "Come Build",
-    "join.build.text1": "Currently sknwpl consists of 5 people, divided into 3 groups:",
+    "join.build.text1": "Currently PUT Drug Discovery consists of 5 people, divided into 3 groups:",
     "join.build.group1": "Infrastructure",
     "join.build.group1.desc": " – here we build things for the workflow, so others don't have to configure tools if we can do it.",
     "join.build.group2": "Structural Bioinformatics",
@@ -557,18 +557,18 @@ export const translations = {
     "footer.contact.title": "Contact and Addresses",
     "footer.contact.github": "GitHub Repository",
     "footer.contact.email": "Contact",
-    "footer.contact.email.text": "Email: sknwpl(at)proton(dot)me",
+    "footer.contact.email.text": "Email: contact email",
     "footer.partners.title": "Partners / Support",
     "footer.partners.text": "Open invitation to collaborate (equipment, grants, consultations).<br>If you want to reach out with a question, scientific collaboration, etc. - contact us.",
     "footer.bottom": "Join us and share your skills.",
 
     // Microorganism Project (Index - EN fallback)
-    "micro.ascii.caption": "GUB pipeline - protein activity visualization",
+    "micro.ascii.caption": "PROTO-NOOS pipeline - protein activity visualization",
     "micro.nav.aqp4": "Archive: AQP4",
-    "micro.nav.home": "GUB Pipeline",
+    "micro.nav.home": "PROTO-NOOS",
     "micro.nav.start": "Start",
 
-    "micro.hero.title": "GUB Pipeline: drug design for Gram-negative bacteria",
+    "micro.hero.title": "PROTO-NOOS: drug design for Gram-negative bacteria",
     "micro.hero.lead": "We build a closed-loop flow from molecule design to cell and systems verification, and feed outcomes back into the models.",
     "micro.hero.proof1": "De novo generation (REINVENT4)",
     "micro.hero.proof2": "Retention and target engagement (Stage 2-3)",
@@ -584,7 +584,7 @@ export const translations = {
     "micro.why.point2": "Selection without metabolic context misses system-level risk.",
     "micro.why.point3": "The pipeline must expose artifacts and limits at every stage.",
 
-    "micro.pipeline.title": "GUB Pipeline (Gram-Negative & Universal Bacteria)",
+    "micro.pipeline.title": "PROTO-NOOS (Gram-Negative & Universal Bacteria)",
     "micro.pipeline.intro": "Integrated CADD workflow for E. coli: from molecule generation to Stage 6A/6B validation.",
 
     "micro.step.output.label": "Output (latest known state)",
@@ -616,7 +616,7 @@ export const translations = {
     "micro.ouroboros.subtitle": "Iterative learning on validation outcomes.",
     "micro.ouroboros.desc": "An engineering validation loop is operating, but we do not present it as a fully autonomous production system.",
     "micro.ouroboros.live.title": "Live now (as of 2026-02-10)",
-    "micro.ouroboros.live.item1": "API contracts (Pydantic) and stage_runner.py across stages 1-6.",
+    "micro.ouroboros.live.item1": "API contracts and stage validation across stages 1-6.",
     "micro.ouroboros.live.item2": "EXP3 pilot15 (top_n=10): Stage1 -> Stage6 + finalize completed.",
     "micro.ouroboros.live.item3": "EXP2 surrogate loop (n=15): true pass-rate 0.575 -> 0.625.",
     "micro.ouroboros.target.title": "Target architecture",
@@ -658,7 +658,7 @@ export const translations = {
     "micro.task4.desc": "Finalize Stage 6A/6B strict-quality-gates and document as run standard.",
     "micro.task4.meta": "Status: in progress.",
 
-    "micro.join.title": "Join the GUB team",
+    "micro.join.title": "Join the PROTO-NOOS team",
     "micro.join.text": "We are looking for people who want to build a rigorous research pipeline and close engineering tasks regularly.",
     "micro.join.roles.title": "Work areas",
     "micro.join.role1.title": "Infrastructure and automation",

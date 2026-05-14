@@ -1,5 +1,5 @@
 /**
- * @fileoverview ASCII animation engine for GUB Pipeline visualization.
+ * @fileoverview ASCII animation engine for PROTO-NOOS visualization.
  * Handles protein structure animations and narrative scene rendering.
  */
 

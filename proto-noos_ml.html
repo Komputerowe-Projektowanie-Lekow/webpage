@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTO-NOOS ML - Rational Compute Allocation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:opsz,wght@6..72,400;6..72,500;6..72,600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #092334;
+    --muted: #4b6171;
+    --dim: #74818c;
+    --paper: #f4f7f5;
+    --surface: rgba(255,255,255,0.82);
+    --line: rgba(9,35,52,0.16);
+    --teal: #007f83;
+    --green: #567a3d;
+    --amber: #b16b28;
+    --rose: #a1485f;
+    --shadow: 0 18px 46px rgba(9,35,52,0.11);
+    --mono: 'IBM Plex Mono', ui-monospace, Menlo, Consolas, monospace;
+    --serif: 'Newsreader', Georgia, serif;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; background: var(--paper); color: var(--ink); }
+  body {
+    min-height: 100vh;
+    font-family: var(--mono);
+    background-image:
+      linear-gradient(to right, rgba(0,127,131,0.09) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(177,107,40,0.08) 1px, transparent 1px);
+    background-size: 68px 68px;
+  }
+  a { color: var(--teal); text-decoration: none; border-bottom: 1px solid currentColor; }
+  .nav {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    border-bottom: 1px solid var(--line);
+    background: rgba(244,247,245,0.92);
+    backdrop-filter: blur(12px);
+  }
+  .nav-inner {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: 0.75rem clamp(1.1rem, 3vw, 2rem);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+  .brand {
+    border: none;
+    color: var(--ink);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  main {
+    max-width: 78rem;
+    margin: 0 auto;
+    padding: clamp(3.5rem, 7vw, 6.5rem) clamp(1.1rem, 3vw, 2rem) 5rem;
+  }
+  .hero {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(17rem, 24rem);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: end;
+    margin-bottom: 3rem;
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.55rem;
+    align-items: center;
+    color: var(--dim);
+    font-size: 12px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+  }
+  .tag {
+    border: 1px solid var(--line);
+    padding: 2px 7px;
+    background: rgba(255,255,255,0.55);
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.35rem, 5.4vw, 4.7rem);
+    line-height: 1.02;
+    font-weight: 500;
+    letter-spacing: 0;
+    margin: 0 0 1.25rem;
+    max-width: 62rem;
+  }
+  .dek {
+    color: var(--muted);
+    line-height: 1.72;
+    font-size: clamp(1rem, 1.6vw, 1.15rem);
+    max-width: 58rem;
+    margin: 0 0 1.4rem;
+  }
+  .author {
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--dim);
+    font-size: 1.1rem;
+    margin-bottom: 1.4rem;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .button {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.55rem;
+    border: 1px solid var(--teal);
+    padding: 0.65rem 0.9rem;
+    background: rgba(255,255,255,0.78);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+  }
+  .hero-panel {
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    padding: 1rem;
+  }
+  .hero-panel img {
+    display: block;
+    width: 100%;
+    height: auto;
+    padding: 0.55rem;
+    border: 1px solid var(--line);
+    background: #fff;
+  }
+  .hero-panel p {
+    margin: 0.85rem 0 0;
+    color: var(--muted);
+    font-size: 13px;
+    line-height: 1.55;
+  }
+  .section {
+    border-top: 1px solid var(--line);
+    padding-top: 1.35rem;
+    margin-top: 3rem;
+  }
+  h2 {
+    font-family: var(--serif);
+    font-size: clamp(1.65rem, 3vw, 2.15rem);
+    line-height: 1.12;
+    font-weight: 500;
+    margin: 0 0 0.9rem;
+  }
+  h3 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
+    line-height: 1.18;
+    font-weight: 500;
+    margin: 0 0 0.45rem;
+  }
+  p {
+    color: var(--muted);
+    line-height: 1.75;
+    font-size: 15px;
+    max-width: 58rem;
+  }
+  .abstract {
+    max-width: 62rem;
+    color: var(--muted);
+    line-height: 1.78;
+    font-size: 15px;
+  }
+  .metrics {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+    margin-top: 1.35rem;
+  }
+  .metric {
+    border-left: 3px solid var(--teal);
+    background: rgba(255,255,255,0.72);
+    padding: 0.85rem 0.9rem;
+    box-shadow: 0 10px 28px rgba(9,35,52,0.07);
+  }
+  .metric:nth-child(2) { border-color: var(--green); }
+  .metric:nth-child(3) { border-color: var(--amber); }
+  .metric:nth-child(4) { border-color: var(--rose); }
+  .metric strong {
+    display: block;
+    color: var(--ink);
+    font-family: var(--serif);
+    font-size: 1.8rem;
+    line-height: 1;
+    font-weight: 500;
+  }
+  .metric span {
+    display: block;
+    margin-top: 0.45rem;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.45;
+  }
+  .figure-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1.2rem;
+  }
+  .figure-card {
+    margin: 0;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+  .figure-card img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    background: #fff;
+    border-bottom: 1px solid var(--line);
+  }
+  .figure-card figcaption {
+    padding: 0.85rem 0.95rem 1rem;
+  }
+  .figure-card span {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--amber);
+    font-size: 10px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+  }
+  .figure-card p {
+    margin: 0;
+    font-size: 13px;
+    line-height: 1.58;
+  }
+  .poster-frame {
+    display: block;
+    width: 100%;
+    min-height: 32rem;
+    border: 1px solid var(--line);
+    background: #fff;
+    box-shadow: var(--shadow);
+  }
+  .poster-tools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.7rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 900px) {
+    .hero,
+    .metrics {
+      grid-template-columns: 1fr;
+    }
+    .hero-panel {
+      max-width: 24rem;
+    }
+  }
+  @media (max-width: 720px) {
+    main { padding-top: 2.6rem; }
+    .figure-grid { grid-template-columns: 1fr; }
+    .poster-frame { min-height: 24rem; }
+  }
+</style>
+</head>
+<body>
+  <nav class="nav">
+    <div class="nav-inner">
+      <a class="brand" href="index.html">PUT Drug Discovery - PROTO-NOOS</a>
+      <a href="index.html">Back to site</a>
+    </div>
+  </nav>
+
+  <main>
+    <header class="hero">
+      <div>
+        <div class="meta">
+          <time datetime="2026-05-08">08.05.2026</time>
+          <span class="tag">manuscript</span>
+          <span class="tag">poster</span>
+          <span class="tag">machine learning</span>
+        </div>
+        <h1>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h1>
+        <p class="dek">
+          A shared PROTO-NOOS ML report describing how uncertainty, mutual information, and evidence-aware prioritisation can guide which antibiotic-discovery candidates receive deeper and more expensive computational treatment.
+        </p>
+        <div class="author">PUT Drug Discovery</div>
+        <div class="actions">
+          <a class="button" href="./posts/proto-noos-ml/PROTO-NOOS_ Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification .pdf">Open manuscript</a>
+          <a class="button" href="./posts/proto-noos-ml/Poster GHOST PROTO-NOOS ML.pdf">Open poster</a>
+          <a class="button" href="#figures">View figures</a>
+        </div>
+      </div>
+      <aside class="hero-panel" aria-label="Page QR code">
+        <a href="./qrs/proto-noos-ml/proto-noos-page-qr.svg">
+          <img src="./qrs/proto-noos-ml/proto-noos-page-qr.svg" alt="QR code for the PROTO-NOOS ML page">
+        </a>
+        <p>Scan to open this shared PROTO-NOOS ML research page during poster sessions and manuscript discussions.</p>
+      </aside>
+    </header>
+
+    <section class="section" aria-labelledby="abstractTitle">
+      <h2 id="abstractTitle">Abstract</h2>
+      <p class="abstract">
+        PROTO-NOOS ML treats early antibiotic-discovery screening as a compute-allocation problem. Rather than sending every generated molecule through the most expensive modelling stages, the workflow uses uncertainty-aware and information-theoretic descriptors to decide which candidates deserve deeper analysis. The study frames model confidence, evidence disagreement, and expected information gain as explicit ranking signals that can be combined with physicochemical, structural, and biological descriptors. This creates a practical bridge between high-throughput approximation and targeted downstream simulation, where scarce compute is spent on candidates whose evaluation is expected to reduce uncertainty most meaningfully.
+      </p>
+      <div class="metrics" aria-label="Key study themes">
+        <div class="metric"><strong>MI</strong><span>mutual-information signal for prioritising informative candidates</span></div>
+        <div class="metric"><strong>UQ</strong><span>uncertainty quantification as a routing feature, not only an error bar</span></div>
+        <div class="metric"><strong>ML</strong><span>machine-learning descriptors aligned with downstream simulation cost</span></div>
+        <div class="metric"><strong>PROTO-NOOS</strong><span>pipeline-ready data products for iterative candidate triage</span></div>
+      </div>
+    </section>
+
+    <section class="section" id="figures" aria-labelledby="figuresTitle">
+      <h2 id="figuresTitle">Visual Summary</h2>
+      <p>
+        The figure set presents the poster narrative as a sequence: building a Pareto view, measuring screening depth, exposing uncertainty, and checking how realistic the available data are for downstream decisions.
+      </p>
+      <div class="figure-grid">
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-ml/gif_01_pareto_build_creative_final.png" alt="Pareto build visual summary">
+          <figcaption>
+            <span>Figure 1</span>
+            <h3>Pareto construction</h3>
+            <p>Candidate prioritisation is framed as a trade-off among informative but imperfect screening signals.</p>
+          </figcaption>
+        </figure>
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-ml/gif_02_screening_depth_creative_final.png" alt="Screening depth visual summary">
+          <figcaption>
+            <span>Figure 2</span>
+            <h3>Screening depth</h3>
+            <p>Compute allocation is adjusted to the expected value of learning from each candidate.</p>
+          </figcaption>
+        </figure>
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-ml/gif_03_uncertainty_story_creative_final.png" alt="Uncertainty visual summary">
+          <figcaption>
+            <span>Figure 3</span>
+            <h3>Uncertainty story</h3>
+            <p>Uncertain predictions become routing signals for selecting candidates that need better evidence.</p>
+          </figcaption>
+        </figure>
+        <figure class="figure-card">
+          <img src="./posts/proto-noos-ml/gif_04_data_realism_creative_final.png" alt="Data realism visual summary">
+          <figcaption>
+            <span>Figure 4</span>
+            <h3>Data realism</h3>
+            <p>The workflow separates useful ranking information from overconfident claims about biological activity.</p>
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" aria-labelledby="posterTitle">
+      <h2 id="posterTitle">Poster and Manuscript</h2>
+      <p>
+        The poster provides the compact visual version of the compute-allocation argument, while the manuscript records the motivation and modelling assumptions for the PROTO-NOOS ML branch.
+      </p>
+      <iframe class="poster-frame" src="./posts/proto-noos-ml/Poster GHOST PROTO-NOOS ML.pdf#toolbar=0" title="PROTO-NOOS ML poster PDF preview"></iframe>
+      <div class="poster-tools">
+        <a class="button" href="./posts/proto-noos-ml/Poster GHOST PROTO-NOOS ML.pdf">Open poster PDF</a>
+        <a class="button" href="./posts/proto-noos-ml/PROTO-NOOS_ Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification .pdf">Open manuscript PDF</a>
+      </div>
+    </section>
+  </main>
+</body>
+</html>

@@ -1,5 +1,5 @@
 // ══════════════════════════════════════════════════════════
-//   SKNWPL Pipeline GUB — app logic
+//   PUT Drug Discovery PROTO-NOOS — app logic
 // ══════════════════════════════════════════════════════════
 
 // ─── 1. Tweaks ─────────────────────────────────────────────
@@ -64,7 +64,7 @@ function renderPipeline() {
 // ─── 3. Stage cards ────────────────────────────────────────
 const STAGE_DETAIL = [
   { n:'00', key:'ouroboros', special:true, title:'Pętla Ouroboros', status:'live',
-    tool:'stage_runner.py · Pydantic API', out:'EXP3 pilot15 top_n=10 · EXP2 0.575→0.625',
+    tool:'Walidacja etapów', out:'EXP3 pilot15 top_n=10 · EXP2 0.575→0.625',
     desc:'Iteracyjne uczenie pipeline\'u na wynikach walidacji. Działa dziś jako inżynieryjna pętla; nie traktujemy jej jako w pełni autonomicznego systemu produkcyjnego.' },
   { n:'01', key:'generate', title:'Generate · REINVENT4', status:'live',
     tool:'REINVENT4', out:'12,797 rekordów → 12,581 valid',
@@ -174,7 +174,6 @@ try {
 const I18N = {
   en: {
     'nav.home':'Home','nav.pipeline':'Pipeline','nav.status':'Status','nav.join':'Join','nav.support':'Support',
-    'hero.status':'Pipeline active · snapshot 2026-02-10','hero.org':'Computational Drug Design Section',
     'hero.h1':'Designing drugs for <em>Gram-negative</em> bacteria — from molecule generation to systems validation.',
     'hero.lead':'We build a closed loop from <em>de novo</em> design to cellular and systems verification. Every stage reports artefacts, limits and coverage — results feed back into the models.',
     'cta.join':'Join the team','cta.pipeline':'See pipeline',
@@ -185,8 +184,8 @@ const I18N = {
     'why.l1':'<strong>Affinity alone is not enough</strong> if the molecule cannot stay in the cell.',
     'why.l2':'<strong>Selection without metabolic context</strong> skips systemic side effects.',
     'why.l3':'<strong>A pipeline is needed</strong> that reports artefacts and limits at every stage.',
-    'why.note':'Note — snapshot dated 2026-02-10. All metrics below refer to specific EXP3 pilot15 and EXP2 surrogate-loop runs. Treat them as an engineering status report, not final biological claims.',
-    'pipe.kicker':'Pipeline GUB','pipe.title':'Six stages from SMILES to systems biology.',
+    'why.note':'Note: the metrics below describe the current engineering status, not final biological claims.',
+    'pipe.kicker':'PROTO-NOOS','pipe.title':'Six stages from SMILES to systems biology.',
     'pipe.intro':'Integrated CADD workflow targeting <em>E. coli</em>: from molecule generation (REINVENT4), through retention (CellTE) and structure (Boltz2), to dynamics (GROMACS) and systems validation (COBRApy/iML1515).',
     'pipe.chart':'Pipeline topology · layout:','pipe.details':'Full details and accordion',
     'pipe.title2':'Gram-Negative & Universal Bacteria — closed loop.',
@@ -199,7 +198,7 @@ const I18N = {
     'repo1.title':'REINVENT4 + analysis + retention','repo1.desc':'Generation, filtering and scoring for Stage 3 input with large-library support.','repo1.meta':'env validations + log-driven hardening (2026-02-09)',
     'repo2.title':'CellTE + Boltz2 + GROMACS','repo2.desc':'Kinetic and structural stages with CSV contracts and pre/post Boltz2 steps.','repo2.meta':'top 200 → Boltz2, top 50 → GROMACS',
     'repo3.title':'Systems biology Stage 6A/6B','repo3.desc':'FBA/FVA, quality gates, target preflight and blindspot reports.','repo3.meta':'EXP1: pilot 20 + full 100',
-    'join.title':'Join the GUB team.','join.text':'We are looking for people who want to build a reliable research pipeline and consistently close out engineering tasks. Autonomy, systematic debugging, clear progress communication.',
+    'join.title':'Join the PROTO-NOOS team.','join.text':'We are looking for people who want to build a reliable research pipeline and consistently close out engineering tasks. Autonomy, systematic debugging, clear progress communication.',
     'join.roles':'Work areas','join.expect':'What we expect','join.apply':'How to apply',
     'role1.title':'Infrastructure & automation','role1.desc':'Slurm, handoff, stage validations and run reliability.',
     'role2.title':'Molecular modeling','role2.desc':'REINVENT4, Boltz2, GROMACS, structural result interpretation.',
@@ -207,7 +206,7 @@ const I18N = {
     'expect1':'<strong>Autonomy & delivery</strong> — from diagnosis to artefact.',
     'expect2':'<strong>Comfort with uncertainty</strong> — systematic debugging.',
     'expect3':'<strong>Clear progress communication</strong> — weekly rhythm.',
-    'apply1':'Write to <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a> about which area you want to enter and what problem you want to own.',
+    'apply1':'Write to <a href="mailto:sknwpl@proton.me">contact email</a> about which area you want to enter and what problem you want to own.',
     'apply2':'After a short conversation you get a starter task and onboarding plan.',
     'apply.note':'What matters is delivery quality and iterative improvement, not formal credentials.',
     'support.title':'Support and partnership.','support.text':'If you want to accelerate this pipeline — below are concrete operational needs. We keep an open bottleneck registry; each entry has estimated impact.',
@@ -216,7 +215,7 @@ const I18N = {
     'ask2.t':'Experimental validation','ask2.d':'Wet-lab access for selected candidates after Stage 6 filters — closes the ouroboros loop.',
     'ask3.t':'Expert mentoring','ask3.d':'MD, FBA/COBRA and experimental design — consultation on quality-gate thresholds.',
     'footer.mission':'Mission','footer.mission.text':'This project was born from a dream of <em>computing</em> what seems impossible. The only question we look for an answer to — can a drug be designed <em>without a lab</em>?',
-    'footer.contact':'Contact','footer.address':'Computational DD Section<br>Warsaw',
+    'footer.contact':'Contact','footer.address':'PUT Drug Discovery<br>Poznan',
     'footer.partners':'Partners','footer.partners.text':'Open invitation to cooperate: hardware, grants, consulting, joint publications.',
   }
 };
@@ -253,7 +252,7 @@ const CMDK_ITEMS = [
   { label:'Go · Status', hint:'Nav', action:() => go('status') },
   { label:'Go · Join', hint:'Nav', action:() => go('join') },
   { label:'Go · Support', hint:'Nav', action:() => go('support') },
-  { label:'Copy email · sknwpl@proton.me', hint:'Action', action:() => navigator.clipboard.writeText('sknwpl@proton.me') },
+  { label:'Copy email', hint:'Action', action:() => navigator.clipboard.writeText('sknwpl@proton.me') },
   { label:'Switch language · Polski', hint:'Lang', action:() => setLang('pl') },
   { label:'Switch language · English', hint:'Lang', action:() => setLang('en') },
   { label:'Variant · Notebook', hint:'Tweak', action:() => setTweak('variant','notebook') },

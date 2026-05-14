@@ -1,5 +1,5 @@
 /**
- * @fileoverview UI interactions for the GUB Pipeline website.
+ * @fileoverview UI interactions for the PROTO-NOOS website.
  * Handles accordion, navigation, scroll progress, command palette, and clipboard.
  */
 
@@ -173,7 +173,7 @@ document.addEventListener("DOMContentLoaded", function () {
     { icon: "\u2302", label: "Kontekst sekcji", hint: "start home", action: function () { location.hash = "#kontekst-sekcji"; } },
     { icon: "\u2261", label: "Projekty", hint: "projects workflow", action: function () { location.hash = "#projekty"; } },
     { icon: "+", label: "Do\u0142\u0105cz", hint: "join team", action: function () { location.hash = "#dolacz"; } },
-    { icon: "\u25b6", label: "Pipeline GUB", hint: "main microorganisms", action: function () { location.href = "index.html"; } },
+    { icon: "\u25b6", label: "PROTO-NOOS", hint: "main microorganisms", action: function () { location.href = "index.html"; } },
     { icon: "\u2709", label: "Copy email", hint: "clipboard contact", action: function () {
       navigator.clipboard.writeText("sknwpl@proton.me").then(function(){}).catch(function(){});
     }},
