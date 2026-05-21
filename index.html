@@ -429,9 +429,17 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     gap: 0.6rem;
     align-items: center;
     font-family: var(--mono);
-    font-size: 10.5px;
-    letter-spacing: 0.08em;
-    color: var(--fg-dim);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--fg);
+    font-weight: 600;
+  }
+  .research-meta time {
+    display: inline-block;
+    color: var(--fg);
+    background: rgba(255, 255, 255, 0.78);
+    border: 1px solid var(--panel-border-strong);
+    padding: 2px 7px;
   }
   .research-item .tag {
     display: inline-block;
@@ -1166,14 +1174,6 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
           <p class="intro">Shared science, product and engineering work from the team.</p>
         </div>
         <div class="research-list">
-          <a class="research-item" href="proto-noos/" aria-label="Open PROTO-NOOS ML shared research note">
-            <div class="research-meta">
-              <time datetime="2026-05-08">08.05.2026</time>
-              <span class="tag">paper</span>
-            </div>
-            <h3>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h3>
-            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
-          </a>
           <a class="research-item" href="proto-noos_system/" aria-label="Open PROTO-NOOS shared research note">
             <div class="research-meta">
               <time datetime="2026-05-13">13.05.2026</time>
@@ -1188,6 +1188,14 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
               <span class="tag">poster</span>
             </div>
             <h3>Molecular Dynamics IN PROTO-NOOS: Comparative Analysis of EcDHFR-NADPH-Ligand Complex Dynamics for Selected Trimethoprim Analogues</h3>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
+          </a>
+          <a class="research-item" href="proto-noos/" aria-label="Open PROTO-NOOS ML shared research note">
+            <div class="research-meta">
+              <time datetime="2026-05-08">08.05.2026</time>
+              <span class="tag">paper</span>
+            </div>
+            <h3>PROTO-NOOS: Rational Compute Allocation in Antibiotic Discovery via Mutual Information and Uncertainty Quantification</h3>
             <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
           </a>
         </div>
