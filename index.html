@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>PUT Drug Discovery - PROTO-NOOS</title>
+<title>PUT Drug Discovery</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=IBM+Plex+Mono:wght@300;400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,300;0,6..72,400;0,6..72,500;0,6..72,600;1,6..72,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -62,7 +62,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     --panel: #ffffff;
     --panel-border: rgba(10,37,64,0.16);
     --panel-border-strong: rgba(10,37,64,0.32);
-    --nav-bg: rgba(243,247,251,0.92);
+    --nav-bg: rgba(255,255,255,0.94);
     --code-bg: rgba(10,37,64,0.04);
   }
 
@@ -151,23 +151,18 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     max-width: 78rem; margin: 0 auto;
     display: grid; grid-template-columns: auto 1fr auto;
     align-items: center; gap: 1.25rem;
-    padding: 0.65rem clamp(1.2rem, 3vw, 2rem);
+    padding: 0.5rem clamp(1.2rem, 3vw, 2rem);
   }
   .brand {
-    display: inline-flex; gap: 0.6rem; align-items: center;
+    display: inline-flex; align-items: center;
     color: var(--fg); border: none; text-transform: uppercase;
     letter-spacing: 0.14em; font-size: 12px; font-weight: 500;
   }
-  .brand-mark {
-    width: 28px; height: 28px;
-    display: inline-flex; align-items: center; justify-content: center;
-    border: 1px solid var(--panel-border-strong);
-    position: relative;
-  }
-  .brand-mark::before {
-    content: ''; position: absolute; inset: 5px;
-    background: var(--accent);
-    clip-path: polygon(50% 0, 100% 50%, 50% 100%, 0 50%);
+  .brand-logo {
+    width: clamp(150px, 13vw, 190px);
+    height: auto;
+    display: block;
+    object-fit: contain;
   }
   .nav-links { display: flex; gap: 0.25rem; justify-content: center; flex-wrap: wrap; }
   .nav-link {
@@ -1089,8 +1084,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 <nav class="nav">
   <div class="nav-inner">
     <a href="#" class="brand" data-nav="home">
-      <span class="brand-mark" aria-hidden="true"></span>
-      <span>PUT Drug Discovery - PROTO-NOOS</span>
+      <img class="brand-logo" src="images/logo/put_drug_discovery.png" alt="PUT Drug Discovery">
     </a>
     <div class="nav-links" id="navLinks">
       <button class="nav-link active" data-nav="home"><span class="num">01</span><span data-i18n="nav.home">Start</span></button>
@@ -1123,11 +1117,11 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       <pre class="protein-backdrop-screen main" id="proteinBackdropScreen" data-ready="false"></pre>
     </div>
     <div class="wrap">
-      <h1 data-i18n="hero.h1">Projektowanie leków na <em>Gram-ujemne</em>, od generowania molekuł do walidacji systemowej.</h1>
+      <h1 data-i18n="hero.h1">Projektowanie leków przeciw bakteriom <em>Gram-ujemnym</em>, prowadzone przez dane molekularne i ograniczenia biologiczne.</h1>
 
       <div class="hero-grid">
         <div>
-          <p class="hero-lead" data-i18n="hero.lead">Budujemy zamkniętą pętlę od projektowania <em>de novo</em> do weryfikacji komórkowej i systemowej. Każdy etap raportuje artefakty, ograniczenia i metryki pokrycia — wyniki wracają do modeli.</p>
+          <p class="hero-lead" data-i18n="hero.lead">Generujemy kandydatów, filtrujemy je pod kątem wejścia do bakterii Gram-ujemnych, modelujemy wiązanie i stabilność celu, a następnie sprawdzamy zaangażowanie celu w komórce, wpływ metaboliczny i dostępność syntezy. Każdy etap zapisuje dowody użyte w rankingu, dzięki czemu słabe sygnały i odrzucone kandydaty pozostają widoczne.</p>
 
           <div class="hero-cta">
             <button class="btn primary" data-nav="join"><span data-i18n="cta.join">Dołącz do zespołu</span><span class="arrow">→</span></button>
@@ -1492,7 +1486,7 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
     </div>
   </div>
   <div class="copy-line">
-    <span>© 2026 PUT Drug Discovery - PROTO-NOOS</span>
+    <span>© 2026 PUT Drug Discovery</span>
   </div>
 </footer>
 

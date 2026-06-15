@@ -174,8 +174,8 @@ try {
 const I18N = {
   en: {
     'nav.home':'Home','nav.pipeline':'Pipeline','nav.status':'Status','nav.join':'Join','nav.support':'Support',
-    'hero.h1':'Designing drugs for <em>Gram-negative</em> bacteria — from molecule generation to systems validation.',
-    'hero.lead':'We build a closed loop from <em>de novo</em> design to cellular and systems verification. Every stage reports artefacts, limits and coverage — results feed back into the models.',
+    'hero.h1':'Drug discovery for <em>Gram-negative</em> bacteria, guided by molecular evidence and biological constraints.',
+    'hero.lead':'We generate candidates, filter for Gram-negative entry, model target binding and stability, then check cellular target engagement, metabolic impact and synthesis routes. Each step records the evidence used for ranking so weak signals and failed candidates stay visible.',
     'cta.join':'Join the team','cta.pipeline':'See pipeline',
     'facts.generated':'Molecules generated','facts.valid':'Valid after Stage 2a','facts.pass':'EXP2 surrogate pass-rate',
     'why.kicker':'Context','why.aside':'Why this matters',
