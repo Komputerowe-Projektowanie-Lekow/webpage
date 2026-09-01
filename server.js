@@ -70,13 +70,37 @@ async function ensureContainer(db, id) {
   }
 }
 
-async function initCosmos() {
-  const conn = process.env.COSMOS_CONNECTION_STRING;
-  if (!conn) {
-    cosmosStatus = 'no COSMOS_CONNECTION_STRING';
-    return;
+function buildCosmosClient() {
+  // Accept either a full connection string or an endpoint + key pair, and be
+  // forgiving about stray quotes / whitespace pasted into the App Service setting.
+  const conn = (process.env.COSMOS_CONNECTION_STRING || '')
+    .trim()
+    .replace(/^["']|["']$/g, '');
+  const endpoint = (process.env.COSMOS_ENDPOINT || '').trim().replace(/^["']|["']$/g, '');
+  const key = (process.env.COSMOS_KEY || '').trim().replace(/^["']|["']$/g, '');
+
+  if (/AccountEndpoint=/i.test(conn) && /AccountKey=/i.test(conn)) {
+    return new CosmosClient(conn);
   }
-  const client = new CosmosClient(conn);
+  if (endpoint && key) {
+    return new CosmosClient({ endpoint, key });
+  }
+  if (/^https:\/\//i.test(conn)) {
+    throw new Error(
+      'COSMOS_CONNECTION_STRING is the account URI, not the connection string. ' +
+        'Copy "PRIMARY CONNECTION STRING" from Cosmos DB > Settings > Keys, ' +
+        'or set COSMOS_ENDPOINT + COSMOS_KEY instead.'
+    );
+  }
+  throw new Error(
+    'No usable Cosmos credentials. Set COSMOS_CONNECTION_STRING to the ' +
+      'PRIMARY CONNECTION STRING (Cosmos DB > Settings > Keys), or set ' +
+      'COSMOS_ENDPOINT + COSMOS_KEY.'
+  );
+}
+
+async function initCosmos() {
+  const client = buildCosmosClient();
   let db;
   try {
     ({ database: db } = await client.databases.createIfNotExists({

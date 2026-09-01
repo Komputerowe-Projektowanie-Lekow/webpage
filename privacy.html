@@ -13,6 +13,7 @@
     .legal p, .legal li { color: var(--fg-muted, #444); }
     .legal a { color: var(--accent, #01779B); }
     .legal .back { font-family: var(--mono, monospace); font-size: 12px; letter-spacing: 0.1em; text-transform: uppercase; }
+    .legal .todo { background: rgba(181,90,30,0.12); border-left: 3px solid var(--accent-warm, #b55a1e); padding: 0.4rem 0.75rem; font-size: 0.9em; }
   </style>
 </head>
 <body>
@@ -23,53 +24,76 @@
 
     <h2>1. Administrator danych</h2>
     <p>
-      Administratorem danych jest Sekcja Komputerowego Wspierania Projektowania Leków
-      (Politechnika Poznańska). Kontakt w sprawach danych osobowych:
-      <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a>.
-      <em>(Uzupełnij pełną nazwę jednostki i adres korespondencyjny.)</em>
+      Stroną zarządza <strong>PUT Drug Discovery</strong> — sekcja studencka działająca
+      w ramach koła naukowego <em>[dokładna nazwa koła]</em> Politechniki Poznańskiej.
+      Ponieważ sekcja działa w strukturach uczelni, administratorem danych osobowych
+      w rozumieniu RODO jest <strong>Politechnika Poznańska</strong>
+      (pl. Marii Skłodowskiej-Curie 5, 60-965 Poznań).
+    </p>
+    <p>
+      Kontakt w sprawach tej strony: <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a>.
+      Inspektor Ochrony Danych Politechniki Poznańskiej:
+      <a href="mailto:iod@put.poznan.pl">iod@put.poznan.pl</a>.
+    </p>
+    <p class="todo">
+      Do uzupełnienia przed publikacją: dokładna nazwa koła naukowego oraz potwierdzenie
+      z uczelnianym IOD, że taka forma informacji o administratorze jest wystarczająca.
+      Po przekształceniu sekcji w spółkę administratorem stanie się ta spółka.
     </p>
 
     <h2>2. Jakie dane zbieramy</h2>
     <p><strong>Formularz kontaktowy.</strong> Jeśli wyślesz do nas wiadomość, zapisujemy
-      podane przez Ciebie: imię i nazwisko, adres e-mail, opcjonalnie organizację/uczelnię
-      i obszar zainteresowania oraz treść wiadomości.</p>
+      podane przez Ciebie: imię i nazwisko, adres e-mail, opcjonalnie organizację lub
+      uczelnię oraz obszar zainteresowania, a także treść wiadomości. Podanie tych
+      danych jest dobrowolne, ale niezbędne, abyśmy mogli odpowiedzieć.</p>
     <p><strong>Statystyki odwiedzin.</strong> Dla każdej wyświetlonej strony zapisujemy:
       adres URL podstrony, adres strony odsyłającej (referrer), język przeglądarki,
       przybliżoną rozdzielczość ekranu, strefę czasową oraz identyfikator technicznej
       sesji. Identyfikator ten powstaje przez nieodwracalne skrótowanie (SHA-256)
-      adresu IP i przeglądarki z dobową solą — <strong>nie przechowujemy Twojego
-      adresu IP</strong> ani żadnych danych pozwalających Cię bezpośrednio
-      zidentyfikować. Nie używamy plików cookie ani narzędzi firm trzecich do
-      śledzenia.</p>
+      adresu IP i przeglądarki z solą zmienianą codziennie — <strong>nie
+      przechowujemy Twojego adresu IP</strong> ani żadnych danych pozwalających Cię
+      bezpośrednio zidentyfikować. Nie używamy plików cookie ani narzędzi analitycznych
+      firm trzecich.</p>
+    <p>Nie stosujemy profilowania ani zautomatyzowanego podejmowania decyzji
+      wywołujących wobec Ciebie skutki prawne.</p>
 
     <h2>3. Cel i podstawa prawna</h2>
     <ul>
-      <li>Odpowiedź na Twoje zapytanie i dalszy kontakt — art. 6 ust. 1 lit. a i b RODO
-        (zgoda / działania przed zawarciem współpracy).</li>
-      <li>Prowadzenie zbiorczych statystyk ruchu w celu rozwoju strony — art. 6 ust. 1
-        lit. f RODO (uzasadniony interes: analiza w formie zanonimizowanej).</li>
+      <li>Udzielenie odpowiedzi na Twoje zapytanie i dalszy kontakt —
+        art. 6 ust. 1 lit. a RODO (Twoja zgoda wyrażona przez wysłanie formularza)
+        oraz art. 6 ust. 1 lit. f RODO (nasz uzasadniony interes w prowadzeniu
+        korespondencji).</li>
+      <li>Prowadzenie zbiorczych statystyk ruchu w celu rozwoju strony —
+        art. 6 ust. 1 lit. f RODO (uzasadniony interes: analiza w formie
+        zanonimizowanej i zagregowanej).</li>
     </ul>
 
     <h2>4. Okres przechowywania</h2>
     <p>Wiadomości z formularza przechowujemy do czasu zakończenia korespondencji i przez
       okres do 24 miesięcy po niej, chyba że wcześniej poprosisz o ich usunięcie.
-      Dane statystyczne przechowujemy w formie zagregowanej bezterminowo, a rekordy
-      pojedynczych odsłon nie dłużej niż 14 miesięcy.</p>
+      Zagregowane dane statystyczne przechowujemy bezterminowo, a rekordy pojedynczych
+      odsłon — nie dłużej niż 14 miesięcy.</p>
 
-    <h2>5. Odbiorcy danych</h2>
-    <p>Dane są przechowywane w usłudze Microsoft Azure (Azure App Service, Azure Cosmos DB),
-      region Poland Central. Nie przekazujemy danych poza podmioty przetwarzające
-      niezbędne do działania strony.</p>
+    <h2>5. Odbiorcy danych i miejsce przetwarzania</h2>
+    <p>Dane przechowujemy w usłudze Microsoft Azure (Azure App Service oraz Azure
+      Cosmos DB) w regionie <strong>Poland Central</strong> na terenie Unii Europejskiej.
+      Microsoft działa jako podmiot przetwarzający na podstawie standardowych warunków
+      ochrony danych. Nie przekazujemy Twoich danych poza Europejski Obszar Gospodarczy
+      ani nie udostępniamy ich innym podmiotom, poza przypadkami wymaganymi przepisami
+      prawa.</p>
 
     <h2>6. Twoje prawa</h2>
     <p>Masz prawo dostępu do danych, ich sprostowania, usunięcia, ograniczenia
-      przetwarzania, przenoszenia, sprzeciwu oraz cofnięcia zgody w dowolnym momencie,
-      a także prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych.
-      W tych sprawach napisz na <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a>.</p>
+      przetwarzania, przenoszenia, wniesienia sprzeciwu oraz cofnięcia zgody w dowolnym
+      momencie (co nie wpływa na zgodność z prawem przetwarzania sprzed cofnięcia).
+      Masz też prawo wniesienia skargi do Prezesa Urzędu Ochrony Danych Osobowych
+      (ul. Stawki 2, 00-193 Warszawa). W sprawach dotyczących Twoich danych napisz na
+      <a href="mailto:sknwpl@proton.me">sknwpl@proton.me</a> lub
+      <a href="mailto:iod@put.poznan.pl">iod@put.poznan.pl</a>.</p>
 
     <h2>7. Zmiany</h2>
     <p>Aktualna wersja polityki jest zawsze dostępna pod tym adresem. Istotne zmiany
-      zostaną oznaczone datą aktualizacji powyżej.</p>
+      oznaczymy datą aktualizacji powyżej.</p>
   </main>
 </body>
 </html>
