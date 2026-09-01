@@ -1,0 +1,18 @@
+{
+  "name": "put-drug-discovery-web",
+  "version": "1.0.0",
+  "private": true,
+  "description": "PUT Drug Discovery site + lead/analytics backend on Azure App Service",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "@azure/cosmos": "^4.2.0",
+    "applicationinsights": "^2.9.6",
+    "compression": "^1.7.4",
+    "express": "^4.21.2"
+  }
+}

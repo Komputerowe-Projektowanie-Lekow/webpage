@@ -1453,10 +1453,41 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
         </div>
       </div>
 
-      <div style="margin-top:2.5rem; display:flex; gap:0.6rem; flex-wrap:wrap;">
-        <a class="btn primary" href="mailto:sknwpl@proton.me"><span data-i18n="support.cta">Skontaktuj się</span><span class="arrow">→</span></a>
-        <button class="btn" onclick="navigator.clipboard.writeText('sknwpl@proton.me'); this.firstElementChild.textContent='skopiowano ✓'; setTimeout(()=>this.firstElementChild.textContent='copy email', 1600);"><span>copy email</span><span class="arrow">⎘</span></button>
-      </div>
+      <style>
+        .contact-form { display:grid; gap:1rem; max-width:44rem; margin-top:2.5rem; }
+        .contact-form .cf-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+        @media (max-width:640px){ .contact-form .cf-row { grid-template-columns:1fr; } }
+        .contact-form label { display:grid; gap:0.35rem; font-family:var(--mono); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--fg-dim); }
+        .contact-form input, .contact-form textarea {
+          font-family:var(--mono); font-size:14px; color:var(--fg); background:var(--bg-soft);
+          border:1px solid var(--rule); border-radius:2px; padding:0.6rem 0.7rem; width:100%; box-sizing:border-box;
+        }
+        .contact-form textarea { resize:vertical; }
+        .contact-form input:focus, .contact-form textarea:focus { outline:2px solid var(--accent); outline-offset:1px; }
+        .contact-form .cf-actions { display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; }
+        .contact-form .cf-consent { display:flex; gap:0.5rem; align-items:flex-start; text-transform:none; letter-spacing:0; font-size:12px; color:var(--fg-muted); }
+        .contact-form .cf-consent input { width:auto; }
+        .contact-form .cf-hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+        #cfStatus { font-family:var(--mono); font-size:12px; }
+      </style>
+      <form id="contactForm" class="contact-form" novalidate>
+        <div class="cf-row">
+          <label>Imię i nazwisko<input name="name" required autocomplete="name"></label>
+          <label>E-mail<input name="email" type="email" required autocomplete="email"></label>
+        </div>
+        <div class="cf-row">
+          <label>Organizacja / uczelnia<input name="company" autocomplete="organization"></label>
+          <label>Obszar zainteresowania<input name="area" placeholder="np. molecular docking, MD, ML"></label>
+        </div>
+        <label>Wiadomość<textarea name="message" rows="4" required></textarea></label>
+        <div class="cf-hp" aria-hidden="true"><label>Nie wypełniaj tego pola<input name="website" tabindex="-1" autocomplete="off"></label></div>
+        <label class="cf-consent"><input type="checkbox" name="consent" required> Zgadzam się na kontakt w sprawie mojego zapytania i&nbsp;akceptuję <a href="/privacy.html">politykę prywatności</a>.</label>
+        <div class="cf-actions">
+          <button type="submit" class="btn primary"><span>Wyślij</span><span class="arrow">→</span></button>
+          <a class="btn" href="mailto:sknwpl@proton.me"><span>lub napisz mailem</span><span class="arrow">⎘</span></a>
+          <span id="cfStatus" role="status" aria-live="polite"></span>
+        </div>
+      </form>
 
       <p class="footnote" data-i18n="support.reassure" style="margin-top:2rem;">Twoje dane pozostają prywatne. Nie wysyłamy spamu. Odpowiadamy w ciągu 3-4 dni roboczych.</p>
     </div>
@@ -1549,5 +1580,6 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
 <script src="pipeline-narrative.js?v=3"></script>
 <script type="module" src="protein-ascii.js?v=7"></script>
 <script src="app.js?v=3"></script>
+<script src="visitor.js?v=1" defer></script>
 </body>
 </html>

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>Panel — leady i ruch</title>
+  <style>
+    :root { color-scheme: light dark; }
+    body { font: 14px/1.5 ui-monospace, "SF Mono", Menlo, Consolas, monospace; margin: 0; padding: 2rem; background: #0d1117; color: #e6edf3; }
+    h1 { font-size: 1.1rem; }
+    h2 { font-size: 0.95rem; margin-top: 2rem; color: #9db3c8; text-transform: uppercase; letter-spacing: .1em; }
+    input, button { font: inherit; padding: .5rem .6rem; border-radius: 4px; border: 1px solid #30363d; background: #161b22; color: inherit; }
+    button { cursor: pointer; background: #1f6feb; border-color: #1f6feb; }
+    table { border-collapse: collapse; width: 100%; margin-top: .5rem; }
+    th, td { border: 1px solid #30363d; padding: .4rem .5rem; text-align: left; vertical-align: top; font-size: 12px; }
+    th { background: #161b22; }
+    .cards { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: .5rem; }
+    .card { background: #161b22; border: 1px solid #30363d; border-radius: 6px; padding: 1rem 1.25rem; }
+    .card b { font-size: 1.6rem; display: block; }
+    .muted { color: #7d8590; }
+    #err { color: #ff7b72; }
+    .wrap { max-width: 1100px; margin: 0 auto; }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Panel — leady i ruch</h1>
+  <p class="muted">Wpisz ADMIN_KEY (ten sam, co w zmiennych środowiskowych App Service). Klucz trzymany jest tylko w tej karcie przeglądarki.</p>
+  <p>
+    <input id="key" type="password" placeholder="ADMIN_KEY" size="40">
+    <button id="load">Wczytaj</button>
+    <span id="err"></span>
+  </p>
+
+  <h2>Ruch</h2>
+  <div id="summary" class="cards"></div>
+  <div style="display:flex; gap:2rem; flex-wrap:wrap;">
+    <div style="flex:1; min-width:280px;"><h2>Najczęstsze podstrony</h2><table id="pages"></table></div>
+    <div style="flex:1; min-width:280px;"><h2>Źródła (referrer)</h2><table id="refs"></table></div>
+  </div>
+
+  <h2>Leady</h2>
+  <table id="leads"></table>
+</div>
+
+<script>
+const $ = (s) => document.querySelector(s);
+const esc = (v) => String(v == null ? '' : v).replace(/[&<>]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]));
+
+function rows(el, data) {
+  el.innerHTML = data.map((r) => '<tr>' + r.map((c) => '<td>' + esc(c) + '</td>').join('') + '</tr>').join('');
+}
+
+async function get(path, key) {
+  const r = await fetch(path, { headers: { 'x-admin-key': key } });
+  if (!r.ok) throw new Error(path + ' → ' + r.status);
+  return r.json();
+}
+
+$('#load').addEventListener('click', async () => {
+  const key = $('#key').value.trim();
+  $('#err').textContent = '';
+  sessionStorage.setItem('adminKey', key);
+  try {
+    const s = await get('/api/events/summary', key);
+    $('#summary').innerHTML =
+      '<div class="card"><b>' + s.uniqueVisitors + '</b><span class="muted">unikalni (próbka)</span></div>' +
+      '<div class="card"><b>' + s.sampleSize + '</b><span class="muted">odsłony w próbce</span></div>';
+    rows($('#pages'), s.topPages);
+    rows($('#refs'), s.topReferrers);
+
+    const leads = await get('/api/leads', key);
+    $('#leads').innerHTML =
+      '<tr><th>data</th><th>imię</th><th>e-mail</th><th>organizacja</th><th>obszar</th><th>wiadomość</th></tr>' +
+      leads.map((l) =>
+        '<tr><td>' + esc((l.ts || '').replace('T', ' ').slice(0, 16)) + '</td><td>' + esc(l.name) +
+        '</td><td>' + esc(l.email) + '</td><td>' + esc(l.company) + '</td><td>' + esc(l.area) +
+        '</td><td>' + esc(l.message) + '</td></tr>'
+      ).join('');
+  } catch (e) {
+    $('#err').textContent = e.message;
+  }
+});
+
+if (sessionStorage.getItem('adminKey')) {
+  $('#key').value = sessionStorage.getItem('adminKey');
+  $('#load').click();
+}
+</script>
+</body>
+</html>
