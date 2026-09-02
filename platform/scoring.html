@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTO-NOOS score — scoring wielokryterialny i ranking kandydatów | PUT Drug Discovery</title>
+<meta name="description" content="PROTO-NOOS score składa sygnały etapów pipeline'u w jedną deterministyczną liczbę [0,1] i ranking. Wariant v2: 0,75 pożądalności powinowactwa + 0,25 pożądalności QED, penetracja i wtórna bramka K_D jako adnotacje.">
+<link rel="canonical" href="/platform/scoring.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PROTO-NOOS score — scoring wielokryterialny i ranking kandydatów">
+<meta property="og:description" content="Funkcja pożądalności, wagi efektywne, score v2 i jego kalibracja względem danych eksperymentalnych.">
+<meta property="og:url" content="/platform/scoring.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "PROTO-NOOS score — scoring wielokryterialny i ranking kandydatów",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["priorytetyzacja wielokryterialna", "funkcja pożądalności", "QED", "ranking związków", "kalibracja"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/scoring.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 7 — PROTO-NOOS score</nav>
+
+<main class="doc-main">
+  <h1>PROTO-NOOS score — scoring wielokryterialny i ranking</h1>
+
+  <p class="doc-lede">PROTO-NOOS score składa sygnały z poprzednich etapów w jedną
+  deterministyczną liczbę z przedziału [0, 1] i wynikającą z niej rangę.</p>
+
+  <h2>Konstrukcja</h2>
+  <p>Każdą wielkość przeprowadzamy najpierw funkcją pożądalności na wspólną skalę
+  bezjednostkową, a następnie sumujemy bloki z wagami. Funkcję celu definiujemy jednym
+  jawnym schematem i podajemy wagi efektywne.</p>
+
+  <h2>Score v2</h2>
+  <p>W wariancie v2 funkcja celu ma dwa aktywne bloki i wagi efektywne:</p>
+  <ul>
+    <li><strong>0,75</strong> — pożądalność powinowactwa,</li>
+    <li><strong>0,25</strong> — pożądalność QED.</li>
+  </ul>
+  <p>Blok dynamiki molekularnej działa wyłącznie jako bramka, z wagą efektywną zero.
+  Względem wcześniejszych wariantów score v2:</p>
+  <ul>
+    <li>usuwa z agregatu blok <a href="/platform/permeability-and-efflux.html">penetracji</a>
+      (nieskalibrowany), zachowując go jako adnotację;</li>
+    <li>neutralizuje wtórną bramkę K<sub>D</sub> / etykietę oporności, która była
+      deterministycznym progiem tego samego sygnału powinowactwa i zerowała 78,35%
+      rekordów;</li>
+    <li>pomija blok dokowania (niedostępny w danych kampanii) oraz blok
+      <a href="/platform/systems-biology.html">biologii systemowej</a> (rangowo
+      nieodróżnialny od pożądalności powinowactwa).</li>
+  </ul>
+  <p>Wariant wybrano w analizie 16 konfiguracji na 1 003 rekordach z pomiarami, a jego
+  stabilność kontrolowano 200 perturbacjami wag ±20%. Gdy blok jest niedostępny, jego
+  waga znika, a pozostałe są renormalizowane.</p>
+
+  <h2>Kalibracja względem danych eksperymentalnych</h2>
+  <p>Na wspólnej kohorcie 1 003 rekordów z pomiarem pActivity score v2 osiąga
+  Spearman rho = 0,705, ROC AUC 0,875 i PR-AUC 0,931 — wobec 0,697 / 0,858 / 0,924 dla
+  samego powinowactwa. Jest to walidacja retrospektywna wariantu wybranego na tej samej
+  kohorcie, nie wynik na nietkniętym zbiorze testowym. Na punkcie końcowym
+  całokomórkowym (hamowanie wzrostu <em>E. coli</em>) ta sama zmiana obniża ROC AUC do
+  0,483 — nie istnieje jedna funkcja celu dominująca na obu dostępnych endpointach.
+  Pełne porównanie: <a href="/research/dhfr-campaign.html">wyniki kampanii DHFR</a>.</p>
+
+  <div class="doc-next">
+    <a href="/platform/systems-biology.html">← Etap 6 — Biologia systemowa</a>
+    <a href="/research/dhfr-campaign.html">Wyniki kampanii DHFR →</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

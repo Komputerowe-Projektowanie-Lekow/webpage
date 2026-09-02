@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kontakt — współpraca, moc obliczeniowa, walidacja | PUT Drug Discovery</title>
+<meta name="description" content="Skontaktuj się z zespołem PUT Drug Discovery: współpraca badawcza, dostęp do mocy obliczeniowej / HPC, walidacja wet-lab kandydatów z pipeline'u PROTO-NOOS, mentoring i wspólne publikacje.">
+<link rel="canonical" href="/kontakt.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Kontakt — PUT Drug Discovery">
+<meta property="og:description" content="Współpraca badawcza, moc obliczeniowa, walidacja wet-lab, mentoring.">
+<meta property="og:url" content="/kontakt.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<style>
+  .contact-form { display:grid; gap:1rem; max-width:44rem; margin-top:1.5rem; }
+  .contact-form .cf-row { display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  @media (max-width:640px){ .contact-form .cf-row { grid-template-columns:1fr; } }
+  .contact-form label { display:grid; gap:0.35rem; font-family:var(--mono,monospace); font-size:11px; letter-spacing:0.1em; text-transform:uppercase; color:var(--fg-dim,#7a8ba0); }
+  .contact-form input, .contact-form textarea {
+    font-family:var(--mono,monospace); font-size:14px; color:var(--fg,#0a2540); background:var(--bg-soft,#e9f0f7);
+    border:1px solid var(--rule,rgba(10,37,64,.2)); border-radius:2px; padding:0.6rem 0.7rem; width:100%; box-sizing:border-box;
+  }
+  .contact-form textarea { resize:vertical; }
+  .contact-form input:focus, .contact-form textarea:focus { outline:2px solid var(--accent,#01779B); outline-offset:1px; }
+  .contact-form .cf-actions { display:flex; gap:0.6rem; flex-wrap:wrap; align-items:center; }
+  .contact-form .cf-consent { display:flex; gap:0.5rem; align-items:flex-start; text-transform:none; letter-spacing:0; font-size:12px; color:var(--fg-muted,#33475b); }
+  .contact-form .cf-consent input { width:auto; }
+  .contact-form .cf-hp { position:absolute; left:-9999px; width:1px; height:1px; overflow:hidden; }
+  .contact-form button.btn { font-family:var(--mono,monospace); font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding:.6rem 1rem; border:1px solid var(--accent,#01779B); background:var(--accent,#01779B); color:#fff; border-radius:3px; cursor:pointer; }
+  .contact-form a.btn { font-family:var(--mono,monospace); font-size:12px; letter-spacing:.08em; text-transform:uppercase; padding:.6rem 1rem; border:1px solid var(--rule,rgba(10,37,64,.3)); border-radius:3px; text-decoration:none; color:var(--fg-muted,#48607a); }
+  #cfStatus { font-family:var(--mono,monospace); font-size:12px; }
+</style>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / Kontakt</nav>
+
+<main class="doc-main">
+  <h1>Kontakt</h1>
+
+  <p class="doc-lede">Napisz, jeśli interesuje Cię współpraca badawcza, udostępnienie
+  mocy obliczeniowej, walidacja eksperymentalna kandydatów z
+  <a href="/platform/">pipeline'u PROTO-NOOS</a>, mentoring lub wspólne publikacje.</p>
+
+  <form id="contactForm" class="contact-form" novalidate>
+    <div class="cf-row">
+      <label>Imię i nazwisko<input name="name" required autocomplete="name"></label>
+      <label>E-mail<input name="email" type="email" required autocomplete="email"></label>
+    </div>
+    <div class="cf-row">
+      <label>Organizacja / uczelnia<input name="company" autocomplete="organization"></label>
+      <label>Obszar<input name="area" placeholder="np. HPC, wet-lab, mentoring, docking"></label>
+    </div>
+    <label>Wiadomość<textarea name="message" rows="5" required></textarea></label>
+    <div class="cf-hp" aria-hidden="true"><label>Nie wypełniaj tego pola<input name="website" tabindex="-1" autocomplete="off"></label></div>
+    <label class="cf-consent"><input type="checkbox" name="consent" required> Zgadzam się na kontakt w sprawie mojego zapytania i&nbsp;akceptuję <a href="/privacy.html">politykę prywatności</a>.</label>
+    <div class="cf-actions">
+      <button type="submit" class="btn">Wyślij</button>
+      <a class="btn" href="mailto:sknwpl@proton.me">lub napisz mailem</a>
+      <span id="cfStatus" role="status" aria-live="polite"></span>
+    </div>
+  </form>
+
+  <p class="doc-main" style="margin-top:2rem; font-size:.9rem; color:var(--fg-dim,#7a8ba0);">
+  Twoje dane trafiają wyłącznie do zespołu PUT Drug Discovery i służą do odpowiedzi na
+  zapytanie. Szczegóły: <a href="/privacy.html">polityka prywatności</a>.</p>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

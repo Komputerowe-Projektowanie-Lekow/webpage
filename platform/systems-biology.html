@@ -1,0 +1,89 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Biologia systemowa i analiza bilansu strumieni (COBRApy / iML1515) — Etap 6 PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Etap 6 pipeline'u PROTO-NOOS: analiza bilansu strumieni metabolicznych (FBA) na modelu iML1515 E. coli w podłożu M9, pełny nokaut i inhibicja częściowa celu, względne tempo wzrostu i etykieta fenotypowa.">
+<link rel="canonical" href="/platform/systems-biology.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Biologia systemowa i analiza bilansu strumieni (COBRApy / iML1515) — Etap 6 PROTO-NOOS">
+<meta property="og:description" content="FBA na iML1515 w podłożu M9, nokaut i inhibicja częściowa, ograniczenia statycznego bilansu strumieni.">
+<meta property="og:url" content="/platform/systems-biology.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Biologia systemowa i analiza bilansu strumieni (COBRApy / iML1515) — Etap 6 PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["analiza bilansu strumieni", "FBA", "COBRApy", "iML1515", "metabolizm E. coli", "biologia systemowa"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/systems-biology.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 6 — Biologia systemowa</nav>
+
+<main class="doc-main">
+  <h1>Etap 6 — wpływ inhibicji celu na wzrost (COBRApy / iML1515)</h1>
+
+  <p class="doc-lede">Produkcyjny etap biologii systemowej ogranicza się do jednego
+  pytania: jak zahamowanie celu przekłada się na wzrost komórki.</p>
+
+  <h2>Metoda</h2>
+  <p>Analizę bilansu strumieni metabolicznych (flux balance analysis) prowadzimy w
+  <strong>COBRApy</strong> na modelu <strong>iML1515</strong> <em>Escherichia coli</em>
+  w minimalnym podłożu M9 w warunkach tlenowych. Liczymy zarówno pełny nokaut genu
+  celu, jak i inhibicję częściową, w której stopień zajęcia enzymu wynika ze stosunku
+  stężenia wewnątrzkomórkowego do stałej dysocjacji. Wynikiem jest względne tempo
+  wzrostu i czterostopniowa etykieta fenotypowa.</p>
+
+  <h2>Dlaczego blok nie wchodzi do funkcji celu</h2>
+  <p>Przy stężeniu wewnątrzkomórkowym ustalonym na 1 µM tempo wzrostu jest
+  deterministyczną funkcją samego powinowactwa — prosta reguła progowa na K<sub>D</sub>
+  (0,11 / 1,00 / 9,00 µM) odtwarza 100% etykiet. Blok biologii systemowej powiela więc
+  sygnał powinowactwa i służy jedynie do inspekcji danych oraz wyborów w kolejnych
+  etapach, a nie jako składowa <a href="/platform/scoring.html">rankingu</a>.</p>
+
+  <h2>Ograniczenia statycznego bilansu strumieni</h2>
+  <p>Nokaut reakcji DHFR w iML1515 jest letalny, ale nokaut samego genu <em>folA</em>
+  już nie — model anotuje <em>folM</em> jako izoenzym, co jest artefaktem reguł
+  gen–białko–reakcja, a nie realną drogą obejścia. Jednoczesna inhibicja <em>folA</em>
+  i <em>folP</em> nie daje w tym modelu efektu synergicznego (indeks Loewego 2,0), mimo
+  że sugerowałoby go działanie trimetoprimu z sulfametoksazolem — to spodziewane
+  ograniczenie statycznego bilansu strumieni.</p>
+
+  <div class="doc-next">
+    <a href="/platform/molecular-dynamics.html">← Etap 5 — Dynamika molekularna</a>
+    <a href="/platform/scoring.html">Etap 7 → PROTO-NOOS score</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

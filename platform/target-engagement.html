@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kinetyczny model zaangażowania celu (cellTE) — Etap 3 PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Etap 3 pipeline'u PROTO-NOOS: kinetyczny model cellTE opisuje pulę wolną i związaną leku równaniami różniczkowymi bilansującymi wnikanie przez błonę, efluks oraz asocjację i dysocjację z celem (K_D).">
+<link rel="canonical" href="/platform/target-engagement.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kinetyczny model zaangażowania celu (cellTE) — Etap 3 PROTO-NOOS">
+<meta property="og:description" content="Równania różniczkowe puli wolnej i związanej leku, solver LSODA, próg K_D 100 µM jako bramka.">
+<meta property="og:url" content="/platform/target-engagement.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Kinetyczny model zaangażowania celu (cellTE) — Etap 3 PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["target engagement", "kinetyka wiązania", "równania różniczkowe", "efluks", "stała dysocjacji"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/target-engagement.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 3 — Zaangażowanie celu</nav>
+
+<main class="doc-main">
+  <h1>Etap 3 — kinetyczny model zaangażowania celu (cellTE)</h1>
+
+  <p class="doc-lede">Trzeci etap pyta nie o samo powinowactwo, lecz o to, jaka część
+  celu zostaje faktycznie zajęta wewnątrz komórki.</p>
+
+  <h2>Model dwóch pul leku</h2>
+  <p>Wolną pulę w cytoplazmie i pulę związaną z celem opisujemy równaniami
+  różniczkowymi bilansującymi trzy procesy: wnikanie przez błonę, wyrzut efluksowy oraz
+  asocjację i dysocjację z celem (K<sub>D</sub> = k<sub>off</sub> / k<sub>on</sub>).
+  Równania całkujemy solverem <strong>LSODA</strong>.</p>
+
+  <h2>Wejścia z etapu 2</h2>
+  <p>Wskaźniki wnikania i retencji z <a href="/platform/permeability-and-efflux.html">etapu
+  drugiego</a> przeliczamy na przepuszczalność wejściową i szybkość efluksu
+  heurystycznymi, nieskalibrowanymi funkcjami. Kinetykę wiązania w pierwszym przebiegu
+  przyjmujemy jako stały prior, bo powinowactwo nie jest jeszcze znane.</p>
+
+  <h2>Dwa przebiegi i bramka</h2>
+  <p>Odczytane z symulacji zaangażowanie celu wyznacza kolejność kandydatów
+  wchodzących do <a href="/platform/structure-and-affinity.html">predykcji struktury</a>.
+  Po niej uruchamiamy model ponownie — z przewidzianą stałą dysocjacji zamiast prioru.
+  Dopiero ten drugi przebieg jest bramką: próg minimalnego zaangażowania i maksymalnego
+  K<sub>D</sub> równego 100 µM. Zgodność obu przebiegów nie jest niezależną walidacją,
+  bo dzielą te same mapowania penetracji i efluksu.</p>
+
+  <div class="doc-next">
+    <a href="/platform/permeability-and-efflux.html">← Etap 2 — Przenikalność</a>
+    <a href="/platform/structure-and-affinity.html">Etap 4 → Struktura i powinowactwo</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

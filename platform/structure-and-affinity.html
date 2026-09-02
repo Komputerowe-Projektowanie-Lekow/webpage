@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Predykcja struktury kompleksu i powinowactwa (Boltz-2) — Etap 4 PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Etap 4 pipeline'u PROTO-NOOS: Boltz-2 przewiduje jednocześnie strukturę kompleksu białko–ligand i powinowactwo (log IC50); ligandy walidowane i kanonizowane w RDKit, miary pewności ipTM i pLDDT.">
+<link rel="canonical" href="/platform/structure-and-affinity.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Predykcja struktury kompleksu i powinowactwa (Boltz-2) — Etap 4 PROTO-NOOS">
+<meta property="og:description" content="Co-folding i predykcja powinowactwa, kanonizacja ligandów w RDKit, kontrola pozy PoseBusters na ścieżce benchmarkowej.">
+<meta property="og:url" content="/platform/structure-and-affinity.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Predykcja struktury kompleksu i powinowactwa (Boltz-2) — Etap 4 PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["Boltz-2", "co-folding", "predykcja powinowactwa", "RDKit", "ipTM", "pLDDT", "PoseBusters"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/structure-and-affinity.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 4 — Struktura i powinowactwo</nav>
+
+<main class="doc-main">
+  <h1>Etap 4 — struktura kompleksu i powinowactwo (Boltz-2)</h1>
+
+  <p class="doc-lede">Czwarty etap wykorzystuje Boltz-2 do jednoczesnej predykcji
+  struktury kompleksu białko–ligand oraz powinowactwa wiązania.</p>
+
+  <h2>Przygotowanie ligandów</h2>
+  <p>Struktury ligandów walidujemy i kanonizujemy w <strong>RDKit</strong>, więc związki
+  niekompatybilne odpadają przed kosztownymi obliczeniami na GPU.</p>
+
+  <h2>Odczytywane wielkości</h2>
+  <ul>
+    <li><strong>Powinowactwo</strong> raportowane przez model jako logarytm IC50. W tej
+      kampanii przeliczyliśmy je na skalę stężenia i traktowaliśmy jako operacyjny
+      sygnał powinowactwa, mimo że IC50 nie jest fizycznie równoważne stałej dysocjacji
+      bez modelu warunków testu (konwersję poprawimy w kolejnej wersji).</li>
+    <li><strong>Miary pewności predykcji strukturalnej</strong>: ipTM i pLDDT.</li>
+  </ul>
+
+  <h2>Kontrola fizycznej poprawności pozy</h2>
+  <p>Zbiorczego wskaźnika pewności nie raportujemy. Kontrola fizycznej poprawności pozy
+  (PoseBusters) działa tylko na ścieżce benchmarkowej — pozy nie są pod tym kątem
+  filtrowane przed <a href="/platform/molecular-dynamics.html">dynamiką molekularną</a>.
+  Ścisła kontrola PoseBusters na 848 kompleksach BindingDB nie przepuściła żadnej pozy;
+  w 100% przypadków zawodzą testy odległości i nakładania z kofaktorem organicznym, co
+  jest spodziewane dla miejsca wiązania sąsiadującego z NADPH. Po wyłączeniu tych
+  kontroli walidację przechodzi 68 poz (8,02%).</p>
+
+  <h2>Koszt</h2>
+  <p>W referencyjnym przebiegu 50 molekuł predykcja struktury zdominowała koszt
+  obliczeniowy pipeline'u (~62%).</p>
+
+  <div class="doc-next">
+    <a href="/platform/target-engagement.html">← Etap 3 — Zaangażowanie celu</a>
+    <a href="/platform/molecular-dynamics.html">Etap 5 → Dynamika molekularna</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Kampania demonstracyjna PROTO-NOOS: DHFR Escherichia coli K-12 | PUT Drug Discovery</title>
+<meta name="description" content="Kampania demonstracyjna pipeline'u PROTO-NOOS dla reduktazy dihydrofolianowej (DHFR / folA) Escherichia coli K-12: 61 183 rekordy scoringu, kalibracja na 1 003 związkach eksperymentalnych, benchmark dziewięciu metod, kandydaci do walidacji.">
+<link rel="canonical" href="/research/dhfr-campaign.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Kampania demonstracyjna PROTO-NOOS: DHFR Escherichia coli K-12">
+<meta property="og:description" content="Wyniki, kalibracja i benchmark score v2 na celu DHFR (folA) E. coli K-12.">
+<meta property="og:url" content="/research/dhfr-campaign.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Kampania demonstracyjna PROTO-NOOS: DHFR Escherichia coli K-12",
+  "inLanguage": "pl",
+  "author": [
+    { "@type": "Person", "name": "Konrad Gorzelańczyk" },
+    { "@type": "Person", "name": "Szymon Krawczyk" },
+    { "@type": "Person", "name": "Maksymilian Korbik" },
+    { "@type": "Person", "name": "Florian Hołubowski" }
+  ],
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["DHFR", "folA", "Escherichia coli", "antybiotyki", "priorytetyzacja wielokryterialna", "benchmark"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/research/dhfr-campaign.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / Badania / Kampania DHFR</nav>
+
+<main class="doc-main">
+  <h1>Kampania demonstracyjna: DHFR <em>Escherichia coli</em> K-12</h1>
+
+  <p class="doc-lede">Cały <a href="/platform/">pipeline PROTO-NOOS</a> uruchomiliśmy
+  na jednym celu: reduktazie dihydrofolianowej (DHFR / <em>folA</em>, PDB 6XG5)
+  <em>Escherichia coli</em> K-12 — organizmie z dobrze opisaną siecią metaboliczną i
+  danymi kalibracyjnymi, stawiającym jednocześnie problem przenikalności i efluksu
+  właściwy bakteriom Gram-ujemnym.</p>
+
+  <h2>Skala kampanii</h2>
+  <ul>
+    <li>3 794 691 zachowanych próbek przedselekcyjnych z 602 partii REINVENT4.</li>
+    <li>Główna populacja scoringu: <strong>61 183 rekordy</strong>, każdy z rangą po
+      usunięciu wtórnej bramki K<sub>D</sub>.</li>
+    <li>Analizy biblioteczne na podzbiorach: przestrzeń chemiczna i różnorodność na
+      53 740 strukturach, domena stosowalności na 55 768, degeneracja metryk na 50 005.</li>
+  </ul>
+
+  <h2>Jakość biblioteki</h2>
+  <p>Analizowana podbiblioteka (53 740 związków) zawiera 33 876 unikalnych rdzeni
+  Bemis-Murcko (85,4% jednokrotnych), przy średnim wewnętrznym zróżnicowaniu 0,8693 —
+  bez koncentracji na pojedynczym chemotypie. 91,8% związków de novo ma podobieństwo
+  Tanimoto poniżej 0,4 do znanych aktywnych ligandów DHFR. W przestrzeni ECFP4 tylko
+  3,34% związków de novo mieści się w domenie stosowalności zdefiniowanej wokół
+  zmierzonych aktywnych ligandów.</p>
+
+  <h2>Kalibracja score v2</h2>
+  <p>Porównanie wariantów prowadzimy na wspólnej kohorcie 1 003 rekordów z pomiarem
+  pActivity i 155 rdzeniami Bemis-Murcko (860 rekordów po wykluczeniu szarej strefy):</p>
+  <ul>
+    <li><strong>Score v2</strong>: Spearman rho = 0,705 [0,667; 0,741], ROC AUC 0,875
+      [0,849; 0,899], PR-AUC 0,931.</li>
+    <li><strong>Samo powinowactwo</strong>: rho = 0,697, AUC 0,858, PR-AUC 0,924.</li>
+  </ul>
+  <p>Dodanie QED w proporcji 0,75 / 0,25 podnosi wszystkie trzy miary do wartości
+  score v2; ponowne dołączenie penetracji obniża AUC do 0,695. To walidacja
+  retrospektywna wariantu wybranego na tej samej kohorcie — nie wynik na nietkniętym
+  zbiorze testowym.</p>
+
+  <h2>Punkt końcowy całokomórkowy (przesiew Stokes)</h2>
+  <p>Na etykietach hamowania wzrostu <em>E. coli</em> score v2 osiąga ROC AUC 0,483
+  (n = 2 116, 67 aktywnych), wobec 0,653 dla samego powinowactwa i 0,554 dla rankingu
+  losowego. Spadek wynika z QED: wysokie QED wiąże się tu istotnie z brakiem
+  aktywności. Wniosek: nie istnieje jedna funkcja celu dominująca na obu dostępnych
+  endpointach.</p>
+
+  <h2>Benchmark dziewięciu metod scoringowych</h2>
+  <p>Wszystkie metody oceniano out-of-fold w 10-krotnej walidacji GroupKFold po 155
+  rdzeniach Bemis-Murcko, na tych samych 1 003 rekordach:</p>
+  <ul>
+    <li>Score v2 ma najwyższe rho (0,705) i PR-AUC (0,931) w zestawie.</li>
+    <li>ECFP4 + XGBoost ma wyższy punktowy ROC AUC (0,893), ale sparowana różnica
+      AUC względem v2 nie jest istotna po korekcie Holma (p = 0,432).</li>
+    <li>Przewaga v2 w rho nad XGBoost jest istotna (p = 0,0048).</li>
+  </ul>
+  <p>Benchmark wskazuje więc przewagę zależną od kryterium, a nie jednoznaczną wyższość.</p>
+
+  <h2>Kandydaci do dalszej walidacji</h2>
+  <p>Maksymalny PROTO-NOOS score w puli de novo (0,6177) jest wyraźnie niższy niż
+  maksimum w zbiorze ChEMBL (0,9997); żaden związek de novo nie przekracza progu 0,9.
+  Dziewięć z 15 najwyżej ocenionych związków de novo zawiera motyw kwasu
+  karboksylowego (60% wobec 5,72% w bibliotece), zgodnie z preferencją osi penetracji.
+  Docelowe portfolio proponujemy w trzech warstwach: znane chemotypy DHFR jako kontrole
+  dodatnie, strukturalnie odmienne związki de novo po odrzuceniu alertów PAINS/Brenk
+  oraz osobna seria hipotez allosterycznych.</p>
+
+  <h2>Zastrzeżenie</h2>
+  <p>Wskazywani kandydaci są hipotezami obliczeniowymi wymagającymi syntezy oraz
+  walidacji biochemicznej i mikrobiologicznej. Bez laboratorium mokrego (MIC, IC50,
+  cytotoksyczność) raportowane AUC pozostają walidacją retrospektywną, nie
+  prerejestrowanym holdoutem. Kampanię ograniczono do jednego celu, bez panelu
+  selektywności.</p>
+
+  <h2>Dostępność danych i kodu</h2>
+  <p>Wersja danych z momentu zgłoszenia (~9 MB), wyniki 26 analiz bibliotecznych
+  (~95 MB) oraz przewidywane struktury kompleksów i trajektorie MD (~1,3 GB) zostaną
+  udostępnione w publicznym repozytorium danych (DOI do uzupełnienia). Kod:
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow/GUB_pipeline" rel="noopener">github.com/Komputerowe-Projektowanie-Lekow/GUB_pipeline</a>.</p>
+
+  <div class="doc-next">
+    <a href="/platform/">Przegląd platformy</a>
+    <a href="/platform/scoring.html">PROTO-NOOS score</a>
+    <a href="/kontakt.html">Współpraca i walidacja</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

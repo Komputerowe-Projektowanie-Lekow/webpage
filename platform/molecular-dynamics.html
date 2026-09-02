@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Dynamika molekularna trwałości pozy (GROMACS) — Etap 5 PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Etap 5 pipeline'u PROTO-NOOS: krótka dynamika molekularna w GROMACS sprawdza, czy przewidziana poza ligand–EcDHFR utrzymuje się w jawnym rozpuszczalniku. Pole AMBER ff14SB, woda TIP3P, ligand GAFF2/AM1-BCC.">
+<link rel="canonical" href="/platform/molecular-dynamics.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Dynamika molekularna trwałości pozy (GROMACS) — Etap 5 PROTO-NOOS">
+<meta property="og:description" content="AMBER ff14SB + TIP3P, ligand GAFF2/AM1-BCC przez ACPYPE, 0,1 ns na związek, werdykt stabilny/niestabilny jako adnotacja.">
+<meta property="og:url" content="/platform/molecular-dynamics.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Dynamika molekularna trwałości pozy (GROMACS) — Etap 5 PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["dynamika molekularna", "GROMACS", "AMBER ff14SB", "TIP3P", "GAFF2", "AM1-BCC", "EcDHFR"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/molecular-dynamics.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 5 — Dynamika molekularna</nav>
+
+<main class="doc-main">
+  <h1>Etap 5 — trwałość pozy w dynamice molekularnej (GROMACS)</h1>
+
+  <p class="doc-lede">Piąty etap sprawdza, czy przewidziana poza ligand–receptor
+  utrzymuje się w jawnym rozpuszczalniku.</p>
+
+  <h2>Przygotowanie układu</h2>
+  <p>Receptor EcDHFR (PDB 6XG5) oczyszczamy z konformacji alternatywnych, wody i buforu.
+  Białko opisujemy polem <strong>AMBER ff14SB</strong> z wodą <strong>TIP3P</strong>,
+  a ligand parametryzujemy <strong>GAFF2 / AM1-BCC</strong> przez ACPYPE. Poza startowa
+  pochodzi z przewidzianego <a href="/platform/structure-and-affinity.html">kompleksu
+  Boltz-2</a>.</p>
+
+  <h2>Symulacja i odczyt</h2>
+  <p>Produkcyjna dynamika trwa 0,1 ns na związek. Z trajektorii wyznaczamy odchylenie
+  szkieletu i wskaźnik stabilności, a werdykt <em>stabilny / niestabilny</em>
+  raportujemy — ale <strong>nie stosujemy go jako bramki</strong> (3,85% przebiegów
+  stabilnych). Wyniki tego etapu zawierają wyłącznie wielkości o jednoznacznej
+  interpretacji fizycznej.</p>
+
+  <h2>Ograniczenia</h2>
+  <p>Krótka, pojedyncza trajektoria nie rozstrzyga stabilności energetycznej ani
+  wpływu liganda na reakcję przeniesienia wodorku — wymagałoby to dłuższych replik,
+  metod energii swobodnej lub obliczeń QM/MM. Z powodu niezgodności bibliotek CUDA na
+  współdzielonym klastrze dynamikę domyślnie skracamy, co obniża pewność jej metryk.
+  W referencyjnym przebiegu 50 molekuł dynamika odpowiadała za ~33% kosztu
+  obliczeniowego.</p>
+
+  <div class="doc-next">
+    <a href="/platform/structure-and-affinity.html">← Etap 4 — Struktura i powinowactwo</a>
+    <a href="/platform/systems-biology.html">Etap 6 → Biologia systemowa</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

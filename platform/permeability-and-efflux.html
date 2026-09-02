@@ -1,0 +1,93 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Przenikalność i efluks w bakteriach Gram-ujemnych — Etap 2 PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Etap 2 pipeline'u PROTO-NOOS: deskryptory i filtry drug-likeness (reguła Lipinskiego, heurystyki eNTRy) połączone z uczonym modelem retencji i efluksu trenowanym na pomiarach akumulacji LC/MS w E. coli.">
+<link rel="canonical" href="/platform/permeability-and-efflux.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Przenikalność i efluks w bakteriach Gram-ujemnych — Etap 2 PROTO-NOOS">
+<meta property="og:description" content="Reguła Lipinskiego, reguły eNTRy i gradient-boostingowy model retencji trenowany na danych akumulacji LC/MS.">
+<meta property="og:url" content="/platform/permeability-and-efflux.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Przenikalność i efluks w bakteriach Gram-ujemnych — Etap 2 PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["przenikalność błony", "efluks", "reguły eNTRy", "reguła Lipinskiego", "model retencji", "gradient boosting"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/permeability-and-efflux.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 2 — Przenikalność i efluks</nav>
+
+<main class="doc-main">
+  <h1>Etap 2 — deskryptory, przenikalność i efluks</h1>
+
+  <p class="doc-lede">Zadaniem drugiego etapu jest dostarczenie taniej bramki przed
+  kosztownymi obliczeniowo etapami strukturalnymi. Łączy on deterministyczną warstwę
+  deskryptorów i filtrów drug-likeness z uczonym modelem retencji i efluksu.</p>
+
+  <h2>Warstwa deterministyczna (2a)</h2>
+  <ul>
+    <li><strong>Reguła Lipinskiego</strong> (rule of five) jako podstawowy filtr drug-likeness.</li>
+    <li><strong>Heurystyczny wskaźnik wnikania</strong> inspirowany regułami eNTRy —
+      predictive compound accumulation rules dla antybiotyków o szerokim spektrum.</li>
+  </ul>
+
+  <h2>Uczony model retencji i efluksu (2b)</h2>
+  <p>Model retencji trenujemy — dokładnie jak autorzy pracy źródłowej — na pomiarach
+  akumulacji LC/MS w szczepie <em>E. coli</em> pozbawionym pompy TolC: 37 deskryptorów,
+  gradient boosting, ROC AUC 0,845 przy podziale losowym i 0,834 przy podziale po
+  rdzeniach chemicznych.</p>
+
+  <h2>Dlaczego to adnotacja, a nie odcięcie</h2>
+  <p>Etap 2b nie działa jako twarda bramka. Do etapu trzeciego przekazujemy pełny
+  zestaw predykcji retencji, aby zachować sygnał jakości także dla związków, które
+  próg 0,95 by usunął, i ocenić ten próg wstecznie. Wymuszenie progu 0,95
+  przepuściłoby 1,1% biblioteki, a operacyjny punkt modelu (0,833) — 9,2%.</p>
+  <p>Kalibracja względem danych eksperymentalnych nie uzasadnia jednak żadnego progu:
+  przewidywane prawdopodobieństwo retencji nie rozdziela związków aktywnych od
+  nieaktywnych ani na osi powinowactwa enzymatycznego (ROC AUC 0,44 — kierunek
+  odwrotny), ani całokomórkowej (0,59). Bramkowanie zmniejsza tu jedynie liczebność,
+  nie poprawiając zgodności rankingu z eksperymentem — dlatego etap działa jako
+  adnotacja i wejście do <a href="/platform/target-engagement.html">modelu
+  kinetycznego</a>.</p>
+
+  <div class="doc-next">
+    <a href="/platform/molecular-generation.html">← Etap 1 — Generacja</a>
+    <a href="/platform/target-engagement.html">Etap 3 → Zaangażowanie celu</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

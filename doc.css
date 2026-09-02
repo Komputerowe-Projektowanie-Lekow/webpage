@@ -1,0 +1,79 @@
+/* Shared layout for the standalone content pages (/platform, /research, /about …).
+   Rides on top of styles.css variables with hard fallbacks. */
+
+.doc-header {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 1rem; flex-wrap: wrap;
+  max-width: 72rem; margin: 0 auto; padding: 1rem 1.25rem;
+  border-bottom: 1px solid var(--rule, rgba(10, 37, 64, .14));
+}
+.doc-brand { display: flex; align-items: center; }
+.doc-brand img { display: block; height: 28px; width: auto; }
+.doc-nav {
+  display: flex; gap: 1.25rem; flex-wrap: wrap;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 12px; letter-spacing: .08em; text-transform: uppercase;
+}
+.doc-nav a { color: var(--fg-muted, #48607a); text-decoration: none; }
+.doc-nav a:hover { color: var(--accent, #01779B); }
+
+.doc-crumbs {
+  max-width: 48rem; margin: 0 auto; padding: 1.25rem 1.25rem 0;
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 11px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--fg-dim, #7a8ba0);
+}
+.doc-crumbs a { color: inherit; }
+
+.doc-main {
+  max-width: 48rem; margin: 0 auto; padding: 2.5rem 1.25rem 4rem;
+  line-height: 1.75;
+}
+.doc-main h1 {
+  font-family: var(--serif, Georgia, serif);
+  font-size: clamp(1.9rem, 4vw, 2.8rem); line-height: 1.15; margin: 0 0 1rem;
+  color: var(--fg, #0a2540);
+}
+.doc-main h2 { margin: 2.75rem 0 .75rem; font-size: 1.2rem; color: var(--fg, #0a2540); }
+.doc-main h3 {
+  margin: 2rem 0 .5rem; font-size: .95rem;
+  font-family: var(--mono, ui-monospace, monospace); letter-spacing: .04em;
+  color: var(--fg, #0a2540);
+}
+.doc-main p, .doc-main li { color: var(--fg-muted, #33475b); }
+.doc-main a { color: var(--accent, #01779B); }
+.doc-main ul, .doc-main ol { padding-left: 1.3rem; }
+.doc-main li { margin: .35rem 0; }
+.doc-lede { font-size: 1.15rem; color: var(--fg, #0a2540); }
+
+.doc-figs {
+  margin: 1.5rem 0; padding: 1rem 1.25rem;
+  background: var(--bg-soft, #e9f0f7); border-left: 3px solid var(--accent, #01779B);
+  font-size: .95rem;
+}
+.doc-figs .k {
+  font-family: var(--mono, ui-monospace, monospace); font-size: 11px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--fg-dim, #7a8ba0);
+}
+
+.doc-next {
+  display: flex; flex-wrap: wrap; gap: .75rem;
+  margin-top: 3rem; padding-top: 1.5rem;
+  border-top: 1px solid var(--rule, rgba(10, 37, 64, .14));
+}
+.doc-next a {
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 12px; text-transform: uppercase; letter-spacing: .06em;
+  border: 1px solid var(--rule, rgba(10, 37, 64, .2));
+  padding: .5rem .8rem; border-radius: 3px; text-decoration: none;
+  color: var(--fg-muted, #48607a);
+}
+.doc-next a:hover { border-color: var(--accent, #01779B); color: var(--accent, #01779B); }
+
+.doc-footer {
+  max-width: 72rem; margin: 0 auto; padding: 2rem 1.25rem 3rem;
+  border-top: 1px solid var(--rule, rgba(10, 37, 64, .14));
+  font-family: var(--mono, ui-monospace, monospace); font-size: 12px;
+  color: var(--fg-dim, #7a8ba0); display: flex; gap: 1.5rem; flex-wrap: wrap;
+}
+.doc-footer a { color: var(--fg-muted, #48607a); }

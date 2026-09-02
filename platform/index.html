@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PROTO-NOOS — pipeline odkrywania antybiotyków na bakterie Gram-ujemne | PUT Drug Discovery</title>
+<meta name="description" content="PROTO-NOOS to deterministyczny, open-source pipeline do priorytetyzacji małych cząsteczek przeciw bakteriom Gram-ujemnym: generacja de novo, przenikalność i efluks, zaangażowanie celu, powinowactwo, dynamika molekularna, biologia systemowa i scoring wielokryterialny.">
+<link rel="canonical" href="/platform/">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:title" content="PROTO-NOOS — pipeline odkrywania antybiotyków na bakterie Gram-ujemne">
+<meta property="og:description" content="Deterministyczna orkiestracja narzędzi open-source do komputerowego odkrywania leków: od SMILES do biologii systemowej.">
+<meta property="og:url" content="/platform/">
+<meta property="og:image" content="/images/logo/put_drug_discovery.png">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "PROTO-NOOS — pipeline odkrywania antybiotyków na bakterie Gram-ujemne",
+  "description": "Deterministyczny pipeline open-source do priorytetyzacji małych cząsteczek przeciw bakteriom Gram-ujemnym.",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["odkrywanie leków", "antybiotyki", "bakterie Gram-ujemne", "CADD", "oprogramowanie naukowe"],
+  "url": "/platform/"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / Platforma</nav>
+
+<main class="doc-main">
+  <h1>PROTO-NOOS: deterministyczny pipeline odkrywania antybiotyków na bakterie Gram-ujemne</h1>
+
+  <p class="doc-lede">Komputerowe odkrywanie leków łączy generację cząsteczek, predykcję
+  właściwości, modelowanie strukturalne i priorytetyzację — ale integracja tych etapów
+  pozostaje trudna do odtworzenia. PROTO-NOOS jest konfigurowalnym pipeline'em, który
+  spina opublikowane narzędzia open-source w jeden deterministyczny graf z jawnymi
+  kontraktami danych i zapisem pochodzenia.</p>
+
+  <h2>Problem: przepaść między oceną in-silico a efektem biologicznym</h2>
+  <p>Celowanie w bakterie Gram-ujemne jest trudne nie z powodu braku kandydatów
+  strukturalnych — jest ich w nadmiarze. Problem polega na tym, że sama ocena
+  in-silico nie łapie retencji cząsteczki w komórce, aktywnego efluksu i systemowych
+  konsekwencji metabolicznych zahamowania celu. PROTO-NOOS adresuje to na poziomie
+  aplikacyjnym: orkiestracja narzędzi, wersjonowane kontrakty danych, warstwa
+  łącząca przewidywaną penetrację, efluks i powinowactwo oraz ranking
+  wielokryterialny, który da się rozłożyć na faktycznie zastosowane składowe.</p>
+
+  <h2>Osiem etapów: od SMILES do biologii systemowej</h2>
+  <p>Produkcyjny graf obejmuje osiem etapów. Granice etapów są jawne i walidowane
+  kontraktami danych, więc pojedyncze narzędzie można zastąpić inną implementacją,
+  jeśli zachowa semantykę wejścia, wyjścia, jednostek i pochodzenia.</p>
+  <ol>
+    <li><strong><a href="/platform/molecular-generation.html">Generacja cząsteczek</a></strong> —
+      de novo w REINVENT4 (uczenie ze wzmocnieniem).</li>
+    <li><strong><a href="/platform/permeability-and-efflux.html">Deskryptory, drug-likeness, przenikalność i efluks</a></strong> —
+      reguła Lipinskiego, heurystyki eNTRy oraz uczony model retencji.</li>
+    <li><strong><a href="/platform/target-engagement.html">Kinetyczny model zaangażowania celu (cellTE)</a></strong> —
+      ile celu zostaje zajęte wewnątrz komórki.</li>
+    <li><strong><a href="/platform/structure-and-affinity.html">Struktura kompleksu i powinowactwo</a></strong> —
+      Boltz-2 (co-folding + predykcja powinowactwa).</li>
+    <li><strong><a href="/platform/molecular-dynamics.html">Dynamika molekularna</a></strong> —
+      krótka trajektoria GROMACS sprawdzająca trwałość pozy.</li>
+    <li><strong><a href="/platform/systems-biology.html">Biologia systemowa</a></strong> —
+      analiza bilansu strumieni metabolicznych (FBA) na modelu iML1515.</li>
+    <li><strong><a href="/platform/scoring.html">PROTO-NOOS score</a></strong> —
+      deterministyczny scoring wielokryterialny i ranking.</li>
+    <li><strong>Retrosynteza (opcjonalnie)</strong> — ocena syntetyzowalności w AiZynthFinder.</li>
+  </ol>
+
+  <h2>Czym PROTO-NOOS różni się od agentów LLM</h2>
+  <p>W odróżnieniu od agentów LLM orkiestrujących narzędzia chemiczne z
+  niedeterministycznym routingiem (ChemCrow, FROGENT), PROTO-NOOS wykonuje z góry
+  zdefiniowany graf z deterministycznym routingiem i zapisem proweniencji. Dzięki temu
+  można wskazać, który komponent rzeczywiście wniósł informację do wyniku. Narzędzia
+  o podobnym zakresie albo celują w inne cele biologiczne (ITForge — onkologia), albo
+  obejmują węższy fragment procesu (DrugGEN, FSGLD — generacja + dokowanie + MD, bez
+  biologii systemowej).</p>
+
+  <h2>Odtwarzalność i infrastruktura</h2>
+  <p>PROTO-NOOS jest deterministycznym orkiestratorem: graf etapów i kontrakty plików
+  definiuje jeden rejestr, każdy etap ma dedykowane środowisko, a parametry
+  infrastrukturalne i naukowe są wersjonowane osobno. Każdy przebieg zapisuje pełne
+  pochodzenie. Ten sam graf wykonuje się w trzech topologiach — rozproszonej,
+  monolitycznej i wysokoprzepustowej. Etapy są przypisane do partycji GPU (NVIDIA
+  A100 80 GB, RTX 4080/4090) albo CPU (AMD EPYC); w referencyjnym przebiegu 50 molekuł
+  koszt zdominowały predykcja struktury (~62%) i dynamika molekularna (~33%).</p>
+
+  <h2>Status i zastrzeżenie</h2>
+  <p>Wskazywani kandydaci są <strong>hipotezami obliczeniowymi</strong> wymagającymi
+  syntezy oraz walidacji biochemicznej i mikrobiologicznej. Kampanię demonstracyjną
+  przeprowadziliśmy dla reduktazy dihydrofolianowej (DHFR / <em>folA</em>)
+  <em>Escherichia coli</em> K-12 — zobacz
+  <a href="/research/dhfr-campaign.html">wyniki kampanii DHFR</a>.</p>
+
+  <p>Kod źródłowy:
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow/GUB_pipeline" rel="noopener">github.com/Komputerowe-Projektowanie-Lekow/GUB_pipeline</a>.</p>
+
+  <div class="doc-next">
+    <a href="/platform/molecular-generation.html">Etap 1 → Generacja cząsteczek</a>
+    <a href="/research/dhfr-campaign.html">Wyniki kampanii DHFR</a>
+    <a href="/kontakt.html">Współpraca</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

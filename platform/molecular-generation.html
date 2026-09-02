@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Generacja cząsteczek de novo w REINVENT4 — Etap 1 PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Etap 1 pipeline'u PROTO-NOOS: generacja de novo małych cząsteczek w REINVENT4 w trybie uczenia ze wzmocnieniem, z nagrodą łączącą QED i powinowactwo z dokowania, priorem ChEMBL i filtrem różnorodności rdzeni.">
+<link rel="canonical" href="/platform/molecular-generation.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Generacja cząsteczek de novo w REINVENT4 — Etap 1 PROTO-NOOS">
+<meta property="og:description" content="Uczenie ze wzmocnieniem, nagroda QED + dokowanie AutoDock Vina, prior ChEMBL, cel DHFR E. coli (PDB 6XG5).">
+<meta property="og:url" content="/platform/molecular-generation.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Generacja cząsteczek de novo w REINVENT4 — Etap 1 PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["generacja de novo", "REINVENT4", "uczenie ze wzmocnieniem", "QED", "dokowanie molekularne"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/molecular-generation.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Etap 1 — Generacja</nav>
+
+<main class="doc-main">
+  <h1>Etap 1 — generacja cząsteczek de novo (REINVENT4)</h1>
+
+  <p class="doc-lede">Pierwszy etap PROTO-NOOS ma dostarczyć szerokiego, różnorodnego
+  zbioru cząsteczek drug-like jako materiału wejściowego dla dalszych filtrów, a nie
+  wąskiej serii analogów jednego chemotypu.</p>
+
+  <h2>Konfiguracja uczenia ze wzmocnieniem</h2>
+  <p>Generację prowadzimy w <strong>REINVENT4</strong> w trybie reinforcement learning:
+  partia 128 molekuł na krok, 10–100 kroków, wczesne zatrzymanie przy średniej nagrodzie
+  0,60. Celem strukturalnym jest reduktaza dihydrofolianowa (DHFR) <em>Escherichia coli</em>
+  (PDB <strong>6XG5</strong>).</p>
+
+  <h2>Funkcja nagrody</h2>
+  <p>Zadeklarowaną nagrodą jest średnia geometryczna dwóch składników:</p>
+  <ul>
+    <li><strong>QED</strong> — ilościowa ocena podobieństwa do leku,</li>
+    <li><strong>powinowactwo z dokowania</strong> AutoDock Vina, uruchamianego przez DockStream.</li>
+  </ul>
+  <p>W wykonanej kampanii demonstracyjnej składnik dokowania nie był dostępny w danych,
+  więc generację prowadził efektywnie sam człon QED. To ograniczenie opisujemy jawnie —
+  kolejna kampania wymaga strukturalnego członu nagrody zwracającego wartość dla każdej
+  cząsteczki i o niezerowej wariancji.</p>
+
+  <h2>Kontrola różnorodności</h2>
+  <p>Aby ograniczyć ryzyko zapadnięcia się rozkładu przy agresywnej optymalizacji
+  nagrody, użyliśmy generycznego prioru <strong>ChEMBL</strong>, filtra różnorodności
+  <strong>ScaffoldSimilarity</strong> i niskiego progu zatrzymania. Zachowane pule
+  przedselekcyjne obejmują 3 794 691 próbek z 602 partii; nie są to unikalne struktury
+  ani zapis każdej epoki.</p>
+
+  <h2>Jakość wygenerowanej biblioteki</h2>
+  <p>Analizowana podbiblioteka (53 740 związków) zawiera 33 876 unikalnych rdzeni
+  Bemis-Murcko (85,4% jednokrotnych, najczęstszy rdzeń 0,96%), przy średnim wewnętrznym
+  zróżnicowaniu 0,8693 — rozkład nie wskazuje koncentracji na pojedynczym chemotypie.
+  Wobec znanych aktywnych ligandów DHFR 91,8% związków de novo ma podobieństwo
+  Tanimoto poniżej 0,4.</p>
+
+  <div class="doc-next">
+    <a href="/platform/">← Przegląd platformy</a>
+    <a href="/platform/permeability-and-efflux.html">Etap 2 → Przenikalność i efluks</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>
