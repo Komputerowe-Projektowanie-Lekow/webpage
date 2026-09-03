@@ -1,0 +1,119 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ETAG — warstwa integralności dowodowej (typed evidence) | PUT Drug Discovery</title>
+<meta name="description" content="ETAG to warstwa integralności dowodowej pipeline'u PROTO-NOOS: każda liczba niesie swój typ fizyczny, status kalibracji (surowy / skalibrowany / zmierzony), kierunek, niepewność, zakres ważności i zależności. Reguły audytu wykrywają wielkości powielające się rangowo i puste bloki scoringu.">
+<link rel="canonical" href="/platform/etag.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ETAG — warstwa integralności dowodowej (typed evidence)">
+<meta property="og:description" content="Typowane dowody, śledzenie zależności, testy niezmienniczości i bramki w pipeline PROTO-NOOS.">
+<meta property="og:url" content="/platform/etag.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "ETAG — warstwa integralności dowodowej pipeline'u PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["integralność dowodowa", "typed evidence", "kalibracja", "śledzenie zależności", "audyt danych", "odtwarzalność"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/etag.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / ETAG</nav>
+
+<main class="doc-main">
+  <h1>ETAG — warstwa integralności dowodowej</h1>
+
+  <p class="doc-lede">Konceptualnym rdzeniem PROTO-NOOS nie jest żaden pojedynczy model,
+  lecz sposób, w jaki pipeline traktuje liczby. ETAG (typed evidence, dependency
+  tracking, invariance, gates) sprawia, że każda wielkość niesie ze sobą informację
+  o tym, czym fizycznie jest i na ile można na niej polegać.</p>
+
+  <h2>Typ fizyczny i status kalibracji</h2>
+  <p>Każda liczba w pipeline ma przypisany <strong>typ wielkości</strong>: wymiar
+  (stężenie, szybkość pierwszego lub drugiego rzędu, czas, bezwymiarowy wynik),
+  jednostkę oraz <strong>status kalibracji</strong>:</p>
+  <ul>
+    <li><strong>surowy</strong> — goły wynik modelu,</li>
+    <li><strong>skalibrowany</strong> — przepuszczony przez zwalidowaną transformację fizyczną,</li>
+    <li><strong>zmierzony</strong> — wartość eksperymentalna.</li>
+  </ul>
+  <p>Mechanizm <code>require_quantity</code> blokuje na przykład użycie sygnału
+  powinowactwa typu „IC50-like" tam, gdzie oczekiwana jest prawdziwa stała dysocjacji —
+  bo to różne wielkości fizyczne, mimo tej samej jednostki.</p>
+
+  <h2>Rekord dowodu</h2>
+  <p>Wokół każdej liczby ETAG przechowuje: kierunek („wyżej lepiej" / „niżej lepiej"),
+  niepewność (przedział ufności 95%), zakres ważności (np. „EcDHFR, <em>E. coli</em>
+  K-12, in silico"), wersję metody, źródło (zmierzone / przewidziane / heurystyka /
+  pochodne) oraz status (kanoniczny / uzupełniający / referencyjny / wycofany). Rekordy
+  pochodne muszą jawnie deklarować, od jakich innych rekordów zależą.</p>
+
+  <h2>Po co to jest — realne błędy, które to wychwytuje</h2>
+  <p>Reguły audytu ETAG wykryły w naszej własnej kampanii m.in.:</p>
+  <ul>
+    <li><strong>Fantomowy blok scoringu</strong> — zadeklarowana 1/5 wagi (dowód
+      z dokowania) była pusta w każdym wierszu; agregat mimo to zwracał liczbowo
+      poprawny wynik, bo pusty komponent po cichu redukuje się do elementu neutralnego.</li>
+    <li><strong>Zduplikowana oś</strong> — blok „biologii systemowej" korelował
+      rangowo z powinowactwem na poziomie rho = 1,000: liczył to samo drugi raz pod
+      inną nazwą.</li>
+    <li><strong>Mylące nazwy kolumn</strong> — „czas rezydencji" liganda był w istocie
+      stałą długością symulacji (0,1 ns dla każdego związku z konstrukcji), a nie
+      obserwablą.</li>
+  </ul>
+  <p>Obowiązuje reguła: wielkość trafia do wyników tylko wtedy, gdy przyjmuje więcej niż
+  jedną wartość, nie powtarza rangowo (|rho| &lt; 0,999) innej i ma odbiorcę w dalszej
+  części łańcucha.</p>
+
+  <h2>Bramki i selektywna naprawa</h2>
+  <p>Osobna warstwa naprawcza skanuje gotowe drzewo wyników, raportuje niezgodności,
+  wylicza minimalny zakres etapów do powtórzenia i odtwarza brakujące artefakty na
+  kopii danych — zawsze do istniejącego kontraktu, bez regenerowania samych związków.
+  Bramka wydania (<code>validate_release.py</code>) zawodzi „na zamknięcie", jeśli
+  jakikolwiek artefakt scoringu ma nieaktualny schemat lub trafił poza swoją
+  proweniencjonowaną ścieżkę.</p>
+
+  <p class="doc-figs"><span class="k">Status</span>
+  <span style="display:block;margin-top:.3rem">Schemat typowanych dowodów i kontrakty
+  są zaimplementowane i pokryte testami; pełne wpięcie w każdą ścieżkę scoringu i
+  cellTE jest osobną, większą migracją w toku.</span></p>
+
+  <div class="doc-next">
+    <a href="/platform/">← Przegląd platformy</a>
+    <a href="/platform/scoring.html">PROTO-NOOS score</a>
+    <a href="/research/negative-results.html">Wyniki negatywne i audyt →</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

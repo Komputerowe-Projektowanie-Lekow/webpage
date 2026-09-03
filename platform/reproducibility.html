@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Odtwarzalność, architektura i koszt obliczeniowy PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Architektura wykonawcza PROTO-NOOS: deterministyczny orkiestrator, kontrakty Pydantic, per-modułowe środowiska conda, topologia lokalna i SLURM, bramka wydania oraz zmierzony koszt obliczeniowy na cząsteczkę dla każdego etapu.">
+<link rel="canonical" href="/platform/reproducibility.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Odtwarzalność, architektura i koszt obliczeniowy PROTO-NOOS">
+<meta property="og:description" content="Deterministyczny orkiestrator, kontrakty danych, proweniencja i zmierzony koszt na cząsteczkę per etap.">
+<meta property="og:url" content="/platform/reproducibility.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<style>
+  .rt { width:100%; border-collapse:collapse; margin:1rem 0; font-size:.9rem; overflow-x:auto; display:block; }
+  .rt th, .rt td { border:1px solid var(--rule,rgba(10,37,64,.2)); padding:.4rem .6rem; text-align:left; }
+  .rt th { background:var(--bg-soft,#e9f0f7); font-family:var(--mono,monospace); font-size:11px; letter-spacing:.05em; text-transform:uppercase; }
+  .rt td:nth-child(2), .rt td:nth-child(3) { text-align:right; font-family:var(--mono,monospace); }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "Odtwarzalność, architektura i koszt obliczeniowy PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["odtwarzalność obliczeniowa", "orkiestracja", "SLURM", "kontrakty danych", "Pydantic", "koszt obliczeniowy"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/platform/reproducibility.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / <a href="/platform/">Platforma</a> / Odtwarzalność i koszt</nav>
+
+<main class="doc-main">
+  <h1>Odtwarzalność, architektura i koszt obliczeniowy</h1>
+
+  <p class="doc-lede">PROTO-NOOS jest deterministycznym orkiestratorem. Graf etapów
+  i kontrakty plików definiuje jeden rejestr, a parametry infrastrukturalne i naukowe
+  są wersjonowane osobno.</p>
+
+  <h2>Architektura wykonawcza</h2>
+  <ul>
+    <li><strong>Orkiestrator</strong> (<code>obl/pipeline/run.py</code>) + rejestr
+      etapów (<code>stages.py</code>) i kontrakty wejścia/wyjścia <strong>Pydantic</strong>
+      (<code>contracts*.py</code>).</li>
+    <li><strong>Narzędzia CPU</strong> (<code>obl/*_skrypty/</code>): AiZynthFinder,
+      analiza RDKit, biologia systemowa (BioTransformer / COBRApy), cellTE, wariant CPU
+      GROMACS.</li>
+    <li><strong>Narzędzia GPU</strong> (<code>ngpu/*_skrypty/</code>): REINVENT4,
+      Boltz-2, wariant GPU GROMACS, model retencji/efluksu.</li>
+    <li><strong>Analiza</strong> (<code>analysis/</code>) czyta wyłącznie
+      <code>artifacts/results/</code> i nigdy nie jest źródłem danych dla samego
+      pipeline'u.</li>
+    <li><strong>Selektywna naprawa</strong> (<code>errorcorrection/</code>) — audyt
+      i odtworzenie brakujących artefaktów dla już policzonych runów, poza normalną
+      generacją.</li>
+  </ul>
+
+  <h2>Środowiska i wersjonowanie</h2>
+  <p>Nie ma jednego pliku zależności — każdy moduł ma własne środowisko conda
+  (<code>environment*.yml</code>), które przypina swoje ciężkie biblioteki (RDKit,
+  PyTorch, OpenMM/GROMACS, COBRApy, AiZynthFinder). Powtarzalność kontrolują jawne
+  ziarna losowe; każdy przebieg zapisuje pełne pochodzenie. Pełne przypięcie środowisk
+  (dokładne wersje, sumy kontrolne, kontenery) jest otwartą pozycją zadaniową.</p>
+
+  <h2>Topologie</h2>
+  <p>Ten sam graf wykonuje się lokalnie na jednej maszynie oraz na klastrze SLURM
+  (w tym w trybie task-array). Etapy związane z GPU (generacja, predykcja
+  struktury/powinowactwa, dynamika molekularna, model retencji) projektowano pod węzły
+  GPU, etapy CPU (deskryptory, cellTE, biologia systemowa, retrosynteza) — pod węzły CPU.</p>
+
+  <h2>Zmierzony koszt na cząsteczkę</h2>
+  <p>Każda partia zapisuje <code>pipeline_stage_runtime_summary.csv</code> z kolumną
+  <code>seconds_per_input_molecule</code>. Agregacja po losowej próbie 150 z 649 plików
+  partii (ziarno 42):</p>
+
+  <table class="rt">
+    <thead><tr><th>Etap</th><th>średnia s/cząsteczkę</th><th>mediana</th><th>uwaga</th></tr></thead>
+    <tbody>
+      <tr><td>Stage 1 — postprocessing generacji</td><td>0,52</td><td>0,56</td><td>bez wall-clock treningu RL</td></tr>
+      <tr><td>Stage 2a — deskryptory</td><td>1,83</td><td>1,59</td><td>—</td></tr>
+      <tr><td>Stage 2b — retencja</td><td>0,06</td><td>0,05</td><td>—</td></tr>
+      <tr><td>Stage 3 (pre) — cellTE</td><td>0,06</td><td>0,05</td><td>—</td></tr>
+      <tr><td><strong>Stage 4 — Boltz-2</strong></td><td><strong>26,45</strong></td><td>26,75</td><td>dominanta GPU</td></tr>
+      <tr><td>Stage 3 (post) — cellTE rescore</td><td>0,05</td><td>0,05</td><td>—</td></tr>
+      <tr><td><strong>Stage 5 — MD (0,1 ns, 1 replika)</strong></td><td><strong>46,07</strong></td><td>40,91</td><td>duże odchylenie (std 35,9 s)</td></tr>
+      <tr><td>Stage 6a</td><td>15,33</td><td>12,89</td><td>—</td></tr>
+      <tr><td>Stage 6b</td><td>1,09</td><td>1,08</td><td>—</td></tr>
+    </tbody>
+  </table>
+
+  <p>Dwa etapy GPU (4 i 5) dominują koszt — zgodnie z manuskryptem: Boltz-2 ~62%,
+  MD ~33% referencyjnego przebiegu 50 molekuł. Pełny pakiet 26 analiz bibliotecznych
+  to ok. 53 minuty CPU, a przeliczenie wyników scoringu dla wszystkich partii ok. 13
+  minut CPU. Bramka jakości (<code>ruff</code> + kontrola złożoności) działa na każdym
+  commicie, testy na każdym push.</p>
+
+  <div class="doc-next">
+    <a href="/platform/">← Przegląd platformy</a>
+    <a href="/platform/etag.html">Warstwa ETAG</a>
+    <a href="/research/dhfr-campaign.html">Wyniki kampanii DHFR →</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>

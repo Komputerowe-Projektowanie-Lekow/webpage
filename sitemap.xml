@@ -10,7 +10,10 @@
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/platform/molecular-dynamics.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/platform/systems-biology.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/platform/scoring.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/platform/etag.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/platform/reproducibility.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/research/dhfr-campaign.html</loc><changefreq>monthly</changefreq><priority>0.8</priority></url>
+  <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/research/negative-results.html</loc><changefreq>monthly</changefreq><priority>0.7</priority></url>
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/about.html</loc><changefreq>monthly</changefreq><priority>0.6</priority></url>
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/kontakt.html</loc><changefreq>yearly</changefreq><priority>0.6</priority></url>
   <url><loc>https://gorzelanczyk-web-avbpb2hhhahhdfd8.polandcentral-01.azurewebsites.net/privacy.html</loc><changefreq>yearly</changefreq><priority>0.3</priority></url>

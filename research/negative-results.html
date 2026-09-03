@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="pl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Wyniki negatywne i ustalenia audytowe PROTO-NOOS | PUT Drug Discovery</title>
+<meta name="description" content="Pełna lista znanych ograniczeń pipeline'u PROTO-NOOS traktowanych jako pełnoprawne wyniki: nagroda generatora sprowadzona do QED, agregat scoringu gorszy od własnej najlepszej składowej, niepotwierdzona warstwa penetracji, zduplikowane osie scoringu, wycofany moduł metabolizmu ksenobiotyku.">
+<link rel="canonical" href="/research/negative-results.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Wyniki negatywne i ustalenia audytowe PROTO-NOOS">
+<meta property="og:description" content="Ograniczenia i eksperymenty negatywne raportowane jawnie, nie ukrywane jako poprawki.">
+<meta property="og:url" content="/research/negative-results.html">
+<link rel="icon" type="image/png" href="/images/logo/put_drug_discovery.png">
+<link rel="stylesheet" href="/styles.css?v=8">
+<link rel="stylesheet" href="/doc.css?v=1">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "ScholarlyArticle",
+  "headline": "Wyniki negatywne i ustalenia audytowe PROTO-NOOS",
+  "inLanguage": "pl",
+  "author": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "publisher": { "@type": "Organization", "name": "PUT Drug Discovery" },
+  "about": ["wyniki negatywne", "ograniczenia", "integralność dowodowa", "odtwarzalność", "audyt"],
+  "isPartOf": { "@type": "CreativeWork", "name": "PROTO-NOOS", "url": "/platform/" },
+  "url": "/research/negative-results.html"
+}
+</script>
+</head>
+<body>
+
+<header class="doc-header">
+  <a href="/" class="doc-brand"><img src="/images/logo/put_drug_discovery.png" alt="PUT Drug Discovery"></a>
+  <nav class="doc-nav">
+    <a href="/platform/">Platforma</a>
+    <a href="/research/dhfr-campaign.html">Kampania DHFR</a>
+    <a href="/about.html">Zespół</a>
+    <a href="/kontakt.html">Kontakt</a>
+  </nav>
+</header>
+
+<nav class="doc-crumbs"><a href="/">Start</a> / Badania / Wyniki negatywne</nav>
+
+<main class="doc-main">
+  <h1>Wyniki negatywne i ustalenia audytowe</h1>
+
+  <p class="doc-lede">W PROTO-NOOS wyniki negatywne — zależność od partii, semantyczny
+  dryf nazw, zduplikowany dowód, nieaktualne wyjścia — są pełnoprawnymi rezultatami,
+  raportowanymi jawnie, a nie po cichu poprawianymi. Poniżej najważniejsze z nich.</p>
+
+  <h2>1. Nagroda generatora była faktycznie tylko QED</h2>
+  <p>Komponent dokowania w nagrodzie uczenia ze wzmocnieniem nigdy nie dostarczył
+  danych (<code>stage1_docking_score</code> puste w 100% z 63 441 wierszy). Cała
+  kampania to więc generacja związków drug-like, a nie związków celowanych na DHFR.
+  Manuskrypt tego nie ukrywa — ustala i raportuje. Naprawa wymaga nowej kampanii RL na
+  klastrze GPU.</p>
+
+  <h2>2. Złożony score jest gorszy niż jego własna najlepsza składowa</h2>
+  <p>Na osi całokomórkowej agregat koreluje z aktywnością słabiej niż sama składowa
+  powinowactwa; złożona funkcja celu nie dominuje affinity-only na obu dostępnych
+  endpointach jednocześnie. To jest jeden z głównych wyników pracy: agregaty
+  wielokryterialne potrafią maskować braki składowych. „Naprawienie" przez zastąpienie
+  agregatu samym powinowactwem usunęłoby ten argument. Redesign wag należy do kolejnej
+  iteracji, po zebraniu nietkniętego zbioru testowego.</p>
+
+  <h2>3. Warstwa penetracji/efluksu pozostaje niepotwierdzoną hipotezą</h2>
+  <p>Konceptualny wyróżnik systemu na jedynym dostępnym benchmarku całokomórkowym
+  (Stokes) nie różni się istotnie od predyktora losowego. Mapowania przepuszczalności
+  i efluksu nigdy nie były kalibrowane na rzeczywistych danych akumulacji
+  wewnątrzkomórkowej — takich danych po prostu nie ma. W score v2 warstwa jest
+  raportowana jako adnotacja, nie wchodzi do agregatu.</p>
+
+  <h2>4. Stage 2b miał być bramką, a był adnotacją</h2>
+  <p>Skonfigurowany próg retencji P ≥ 0,95 istniał, ale przefiltrowany wynik był
+  w kodzie nadpisywany pełną tabelą. Ustalenie audytowe zamknięte: kontrfaktyczne
+  przeliczenie i kalibracja pokazały, że żaden próg retencji nie poprawia zgodności
+  rankingu z eksperymentem (ROC AUC 0,44 na osi enzymatycznej — kierunek odwrotny),
+  więc stan docelowy (adnotacja + wejście do cellTE) jest poprawny.</p>
+
+  <h2>5. Etykieta fenotypowa „resistant" to przemalowany próg na K_D</h2>
+  <p>Trzy liczby z configu odtwarzają 100% etykiet Stage 6B — klasa nie niesie
+  informacji fenotypowej niezależnej od powinowactwa, a dodatkowo jest własnością
+  wybranego stężenia, a nie związku (między dwoma liczonymi scenariuszami klasę zmienia
+  99,5% związków). Dlatego blok biologii systemowej nie wchodzi do funkcji celu.</p>
+
+  <h2>6. Wycofany moduł metabolizmu ksenobiotyku (Stage 6A)</h2>
+  <p>BioTransformer3 + PROXIMAL2 nie potrafiły wygenerować sensownej ścieżki
+  metabolicznej dla <em>E. coli</em> (cztery zbieżne linie dowodowe). Autorzy świadomie
+  wycofali moduł z produkcji zamiast go maskować — poprawnie zamknięty eksperyment
+  negatywny.</p>
+
+  <h2>7–9. Ciche defekty agregacji wykryte regułami audytu</h2>
+  <ul>
+    <li><strong>Fantomowy blok dokowania</strong> — 1/5 wagi score'u pusta w każdym
+      wierszu; pusty komponent redukuje się do elementu neutralnego bez zgłoszenia błędu
+      (usunięty z configu, wynik przeliczony bit-identycznie).</li>
+    <li><strong>Blok „systems_score" był kopią powinowactwa</strong> — rho = 1,000000
+      (usunięty, ranking przeliczony, top-10/top-50 bez zmian).</li>
+    <li><strong>Mylące nazwy kolumn Stage 5</strong> — „czas rezydencji" był stałą
+      długością symulacji, „koff_proxy" przeskalowaniem wskaźnika stabilności (usunięte
+      z wyjścia).</li>
+  </ul>
+
+  <h2>10–11. Bramki policzone, ale nie stosowane</h2>
+  <p>Werdykt jakości MD jest raportowany, ale przy 0,1 ns i jednej replice nie miałby
+  mocy statystycznej, więc nie blokuje niczego. PoseBusters istnieje tylko na ścieżce
+  benchmarkowej — pozy z Boltz-2 nigdy nie były filtrowane pod kątem fizycznej
+  wiarygodności przed dynamiką. Diagnostyka jest wykonana; żywa bramka produkcyjna to
+  priorytet kolejnej kampanii.</p>
+
+  <h2>12–13. Nieaktualny ranking retrosyntezy i luki w lejku</h2>
+  <p>Wszystkie partie retrosyntezy odnoszą się do rankingu sprzed korekty agregacji;
+  zastrzeżenie o nieaktualności jest w tekście. Dwie niewyjaśnione różnice liczbowe
+  między artefaktem lejka, rejestrem lineage i głównym Stage 7 (345 i 337 rekordów)
+  pozostają otwarte — zgłoszone jako takie, a nie zgadywane.</p>
+
+  <div class="doc-figs">
+    <span class="k">Podsumowanie</span>
+    <p style="margin:.4rem 0 0">Z 13 punktów: 5 domkniętych (naprawa na klastrze lub
+    poprawnie zamknięty eksperyment negatywny), reszta wymaga nowej kampanii
+    obliczeniowej, danych eksperymentalnych lub decyzji modelowych poza zakresem tej
+    publikacji. Żaden nie jest ukrytą luką — wszystkie są jawnie opisane.</p>
+  </div>
+
+  <div class="doc-next">
+    <a href="/research/dhfr-campaign.html">← Wyniki kampanii DHFR</a>
+    <a href="/platform/etag.html">Jak ETAG to wychwytuje</a>
+  </div>
+</main>
+
+<footer class="doc-footer">
+  <a href="/">PUT Drug Discovery</a>
+  <a href="/about.html">Zespół</a>
+  <a href="/privacy.html">Polityka prywatności</a>
+  <a href="https://github.com/Komputerowe-Projektowanie-Lekow" rel="noopener">GitHub</a>
+</footer>
+
+<script src="/visitor.js?v=1" defer></script>
+</body>
+</html>
