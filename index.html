@@ -1112,6 +1112,8 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       <button class="nav-link" data-nav="status"><span class="num">03</span><span data-i18n="nav.status">Status</span></button>
       <button class="nav-link" data-nav="join"><span class="num">04</span><span data-i18n="nav.join">Dołącz</span></button>
       <button class="nav-link" data-nav="support"><span class="num">05</span><span data-i18n="nav.support">Wsparcie</span></button>
+      <a class="nav-link" href="/platform/"><span class="num">06</span><span data-i18n="nav.platform">Platforma</span></a>
+      <a class="nav-link" href="/research/dhfr-campaign.html"><span class="num">07</span><span data-i18n="nav.research">Badania</span></a>
     </div>
     <div class="nav-util">
       <button class="chip cmdk-trigger" id="cmdkTrigger">
@@ -1144,15 +1146,15 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
           <p class="hero-lead" data-i18n="hero.lead">Generujemy kandydatów, filtrujemy je pod kątem wejścia do bakterii Gram-ujemnych, modelujemy wiązanie i stabilność celu, a następnie sprawdzamy zaangażowanie celu w komórce, wpływ metaboliczny i dostępność syntezy. Każdy etap zapisuje dowody użyte w rankingu, dzięki czemu słabe sygnały i odrzucone kandydaty pozostają widoczne.</p>
 
           <div class="hero-cta">
-            <button class="btn primary" data-nav="join"><span data-i18n="cta.join">Dołącz do zespołu</span><span class="arrow">→</span></button>
-            <button class="btn" data-nav="pipeline"><span data-i18n="cta.pipeline">Zobacz pipeline</span><span class="arrow">→</span></button>
+            <a class="btn primary" href="/platform/"><span data-i18n="cta.platform">Poznaj platformę</span><span class="arrow">→</span></a>
+            <a class="btn" href="/kontakt.html"><span data-i18n="cta.contact">Nawiąż współpracę</span><span class="arrow">→</span></a>
           </div>
 
           <div class="pill-row">
-            <span class="pill"><span class="k">6</span>stages</span>
-            <span class="pill"><span class="k">3</span>modułów</span>
-            <span class="pill"><span class="k">EXP3</span>pilot15 · top_n=10</span>
-            <span class="pill"><span class="k">true</span>pass 0.575→0.625</span>
+            <span class="pill"><span class="k">8</span>etapów pipeline</span>
+            <span class="pill"><span class="k">61 183</span>rekordów w rankingu</span>
+            <span class="pill"><span class="k">53 740</span>związków w bibliotece</span>
+            <a class="pill" href="/platform/etag.html" style="text-decoration:none;"><span class="k">ETAG</span>warstwa dowodowa</a>
           </div>
         </div>
 
@@ -1176,18 +1178,42 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
       </div>
 
       <div class="hero-facts" style="margin-top:3rem;">
-        <div class="fact"><span class="fact-num">12,797</span><span class="fact-label" data-i18n="facts.generated">Molekuł wygenerowanych</span></div>
-        <div class="fact"><span class="fact-num">12,581</span><span class="fact-label" data-i18n="facts.valid">Valid po Stage 2a</span></div>
-        <div class="fact"><span class="fact-num">0.625</span><span class="fact-label" data-i18n="facts.pass">EXP2 surrogate pass-rate</span></div>
+        <div class="fact"><span class="fact-num">61 183</span><span class="fact-label" data-i18n="facts.generated">Rekordów w rankingu score v2</span></div>
+        <div class="fact"><span class="fact-num">53 740</span><span class="fact-label" data-i18n="facts.valid">Związków w analizowanej bibliotece</span></div>
+        <div class="fact"><span class="fact-num">0,875</span><span class="fact-label" data-i18n="facts.pass">ROC AUC score v2 (kohorta 1 003)</span></div>
       </div>
 
       <section class="shared-research" aria-labelledby="sharedResearchTitle">
         <div>
-          <p class="label">Shared Research</p>
-          <h2 id="sharedResearchTitle">Shared Research</h2>
-          <p class="intro">Shared science, product and engineering work from the team.</p>
+          <p class="label">Dokumentacja i badania</p>
+          <h2 id="sharedResearchTitle">Platforma i wyniki</h2>
+          <p class="intro">Pełny opis pipeline'u, kampania demonstracyjna DHFR i jawny rejestr ograniczeń.</p>
         </div>
         <div class="research-list">
+          <a class="research-item" href="/platform/" aria-label="Dokumentacja platformy PROTO-NOOS">
+            <div class="research-meta">
+              <time datetime="2026-09-03">PROTO-NOOS</time>
+              <span class="tag">platforma</span>
+            </div>
+            <h3>Dokumentacja pipeline'u — 8 etapów, warstwa dowodowa ETAG, odtwarzalność i koszt</h3>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
+          </a>
+          <a class="research-item" href="/research/dhfr-campaign.html" aria-label="Wyniki kampanii DHFR">
+            <div class="research-meta">
+              <time datetime="2026-09-03">Kampania</time>
+              <span class="tag">wyniki</span>
+            </div>
+            <h3>Kampania demonstracyjna DHFR <em>E. coli</em> K-12 — kalibracja i benchmark dziewięciu metod</h3>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
+          </a>
+          <a class="research-item" href="/research/negative-results.html" aria-label="Wyniki negatywne i audyt">
+            <div class="research-meta">
+              <time datetime="2026-09-03">Audyt</time>
+              <span class="tag">wyniki negatywne</span>
+            </div>
+            <h3>13 udokumentowanych ustaleń audytowych i ograniczeń pipeline'u</h3>
+            <p>PUT Drug Discovery <span class="research-arrow">→</span></p>
+          </a>
           <a class="research-item" href="proto-noos_system/" aria-label="Open PROTO-NOOS shared research note">
             <div class="research-meta">
               <time datetime="2026-05-13">13.05.2026</time>
@@ -1249,27 +1275,27 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
         <span class="section-kicker" data-i18n="pipe.kicker">PROTO-NOOS</span>
         <span></span>
       </div>
-      <h2 class="section-title" data-i18n="pipe.title">Sześć etapów od SMILES do systemowej biologii.</h2>
-      <p class="lede" style="margin: 1rem 0 2rem; max-width:56rem;" data-i18n="pipe.intro">Zintegrowany workflow CADD do projektowania celowanego w <em>E. coli</em>: od generowania molekuł (REINVENT4), przez retencję (CellTE) i strukturę (Boltz2), po dynamikę (GROMACS) i walidację systemową (COBRApy/iML1515).</p>
+      <h2 class="section-title" data-i18n="pipe.title">Osiem etapów od SMILES do biologii systemowej.</h2>
+      <p class="lede" style="margin: 1rem 0 2rem; max-width:56rem;" data-i18n="pipe.intro">Jawna orkiestracja narzędzi open-source z wersjonowanymi kontraktami danych: od generowania molekuł (REINVENT4), przez przenikalność i efluks, kinetykę zaangażowania celu i strukturę (Boltz-2), po dynamikę (GROMACS), biologię systemową (COBRApy / iML1515) i scoring. Kliknij etap, aby przejść do jego opisu.</p>
 
       <div class="stage-strip">
         <div class="strip-row">
-          <div class="strip-cell" data-stage="1"><span class="n">01</span><span class="t">REINVENT4</span><span class="d">de novo</span></div>
+          <a class="strip-cell" data-stage="1" href="/platform/molecular-generation.html" style="text-decoration:none;color:inherit;"><span class="n">01</span><span class="t">REINVENT4</span><span class="d">generacja de novo</span></a>
           <div class="strip-arr">→</div>
-          <div class="strip-cell" data-stage="2"><span class="n">02</span><span class="t">CellTE</span><span class="d">retencja</span></div>
+          <a class="strip-cell" data-stage="2" href="/platform/permeability-and-efflux.html" style="text-decoration:none;color:inherit;"><span class="n">02</span><span class="t">retencja</span><span class="d">eNTRy + model</span></a>
           <div class="strip-arr">→</div>
-          <div class="strip-cell" data-stage="3"><span class="n">03</span><span class="t">Boltz2</span><span class="d">struktura</span></div>
+          <a class="strip-cell" data-stage="3" href="/platform/target-engagement.html" style="text-decoration:none;color:inherit;"><span class="n">03</span><span class="t">cellTE</span><span class="d">zaangażowanie celu</span></a>
           <div class="strip-arr">→</div>
-          <div class="strip-cell" data-stage="4"><span class="n">04</span><span class="t">KD_pred</span><span class="d">affinity</span></div>
+          <a class="strip-cell" data-stage="4" href="/platform/structure-and-affinity.html" style="text-decoration:none;color:inherit;"><span class="n">04</span><span class="t">Boltz-2</span><span class="d">struktura + powinowactwo</span></a>
           <div class="strip-arr">→</div>
-          <div class="strip-cell" data-stage="5"><span class="n">05</span><span class="t">GROMACS</span><span class="d">MD</span></div>
+          <a class="strip-cell" data-stage="5" href="/platform/molecular-dynamics.html" style="text-decoration:none;color:inherit;"><span class="n">05</span><span class="t">GROMACS</span><span class="d">dynamika molekularna</span></a>
           <div class="strip-arr">→</div>
-          <div class="strip-cell" data-stage="6"><span class="n">06</span><span class="t">iML1515</span><span class="d">FBA/FVA</span></div>
+          <a class="strip-cell" data-stage="6" href="/platform/systems-biology.html" style="text-decoration:none;color:inherit;"><span class="n">06</span><span class="t">COBRApy</span><span class="d">FBA · iML1515</span></a>
         </div>
-        <div class="strip-loop">↺ ouroboros · Stage 6 → Stage 1 feedback</div>
+        <div class="strip-loop"><a href="/platform/scoring.html" style="color:inherit;">07 · PROTO-NOOS score</a> &nbsp;·&nbsp; 08 · retrosynteza (opcjonalnie)</div>
       </div>
 
-      <button class="btn" data-nav="pipeline"><span data-i18n="pipe.details">Pełne detale i accordion</span><span class="arrow">→</span></button>
+      <a class="btn" href="/platform/"><span data-i18n="pipe.details">Pełna dokumentacja platformy</span><span class="arrow">→</span></a>
     </div>
   </section>
 
@@ -1286,8 +1312,9 @@ const TWEAKS = /*EDITMODE-BEGIN*/{
         <span style="font-family:var(--mono); font-size:11px; color:var(--fg-dim); letter-spacing:0.1em;">2026-02-10</span>
       </div>
 
-      <h1 class="section-title" style="font-size: clamp(2rem, 5vw, 3.5rem);" data-i18n="pipe.title2">Gram-Negative &amp; Universal Bacteria — zamknięta pętla.</h1>
+      <h1 class="section-title" style="font-size: clamp(2rem, 5vw, 3.5rem);" data-i18n="pipe.title2">Osiem etapów, jawne kontrakty danych.</h1>
       <p class="lede" style="margin-top: 1.5rem;" data-i18n="pipe.intro2">Klikaj karty etapów żeby rozwinąć szczegóły. Każdy etap ma zdefiniowane kontrakty Pydantic, deterministyczne artefakty i status inżynieryjny (live / stabilizing / hardening).</p>
+      <p class="lede" style="margin-top: 0.75rem;">Pełny, indeksowany opis każdego etapu wraz z warstwą ETAG i kosztem obliczeniowym: <a href="/platform/">dokumentacja platformy</a>.</p>
 
       <div class="narrative" id="pipe-narrative-big" style="margin: 2rem 0 3rem; min-height: 520px;">
         <div class="narrative-head">
